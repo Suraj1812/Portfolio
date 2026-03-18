@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 
-import { CursorGlow } from "@/components/cursor-glow";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 
@@ -61,7 +60,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#07111f",
+  themeColor: "#ffe45e",
   colorScheme: "light"
 };
 
@@ -74,7 +73,6 @@ export default function RootLayout({
     <html lang="en">
       <body className="font-body text-ink">
         <SmoothScroll>
-          <CursorGlow />
           {children}
         </SmoothScroll>
       </body>

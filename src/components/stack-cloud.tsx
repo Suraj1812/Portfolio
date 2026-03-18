@@ -28,27 +28,41 @@ const chipPositions = [
   "left-[26%] top-[50%]",
   "left-[62%] top-[60%]",
   "left-[36%] top-[26%]",
-  "left-[54%] top-[84%]"
+  "left-[54%] top-[84%]",
+  "left-[76%] top-[82%]"
 ];
+
+const chipColors = [
+  "bg-[var(--yellow)]",
+  "bg-[var(--pink)]",
+  "bg-[var(--cyan)]",
+  "bg-[var(--lime)]",
+  "bg-[var(--orange)]",
+  "bg-white"
+] as const;
 
 export function StackCloud({ skills, tools }: StackCloudProps) {
   return (
     <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-      <div className="rounded-[2rem] border border-white/70 bg-white/75 p-6 shadow-card backdrop-blur">
+      <div className="neo-panel-lg bg-white p-6">
         <div className="space-y-6">
           {skills.map((skill, index) => (
             <div key={skill.label}>
               <div className="flex items-end justify-between gap-4">
                 <div>
-                  <p className="font-display text-lg font-semibold text-ink">{skill.label}</p>
-                  <p className="mt-1 text-sm text-slate">{skill.detail}</p>
+                  <p className="font-display text-lg font-black uppercase tracking-[-0.03em] text-black">
+                    {skill.label}
+                  </p>
+                  <p className="mt-1 text-sm text-black/70">{skill.detail}</p>
                 </div>
-                <p className="text-sm font-semibold text-slate">{skill.level}%</p>
+                <p className="text-sm font-black uppercase tracking-[0.1em] text-black">
+                  {skill.level}%
+                </p>
               </div>
 
-              <div className="mt-4 h-3 overflow-hidden rounded-full bg-ink/8">
+              <div className="mt-4 h-5 overflow-hidden rounded-[999px] border-2 border-black bg-[var(--cream)]">
                 <motion.div
-                  className="h-full rounded-full bg-gradient-to-r from-teal via-cyan-500 to-ember"
+                  className="h-full rounded-[999px] border-r-4 border-black bg-[var(--blue)]"
                   initial={{ width: 0 }}
                   whileInView={{ width: `${skill.level}%` }}
                   viewport={{ once: true }}
@@ -60,13 +74,11 @@ export function StackCloud({ skills, tools }: StackCloudProps) {
         </div>
       </div>
 
-      <div className="relative min-h-[30rem] overflow-hidden rounded-[2rem] border border-white/70 bg-[linear-gradient(160deg,rgba(255,255,255,0.78),rgba(255,250,242,0.82))] p-6 shadow-card backdrop-blur">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(15,157,154,0.14),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(255,122,24,0.18),_transparent_34%)]" />
-
+      <div className="neo-panel-lg neo-grid-bg relative min-h-[30rem] overflow-hidden bg-[var(--yellow)] p-6">
         <div className="relative z-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate">Tech cloud</p>
-          <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight text-ink">
-            Floating tools I reach for when building polished frontend work.
+          <p className="text-xs font-black uppercase tracking-[0.22em] text-black">Tech cloud</p>
+          <h3 className="mt-3 font-display text-2xl font-black uppercase tracking-[-0.04em] text-black">
+            Floating tools I reach for when building scalable web and AI products.
           </h3>
         </div>
 
@@ -74,7 +86,9 @@ export function StackCloud({ skills, tools }: StackCloudProps) {
           {tools.map((tool, index) => (
             <motion.div
               key={tool}
-              className={`absolute ${chipPositions[index]} rounded-full border border-white/80 bg-white/80 px-4 py-2 text-sm font-medium text-ink shadow-sm backdrop-blur`}
+              className={`neo-chip absolute ${chipPositions[index]} ${
+                chipColors[index % chipColors.length]
+              } px-4 py-2 text-sm font-black uppercase tracking-[0.1em] text-black`}
               animate={{ y: [0, -10, 0], x: index % 2 === 0 ? [0, 6, 0] : [0, -6, 0] }}
               transition={{
                 duration: 5 + (index % 4),

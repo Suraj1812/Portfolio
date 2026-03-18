@@ -1,23 +1,45 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, Sparkles, Star } from "lucide-react";
+import { ArrowDown, Github, Linkedin, Mail, Phone, Sparkles } from "lucide-react";
 import { useRef } from "react";
 
 import { AnimatedButton } from "@/components/animated-button";
 import { MagneticButton } from "@/components/magnetic-button";
 import { heroStats } from "@/lib/data";
+import { siteConfig } from "@/lib/site";
 
 const snippet = [
-  "const Suraj = {",
-  "  role: 'Frontend / Full-Stack Engineer',",
-  "  focus: ['scroll storytelling', 'product UI'],",
-  "  stack: ['Next.js', 'React', 'TypeScript', 'GSAP'],",
-  "  style: 'smooth, cinematic, premium',",
+  "const suraj = {",
+  "  role: 'Full-Stack Software Engineer',",
+  "  focus: ['AI-powered apps', 'scalable systems'],",
+  "  stack: ['Next.js', 'React', 'TypeScript', 'Node.js'],",
+  "  style: 'neobrutal, bold, production-ready',",
   "};"
 ];
 
-const orbitTags = ["GSAP ScrollTrigger", "Lenis smooth scroll", "Pinned sections", "Horizontal rails"];
+const contactLinks = [
+  {
+    label: siteConfig.contact.phoneDisplay,
+    href: siteConfig.links.phone,
+    icon: Phone
+  },
+  {
+    label: siteConfig.contact.email,
+    href: siteConfig.links.email,
+    icon: Mail
+  },
+  {
+    label: "LinkedIn",
+    href: siteConfig.links.linkedin,
+    icon: Linkedin
+  },
+  {
+    label: "GitHub",
+    href: siteConfig.links.github,
+    icon: Github
+  }
+] as const;
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -26,83 +48,94 @@ export function HeroSection() {
     offset: ["start start", "end end"]
   });
 
-  const gridY = useTransform(scrollYProgress, [0, 1], [0, 220]);
-  const gridScale = useTransform(scrollYProgress, [0, 1], [1, 1.24]);
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.72, 1], [1, 1, 0.16]);
-  const visualY = useTransform(scrollYProgress, [0, 1], [0, -72]);
-  const visualRotate = useTransform(scrollYProgress, [0, 1], [0, -6]);
-  const visualScale = useTransform(scrollYProgress, [0, 1], [1, 1.18]);
-  const glowY = useTransform(scrollYProgress, [0, 1], [0, -140]);
+  const gridY = useTransform(scrollYProgress, [0, 1], [0, 180]);
+  const gridRotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.72, 1], [1, 1, 0.12]);
+  const visualY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const visualRotate = useTransform(scrollYProgress, [0, 1], [0, 5]);
+  const visualScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  const tagX = useTransform(scrollYProgress, [0, 1], [0, 80]);
 
   return (
     <section
       id="top"
       ref={sectionRef}
-      className="relative h-[180vh] overflow-hidden bg-[#07111f] text-white"
+      className="neo-grid-bg relative h-[170vh] overflow-hidden bg-[var(--paper)]"
     >
       <motion.div
         aria-hidden="true"
-        className="absolute inset-0 bg-grid bg-[size:42px_42px] opacity-25"
-        style={{ y: gridY, scale: gridScale }}
+        className="absolute -left-20 top-28 h-52 w-52 rounded-[2rem] border-4 border-black bg-[var(--cyan)]"
+        style={{ y: gridY, rotate: gridRotate }}
       />
       <motion.div
         aria-hidden="true"
-        className="absolute left-[8%] top-24 h-80 w-80 rounded-full bg-[radial-gradient(circle,_rgba(15,157,154,0.26)_0%,_rgba(15,157,154,0.06)_48%,_transparent_72%)] blur-3xl"
-        style={{ y: glowY }}
+        className="absolute right-[6%] top-24 h-40 w-40 rounded-[1.8rem] border-4 border-black bg-[var(--pink)]"
+        style={{ x: tagX, rotate: visualRotate }}
       />
       <motion.div
         aria-hidden="true"
-        className="absolute right-[4%] top-40 h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle,_rgba(255,122,24,0.22)_0%,_rgba(255,122,24,0.05)_50%,_transparent_72%)] blur-3xl"
+        className="absolute bottom-24 left-[12%] h-28 w-28 rounded-[1.5rem] border-4 border-black bg-[var(--lime)]"
         style={{ y: visualY }}
       />
       <div className="sticky top-0 flex min-h-screen items-center">
-        <div className="relative mx-auto grid w-full max-w-6xl gap-14 px-4 py-28 sm:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:px-8">
+        <div className="relative mx-auto grid w-full max-w-6xl gap-10 px-4 py-28 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:px-8">
           <motion.div style={{ y: contentY, opacity: contentOpacity }}>
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/6 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/75 backdrop-blur">
-              <Sparkles className="h-4 w-4 text-amber-400" />
-              <span>Scroll storytelling portfolio</span>
+            <div className="neo-chip inline-flex items-center gap-2 bg-[var(--yellow)] px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-black">
+              <Sparkles className="h-4 w-4 text-black" />
+              <span>Neobrutalist portfolio system</span>
             </div>
 
-            <h1 className="mt-7 max-w-4xl font-display text-5xl font-semibold leading-[0.92] tracking-tight sm:text-6xl lg:text-7xl">
-              Hi, I&apos;m Suraj Singh.
-              <span className="mt-3 block text-slate-300">
-                I build smooth, scalable web applications with modern UI and cinematic motion.
+            <h1 className="mt-7 max-w-5xl font-display text-5xl font-black uppercase leading-[0.88] tracking-[-0.06em] text-black sm:text-6xl lg:text-7xl">
+              Suraj Singh
+              <span className="mt-4 block max-w-4xl text-2xl leading-tight tracking-[-0.05em] sm:text-3xl lg:text-4xl">
+                {siteConfig.name}
               </span>
             </h1>
 
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
-              Frontend and full-stack engineer focused on premium interfaces, production launches,
-              and the kind of scroll-driven experience that makes a portfolio feel alive.
+            <p className="mt-7 max-w-3xl text-lg leading-8 text-black/75 sm:text-xl">
+              I build product-grade interfaces, AI-assisted workflows, and scalable web systems
+              with strong frontend architecture, bold design direction, and clean implementation.
             </p>
 
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
               <MagneticButton href="#work">View Projects</MagneticButton>
-              <AnimatedButton
-                href="https://github.com/Suraj1812"
-                external
-                variant="secondary"
-                className="border-white/12 bg-white/6 text-white hover:bg-white/10"
-              >
+              <AnimatedButton href={siteConfig.links.github} external variant="secondary">
                 Visit GitHub
               </AnimatedButton>
             </div>
 
             <div className="mt-10 grid gap-4 sm:grid-cols-3">
               {heroStats.map((stat) => (
-                <div
-                  key={stat.label}
-                  className="rounded-3xl border border-white/12 bg-white/6 p-5 backdrop-blur"
-                >
-                  <p className="font-display text-3xl font-semibold text-white">{stat.value}</p>
-                  <p className="mt-1 text-sm text-slate-300">{stat.label}</p>
+                <div key={stat.label} className="neo-panel-sm bg-white p-5">
+                  <p className="font-display text-3xl font-black uppercase text-black">
+                    {stat.value}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold uppercase tracking-[0.12em] text-black/70">
+                    {stat.label}
+                  </p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-10 inline-flex items-center gap-3 text-sm font-medium text-slate-300">
+            <div className="mt-10 grid gap-3 sm:grid-cols-2">
+              {contactLinks.map(({ label, href, icon: Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noreferrer" : undefined}
+                  className="neo-panel-sm flex items-center gap-3 bg-[var(--cream)] px-4 py-3 text-sm font-bold uppercase tracking-[0.1em] text-black"
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="truncate">{label}</span>
+                </a>
+              ))}
+            </div>
+
+            <div className="mt-10 inline-flex items-center gap-3 text-sm font-black uppercase tracking-[0.12em] text-black/70">
               <ArrowDown className="h-4 w-4 animate-bounce" />
-              <span>Scroll to enter the story</span>
+              <span>Scroll to enter the system</span>
             </div>
           </motion.div>
 
@@ -110,54 +143,69 @@ export function HeroSection() {
             style={{ y: visualY, rotate: visualRotate, scale: visualScale }}
             className="relative lg:pt-8"
           >
-            <div className="relative overflow-hidden rounded-[2.2rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.05))] p-5 shadow-[0_30px_120px_rgba(0,0,0,0.25)] backdrop-blur xl:p-6">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(15,157,154,0.22),_transparent_34%),radial-gradient(circle_at_bottom_left,_rgba(255,122,24,0.24),_transparent_34%)]" />
-
-              <div className="relative flex items-center justify-between rounded-2xl border border-white/10 bg-white/8 px-4 py-3">
+            <div className="neo-panel-lg neo-stripes relative overflow-hidden bg-[var(--blue)] p-5 xl:p-6">
+              <div className="relative flex items-center justify-between rounded-[1.1rem] border-4 border-black bg-white px-4 py-3">
                 <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-teal" />
+                  <span className="h-3 w-3 rounded-full border-2 border-black bg-[var(--pink)]" />
+                  <span className="h-3 w-3 rounded-full border-2 border-black bg-[var(--yellow)]" />
+                  <span className="h-3 w-3 rounded-full border-2 border-black bg-[var(--lime)]" />
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <Star className="h-3.5 w-3.5 text-amber-400" />
-                  <span>Scroll System Active</span>
+                <div className="text-xs font-black uppercase tracking-[0.16em] text-black">
+                  Production-ready stack
                 </div>
               </div>
 
-              <div className="relative mt-4 rounded-[1.85rem] bg-[#091220] p-5 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] xl:p-6">
-                <div className="space-y-3 font-mono text-[13px] leading-6 text-slate-200">
+              <div className="relative mt-4 rounded-[1.6rem] border-4 border-black bg-black p-5 text-sm text-white xl:p-6">
+                <div className="space-y-3 font-mono text-[13px] leading-6 text-white">
                   {snippet.map((line, index) => (
                     <div key={line} className="flex items-start gap-4">
-                      <span className="w-4 text-right text-slate-500">{index + 1}</span>
+                      <span className="w-4 text-right text-white/45">{index + 1}</span>
                       <span>{line}</span>
                     </div>
                   ))}
                 </div>
 
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {orbitTags.map((tag, index) => (
-                    <motion.div
-                      key={tag}
-                      className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.24 + index * 0.08, duration: 0.5 }}
-                    >
-                      {tag}
-                    </motion.div>
-                  ))}
+                  {["AI-powered apps", "Scalable systems", "GSAP + Lenis", "React architecture"].map(
+                    (tag, index) => (
+                      <motion.div
+                        key={tag}
+                        className="rounded-[1rem] border-2 border-black bg-[var(--yellow)] px-4 py-3 text-sm font-black uppercase tracking-[0.12em] text-black"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.24 + index * 0.08, duration: 0.5 }}
+                      >
+                        {tag}
+                      </motion.div>
+                    )
+                  )}
                 </div>
               </div>
 
-              <div className="relative mt-5 rounded-[1.85rem] border border-white/10 bg-white/8 p-5">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300">
-                  Portfolio feel
+              <div className="relative mt-5 grid gap-4 sm:grid-cols-2">
+                <div className="neo-panel-sm bg-[var(--pink)] p-5 text-black">
+                  <p className="text-xs font-black uppercase tracking-[0.22em]">Core promise</p>
+                  <p className="mt-3 text-sm leading-7">
+                    Build product experiences that feel memorable without sacrificing clarity,
+                    performance, or engineering discipline.
+                  </p>
+                </div>
+                <div className="neo-panel-sm bg-[var(--lime)] p-5 text-black">
+                  <p className="text-xs font-black uppercase tracking-[0.22em]">What this shows</p>
+                  <p className="mt-3 text-sm leading-7">
+                    Client delivery, experimental range, AI product direction, and a frontend
+                    system with a point of view.
+                  </p>
+                </div>
+              </div>
+
+              <div className="neo-panel-sm relative mt-5 bg-white p-5">
+                <p className="text-xs font-black uppercase tracking-[0.22em] text-black">
+                  Shipping focus
                 </p>
-                <p className="mt-3 max-w-lg text-sm leading-7 text-slate-200">
-                  Think premium SaaS landing page energy: sticky hero, pinned story sections,
-                  horizontal project movement, and interactions that feel deliberate all the way
-                  through.
+                <p className="mt-3 max-w-lg text-sm leading-7 text-black/75">
+                  Full-stack software engineer with strong frontend instincts, real client launches,
+                  and a growing focus on AI-powered product workflows.
                 </p>
               </div>
             </div>

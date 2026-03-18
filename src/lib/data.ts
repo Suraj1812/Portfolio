@@ -32,7 +32,7 @@ export type FeaturedProject = {
 };
 
 export const navItems: NavItem[] = [
-  { label: "Story", href: "#about" },
+  { label: "About", href: "#about" },
   { label: "Projects", href: "#work" },
   { label: "Clients", href: "#clients" },
   { label: "Lab", href: "#lab" },
@@ -42,57 +42,57 @@ export const navItems: NavItem[] = [
 ];
 
 export const tickerItems = [
+  "Full-Stack Software Engineer",
+  "AI-Powered Applications",
+  "Scalable Web Systems",
+  "Neobrutalist UI Systems",
   "GSAP ScrollTrigger",
-  "Lenis Smooth Scroll",
-  "Pinned Storytelling",
-  "Horizontal Project Rails",
-  "React + TypeScript",
-  "Tailwind Systems",
-  "Framer Motion",
-  "Responsive UI Engineering",
-  "Frontend Architecture",
-  "Launch-Ready Product Work"
+  "Next.js 16 + React 19",
+  "TypeScript Architecture",
+  "Production Client Delivery",
+  "Responsive Product Engineering",
+  "Bold Interaction Design"
 ];
 
 export const heroStats = [
-  { value: "10+", label: "Client launches" },
-  { value: "40+", label: "Personal experiments" },
-  { value: "100%", label: "Motion-first interfaces" }
+  { value: "10+", label: "Production projects" },
+  { value: "40+", label: "Personal builds" },
+  { value: "AI + Web", label: "Delivery focus" }
 ];
 
 export const storySteps: StoryStep[] = [
   {
     id: "intro",
-    label: "01 / Scroll Start",
-    title: "Open with a sticky hero that feels like a product launch, not a resume.",
+    label: "01 / Brutal Clarity",
+    title: "Lead with bold messaging, hard contrast, and a product story that feels intentional.",
     description:
-      "The first viewport should carry confidence immediately: strong typography, a living grid, and motion that reacts to scroll instead of waiting for clicks.",
+      "The portfolio opens like a landing page, not a template. Strong type, strict borders, and bright blocks make the message impossible to miss from the first viewport.",
     detail:
-      "I like using layered depth, paced reveals, and subtle zoom to make the entry feel cinematic while still keeping the message clear in the first few seconds.",
-    highlights: ["Sticky hero pacing", "Layered motion", "Immediate product feel"],
-    accent: "from-cyan-400 via-teal-500 to-emerald-500"
+      "Even with a louder visual system, the structure stays clean: headline, proof, contact paths, and a clear sense of the problems I like solving.",
+    highlights: ["Hard-shadow layout", "Clear first-fold proof", "Fast contact access"],
+    accent: "bg-[var(--yellow)]"
   },
   {
     id: "systems",
     label: "02 / Build Systems",
-    title: "Use the scroll to reveal frontend systems, not just sections stacked one after another.",
+    title: "Show reusable systems, AI integration thinking, and frontend architecture as one story.",
     description:
-      "Instead of listing skills plainly, I turn them into a guided story about motion, reusable components, performance, and how interface decisions scale.",
+      "Instead of dumping a skills list, the middle of the page explains how I build modern applications: component systems, API-backed flows, motion, and scalable UI decisions.",
     detail:
-      "That is where floating tech elements, reveal blocks, and tighter rhythm help the page feel intentional instead of template-driven.",
-    highlights: ["Reusable primitives", "Animated stack cloud", "Responsive polish"],
-    accent: "from-amber-300 via-orange-500 to-rose-500"
+      "That balance matters for AI-powered products especially, because the UI has to feel expressive while still being understandable, maintainable, and fast.",
+    highlights: ["Reusable primitives", "AI product UX", "Responsive engineering"],
+    accent: "bg-[var(--cyan)]"
   },
   {
     id: "delivery",
-    label: "03 / Ship Product Work",
-    title: "Transition into proof: production launches, client outcomes, and experiments with range.",
+    label: "03 / Ship Outcomes",
+    title: "Back the visual identity with real launches, shipped client work, and experiments that prove range.",
     description:
-      "The story works best when the visual style leads naturally into real projects, shipped sites, and ideas that show both product discipline and creative range.",
+      "The portfolio still has to do the real work: show production experience, working products, experiments, and enough technical depth to support serious conversations.",
     detail:
-      "That is why the portfolio shifts from narrative into a pinned horizontal project rail and then into real client work, GitHub activity, and collaboration.",
-    highlights: ["Project transitions", "Client-ready delivery", "Awwwards-style energy"],
-    accent: "from-sky-300 via-indigo-500 to-violet-600"
+      "That is why the page moves from story into proof, then into client delivery, GitHub activity, and direct ways to connect for product or freelance work.",
+    highlights: ["Pinned project rail", "Client-ready delivery", "Public build history"],
+    accent: "bg-[var(--lime)]"
   }
 ];
 
@@ -100,7 +100,7 @@ export const featuredProjects: FeaturedProject[] = [
   {
     slug: "solar-system",
     title: "Solar System Explorer",
-    tagline: "An immersive space experience built around cinematic movement.",
+    tagline: "An immersive educational experience shaped around interaction, story, and motion systems.",
     description:
       "A motion-rich storytelling interface that turns planetary data into a playful educational journey with layered depth and smooth pacing.",
     category: "Interactive Experience",
@@ -118,13 +118,13 @@ export const featuredProjects: FeaturedProject[] = [
       "A component-first experience with layered scenes, motion-driven transitions, and responsive fallbacks for smaller screens.",
     impact:
       "Shows how I approach visually ambitious UI while keeping the browsing flow clear and performant.",
-    accent: "from-sky-300 via-cyan-500 to-blue-700",
+    accent: "bg-[var(--cyan)]",
     metrics: ["Story-driven UI", "3D-inspired feel", "Performance-aware"]
   },
   {
     slug: "chatapp",
     title: "Realtime Chat App",
-    tagline: "A clean communication product with live interaction patterns.",
+    tagline: "A full-stack messaging product with realtime flows and product-style interaction states.",
     description:
       "A full-stack chat experience focused on responsive messaging flows, presence, and a modern interface that feels immediate.",
     category: "Full-Stack Product",
@@ -142,13 +142,13 @@ export const featuredProjects: FeaturedProject[] = [
       "Frontend views are organized around reusable messaging patterns and stateful UI pieces to keep the experience consistent.",
     impact:
       "Highlights my ability to build product UI beyond static landing pages and connect it to live behaviors.",
-    accent: "from-emerald-300 via-teal-500 to-cyan-700",
+    accent: "bg-[var(--orange)]",
     metrics: ["Realtime feel", "Full-stack flow", "Product UI"]
   },
   {
     slug: "aipedia",
     title: "AIPedia",
-    tagline: "An AI-focused product surface designed to feel sharp and understandable.",
+    tagline: "An AI-focused product surface designed to keep complex information usable and fast to scan.",
     description:
       "A knowledge-driven interface that balances content density with clarity, using clean hierarchy and guided interaction patterns.",
     category: "AI Product",
@@ -166,13 +166,13 @@ export const featuredProjects: FeaturedProject[] = [
       "Built around reusable content modules and focused spacing rules so a complex information surface stays easy to scan.",
     impact:
       "Demonstrates how I shape AI products into interfaces that feel practical, friendly, and premium.",
-    accent: "from-amber-200 via-orange-400 to-rose-600",
+    accent: "bg-[var(--pink)]",
     metrics: ["AI UX", "Readable density", "Clear navigation"]
   },
   {
     slug: "dattamsha",
     title: "Dattamsha Data Labs",
-    tagline: "A polished business-facing website with confident product framing.",
+    tagline: "A polished business-facing website with strong product framing and conversion-minded structure.",
     description:
       "A marketing and services experience built to present data-led value clearly, with strong section pacing and refined visual hierarchy.",
     category: "Business Website",
@@ -190,13 +190,13 @@ export const featuredProjects: FeaturedProject[] = [
       "Structured with reusable landing-page building blocks that support fast future iteration without losing consistency.",
     impact:
       "Shows how I translate product positioning into an interface that feels mature and ready for customers.",
-    accent: "from-lime-200 via-emerald-400 to-teal-700",
+    accent: "bg-[var(--yellow)]",
     metrics: ["SaaS tone", "Conversion clarity", "Reusable system"]
   },
   {
     slug: "wildverse",
     title: "Wildverse",
-    tagline: "A bold visual concept with editorial rhythm and immersive cards.",
+    tagline: "A bold visual concept with editorial pacing, immersive cards, and stronger visual identity.",
     description:
       "An experiment in expressive layout, visual storytelling, and motion-led browsing built to feel memorable rather than generic.",
     category: "Creative Experiment",
@@ -214,13 +214,13 @@ export const featuredProjects: FeaturedProject[] = [
       "The design system leans on modular cards and controlled motion sequences so the visual style stays coherent across breakpoints.",
     impact:
       "A strong example of experimentation that still respects navigation, readability, and performance.",
-    accent: "from-fuchsia-300 via-rose-500 to-orange-500",
+    accent: "bg-[var(--lime)]",
     metrics: ["Editorial layout", "Creative motion", "Memorable feel"]
   },
   {
     slug: "brutal-design",
     title: "Brutal Design",
-    tagline: "A sharp UI experiment built to feel unapologetically distinctive.",
+    tagline: "A sharp UI experiment built to feel unapologetically distinctive and structurally clear.",
     description:
       "A design-led interface exploring heavier typography, strong contrast, and deliberate interaction cues without losing usability.",
     category: "UI Experiment",
@@ -238,7 +238,7 @@ export const featuredProjects: FeaturedProject[] = [
       "Visual identity is carried by reusable blocks, allowing the experiment to stay expressive without becoming inconsistent.",
     impact:
       "Shows range in visual direction and a willingness to build interfaces that feel intentional instead of template-driven.",
-    accent: "from-stone-200 via-zinc-500 to-slate-900",
+    accent: "bg-[var(--blue)]",
     metrics: ["Bold visuals", "Experimental UI", "Strong hierarchy"]
   }
 ];
@@ -252,7 +252,7 @@ export const clientProjects = [
     stack: ["React", "Responsive UI", "Brand Systems"]
   },
   {
-    name: "Securethread",
+    name: "SecureThread",
     url: "https://www.securethread.io/",
     focus: "Security product presentation",
     summary: "A product site where trust, clarity, and strong hierarchy matter just as much as speed.",
@@ -298,33 +298,33 @@ export const clientProjects = [
 export const uiExperiments = [
   {
     title: "Solar storytelling",
-    description: "Layered motion, cinematic reveals, and interface depth inspired by spatial exploration.",
+    description: "A bold experiment in layered storytelling, immersive pacing, and interactive scene-building.",
     link: "https://the-solar-system-six.vercel.app/"
   },
   {
     title: "Wildverse energy",
-    description: "A more expressive design direction with richer card movement and editorial pacing.",
+    description: "A louder visual direction with expressive composition, vivid cards, and a more editorial rhythm.",
     link: "https://wildverse-theta.vercel.app/"
   },
   {
     title: "Brutal layouts",
-    description: "An experiment in strong contrast, oversized typography, and deliberate interaction edges.",
+    description: "An experiment in hard contrast, oversized type, and a neobrutalist system that still feels usable.",
     link: "https://brutal-design.vercel.app/"
   },
   {
     title: "Fashion-forward UI",
-    description: "A cleaner premium look exploring product framing, styling, and luxury-inspired visual rhythm.",
+    description: "A styling exercise around product framing, premium rhythm, and a more editorial commerce presentation.",
     link: "https://black-meds-premium-fashion-collecti.vercel.app/"
   }
 ];
 
 export const skills = [
-  { label: "React", level: 95, detail: "Component architecture and scalable UI patterns" },
-  { label: "Next.js", level: 92, detail: "App Router builds, landing pages, and production-ready structure" },
-  { label: "TypeScript", level: 86, detail: "Typed frontend systems and safer reusable components" },
-  { label: "Motion Design", level: 91, detail: "Framer Motion, GSAP, scroll choreography, and micro-interactions" },
-  { label: "Tailwind CSS", level: 94, detail: "Fast design systems with consistent spacing and token-driven styling" },
-  { label: "Full-Stack Integration", level: 84, detail: "Connecting UI to APIs, auth flows, and backend-driven products" }
+  { label: "React + Next.js", level: 95, detail: "App Router architecture, reusable UI systems, and scalable frontend delivery" },
+  { label: "TypeScript", level: 88, detail: "Typed design systems, safer refactors, and maintainable product code" },
+  { label: "AI Product UX", level: 84, detail: "Clear interfaces for AI-assisted flows, content density, and prompt-backed products" },
+  { label: "Motion Systems", level: 91, detail: "GSAP, Framer Motion, scroll choreography, and intentional interaction design" },
+  { label: "Tailwind CSS", level: 94, detail: "Fast token-driven styling with a strong eye for consistent visual systems" },
+  { label: "Full-Stack Delivery", level: 86, detail: "Connecting UI to APIs, auth, business logic, and production-ready integrations" }
 ];
 
 export const techCloud = [
@@ -337,10 +337,11 @@ export const techCloud = [
   "Lenis",
   "Node.js",
   "REST APIs",
-  "Shadcn UI",
+  "OpenAI APIs",
   "Responsive UI",
   "Vercel",
   "Three.js",
-  "Spline",
-  "JavaScript"
+  "JavaScript",
+  "UI Systems",
+  "Scalable Apps"
 ];

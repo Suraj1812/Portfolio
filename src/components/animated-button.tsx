@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import { ArrowUpRight } from "lucide-react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
@@ -23,22 +22,22 @@ export function AnimatedButton({
   external = false
 }: AnimatedButtonProps) {
   return (
-    <motion.div whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }}>
-      <Link
+    <motion.div whileHover={{ x: 4, y: -4 }} whileTap={{ scale: 0.98 }}>
+      <a
         href={href}
         target={external ? "_blank" : undefined}
         rel={external ? "noreferrer" : undefined}
         className={cn(
-          "group inline-flex items-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold transition-all duration-300",
+          "group inline-flex items-center gap-2 border-4 px-5 py-3 text-sm font-black uppercase tracking-[0.16em] transition-transform duration-200",
           variant === "primary"
-            ? "border-transparent bg-navy text-shell shadow-glow"
-            : "border-ink/10 bg-white/75 text-ink backdrop-blur hover:border-ink/20 hover:bg-white",
+            ? "rounded-[1.15rem] border-black bg-[var(--yellow)] text-black shadow-[8px_8px_0_#111111]"
+            : "rounded-[1.15rem] border-black bg-white text-black shadow-[8px_8px_0_#111111]",
           className
         )}
       >
         <span>{children}</span>
         <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-      </Link>
+      </a>
     </motion.div>
   );
 }

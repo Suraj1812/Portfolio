@@ -7,6 +7,18 @@
   --font-display:
     "Space Grotesk Variable", "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
   --font-body: "Manrope Variable", "Inter", "Segoe UI", sans-serif;
+  --paper: #fff9ef;
+  --ink: #111111;
+  --yellow: #ffe45e;
+  --pink: #ff6ad5;
+  --cyan: #63e6ff;
+  --lime: #b8ff5a;
+  --orange: #ff8b3d;
+  --blue: #5f7cff;
+  --cream: #fff1c9;
+  --shadow-sm: 4px 4px 0 var(--ink);
+  --shadow-md: 8px 8px 0 var(--ink);
+  --shadow-lg: 14px 14px 0 var(--ink);
 }
 
 html {
@@ -15,11 +27,12 @@ html {
 
 body {
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, rgba(15, 157, 154, 0.12), transparent 24%),
-    radial-gradient(circle at top right, rgba(255, 122, 24, 0.12), transparent 26%),
-    linear-gradient(180deg, #fbf8f2 0%, #f5efe6 45%, #f2ece4 100%);
-  color: #111827;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(rgba(17, 17, 17, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 17, 17, 0.08) 1px, transparent 1px);
+  background-size: 30px 30px;
+  color: var(--ink);
   overflow-x: hidden;
 }
 
@@ -28,8 +41,8 @@ body {
 }
 
 *::selection {
-  background: rgba(255, 122, 24, 0.24);
-  color: #111827;
+  background: var(--yellow);
+  color: var(--ink);
 }
 
 a {
@@ -45,6 +58,10 @@ select {
 }
 
 @layer base {
+  :target {
+    scroll-margin-top: 7rem;
+  }
+
   h1,
   h2,
   h3,
@@ -60,6 +77,55 @@ select {
 }
 
 @layer utilities {
+  .neo-panel {
+    border: 3px solid var(--ink);
+    border-radius: 1.5rem;
+    box-shadow: var(--shadow-md);
+  }
+
+  .neo-panel-lg {
+    border: 4px solid var(--ink);
+    border-radius: 2rem;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .neo-panel-sm {
+    border: 3px solid var(--ink);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .neo-chip {
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .neo-shadow {
+    box-shadow: var(--shadow-md);
+  }
+
+  .neo-shadow-lg {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .neo-grid-bg {
+    background-image:
+      linear-gradient(rgba(17, 17, 17, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(17, 17, 17, 0.12) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .neo-stripes {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(17, 17, 17, 0.08),
+      rgba(17, 17, 17, 0.08) 12px,
+      transparent 12px,
+      transparent 24px
+    );
+  }
+
   .text-balance {
     text-wrap: balance;
   }

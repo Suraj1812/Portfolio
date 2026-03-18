@@ -1,7 +1,6 @@
 "use client";
 
 import type { MouseEvent, ReactNode } from "react";
-import Link from "next/link";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
@@ -42,22 +41,22 @@ export function MagneticButton({
 
   return (
     <motion.div style={{ x: springX, y: springY }} whileTap={{ scale: 0.98 }}>
-      <Link
+      <a
         href={href}
         target={external ? "_blank" : undefined}
         rel={external ? "noreferrer" : undefined}
         onMouseMove={handleMove}
         onMouseLeave={reset}
         className={cn(
-          "group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-ember via-orange-500 to-amber-400 px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_50px_rgba(255,122,24,0.35)] transition-all duration-300 hover:shadow-[0_24px_70px_rgba(255,122,24,0.42)]",
+          "group inline-flex items-center gap-3 rounded-[1.2rem] border-4 border-black bg-[var(--pink)] px-6 py-3 text-sm font-black uppercase tracking-[0.16em] text-black shadow-[10px_10px_0_#111111] transition-all duration-200",
           className
         )}
       >
         <span>{children}</span>
-        <span className="rounded-full bg-white/18 p-1.5 backdrop-blur transition-transform duration-300 group-hover:translate-x-1">
+        <span className="rounded-full border-2 border-black bg-white p-1.5 transition-transform duration-300 group-hover:translate-x-1">
           <ArrowRight className="h-4 w-4" />
         </span>
-      </Link>
+      </a>
     </motion.div>
   );
 }

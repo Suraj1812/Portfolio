@@ -7,24 +7,35 @@ const rawSiteUrl =
 const normalizedSiteUrl = rawSiteUrl.startsWith("http") ? rawSiteUrl : `https://${rawSiteUrl}`;
 
 export const siteConfig = {
-  name: "Suraj Singh | Frontend Portfolio",
-  shortName: "Suraj Portfolio",
+  name: "Full-Stack Software Engineer | AI-Powered Applications | Building Scalable Web & AI Systems",
+  shortName: "Suraj Singh",
   description:
-    "Production-ready frontend portfolio for Suraj Singh featuring scroll storytelling, GSAP-powered motion, curated client work, and premium React/Next.js UI engineering.",
+    "Production-ready neobrutalist portfolio for Suraj Singh, a full-stack software engineer building scalable web platforms, AI-powered applications, and bold user interfaces.",
   url: normalizedSiteUrl.replace(/\/$/, ""),
   ogImage: "/opengraph-image",
   links: {
-    github: "https://github.com/Suraj1812"
+    github: "https://github.com/Suraj1812",
+    linkedin: "https://www.linkedin.com/in/suraj-singh-0695ba371/",
+    email: "mailto:singhsuraj44500@gmail.com",
+    phone: "tel:+919625553534"
+  },
+  contact: {
+    email: "singhsuraj44500@gmail.com",
+    phoneDisplay: "+91 9625553534",
+    phoneRaw: "+919625553534"
   },
   keywords: [
     "Suraj Singh",
-    "Frontend Engineer",
     "Full-Stack Engineer",
+    "Software Engineer",
+    "AI-Powered Applications",
+    "Scalable Web Systems",
     "Next.js Portfolio",
     "React Portfolio",
-    "GSAP Portfolio",
-    "Scroll Storytelling",
-    "Frontend Developer India"
+    "TypeScript Portfolio",
+    "Neobrutalism Portfolio",
+    "Frontend Developer India",
+    "AI Engineer Portfolio"
   ]
 } as const;
 

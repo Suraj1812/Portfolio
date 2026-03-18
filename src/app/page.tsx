@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowUpRight, Github } from "lucide-react";
+import { ArrowUpRight, Github, Linkedin, Mail, Phone } from "lucide-react";
 
 import { AnimatedButton } from "@/components/animated-button";
 import { CreativeLab } from "@/components/creative-lab";
@@ -21,7 +21,7 @@ import {
   tickerItems,
   uiExperiments
 } from "@/lib/data";
-import { absoluteUrl, siteConfig } from "@/lib/site";
+import { siteConfig } from "@/lib/site";
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -30,17 +30,29 @@ const structuredData = {
       "@type": "Person",
       name: "Suraj Singh",
       url: siteConfig.url,
-      sameAs: [siteConfig.links.github],
-      jobTitle: "Frontend / Full-Stack Engineer",
+      sameAs: [siteConfig.links.github, siteConfig.links.linkedin],
+      jobTitle: "Full-Stack Software Engineer",
       description: siteConfig.description,
+      email: siteConfig.contact.email,
+      telephone: siteConfig.contact.phoneRaw,
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "sales",
+          email: siteConfig.contact.email,
+          telephone: siteConfig.contact.phoneRaw
+        }
+      ],
       knowsAbout: [
         "Next.js",
         "React",
         "TypeScript",
+        "AI Applications",
         "GSAP",
         "Framer Motion",
         "Frontend Architecture",
-        "Responsive Web Design"
+        "Responsive Web Design",
+        "Scalable Web Systems"
       ]
     },
     {
@@ -77,13 +89,13 @@ export default function HomePage() {
         <ScrollStory steps={storySteps} />
         <HorizontalProjects projects={featuredProjects} />
 
-        <section id="clients" className="px-4 py-24 sm:px-6 lg:px-8">
+        <section id="clients" className="bg-[var(--cream)] px-4 py-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <ScrollReveal>
               <SectionHeading
                 eyebrow="Client Work"
-                title="Real production work that backs up the narrative with shipped outcomes."
-                description="These projects show the other side of the portfolio: delivery, responsiveness, product framing, and interfaces built for actual users and businesses."
+                title="Real production work behind the visual system."
+                description="These launches show the business side of the portfolio too: real delivery, real users, product framing, and interfaces built to support live companies."
               />
             </ScrollReveal>
 
@@ -95,19 +107,23 @@ export default function HomePage() {
                       href={project.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="group flex h-full flex-col rounded-[1.75rem] border border-white/70 bg-white/75 p-6 shadow-card backdrop-blur"
+                      className="neo-panel-lg group flex h-full flex-col bg-white p-6"
                     >
                       <div className="flex items-center justify-between gap-4">
-                        <p className="font-display text-xl font-semibold text-ink">{project.name}</p>
-                        <ArrowUpRight className="h-5 w-5 text-slate transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />
+                        <p className="font-display text-xl font-black uppercase tracking-[-0.03em] text-black">
+                          {project.name}
+                        </p>
+                        <ArrowUpRight className="h-5 w-5 text-black transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />
                       </div>
-                      <p className="mt-3 text-sm font-medium text-ember">{project.focus}</p>
-                      <p className="mt-4 text-sm leading-7 text-slate">{project.summary}</p>
+                      <p className="mt-3 text-sm font-black uppercase tracking-[0.12em] text-black/70">
+                        {project.focus}
+                      </p>
+                      <p className="mt-4 text-sm leading-7 text-black/75">{project.summary}</p>
                       <div className="mt-5 flex flex-wrap gap-2">
                         {project.stack.map((item) => (
                           <span
                             key={item}
-                            className="rounded-full border border-ink/10 bg-shell px-3 py-1 text-xs font-medium text-slate"
+                            className="neo-chip bg-[var(--yellow)] px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-black"
                           >
                             {item}
                           </span>
@@ -128,8 +144,8 @@ export default function HomePage() {
             <ScrollReveal>
               <SectionHeading
                 eyebrow="Tech Stack"
-                title="A focused stack for premium frontend experiences and motion-heavy product work."
-                description="Next.js, React, TypeScript, Tailwind, Framer Motion, GSAP, and Lenis stay at the center so the build can feel expressive without becoming hard to maintain."
+                title="A focused stack for product UI, scalable systems, and AI-assisted applications."
+                description="Next.js, React, TypeScript, Tailwind, GSAP, Framer Motion, and API-driven full-stack work stay at the center so the build looks strong and still ships cleanly."
               />
             </ScrollReveal>
 
@@ -139,17 +155,17 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section id="github" className="px-4 py-24 sm:px-6 lg:px-8">
+        <section id="github" className="bg-[var(--blue)] px-4 py-24 sm:px-6 lg:px-8">
           <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.95fr_1.05fr]">
             <ScrollReveal>
               <SectionHeading
                 eyebrow="GitHub"
-                title="Real developer activity, experiments, and ongoing frontend exploration."
-                description="GitHub is where the public side of the work lives: experiments, shipped ideas, prototypes, and the habit of building beyond client deadlines."
+                title="Public build activity, experiments, and ongoing engineering output."
+                description="GitHub is where the public side of the work lives: experiments, shipped ideas, prototypes, and the habit of building beyond project deadlines."
               />
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <AnimatedButton href="https://github.com/Suraj1812" external>
+                <AnimatedButton href={siteConfig.links.github} external>
                   Explore GitHub
                 </AnimatedButton>
                 <AnimatedButton href="#contact" variant="secondary">
@@ -160,24 +176,24 @@ export default function HomePage() {
 
             <ScrollReveal delay={0.1}>
               <div className="grid gap-5">
-                <div className="overflow-hidden rounded-[2rem] border border-white/70 bg-white/75 p-4 shadow-card backdrop-blur">
+                <div className="neo-panel-lg overflow-hidden bg-white p-4">
                   <Image
                     src="https://github-readme-stats.vercel.app/api?username=Suraj1812&show_icons=true&hide_border=true&bg_color=00000000&title_color=111827&text_color=475569&icon_color=0f9d9a"
                     alt="GitHub stats for Suraj Singh"
                     width={1200}
                     height={500}
                     unoptimized
-                    className="h-auto w-full rounded-[1.25rem]"
+                    className="h-auto w-full rounded-[1rem] border-4 border-black"
                   />
                 </div>
-                <div className="overflow-hidden rounded-[2rem] border border-white/70 bg-white/75 p-4 shadow-card backdrop-blur">
+                <div className="neo-panel-lg overflow-hidden bg-[var(--yellow)] p-4">
                   <Image
                     src="https://github-readme-stats.vercel.app/api/top-langs/?username=Suraj1812&layout=compact&hide_border=true&bg_color=00000000&title_color=111827&text_color=475569"
                     alt="Top languages for Suraj Singh"
                     width={1200}
                     height={420}
                     unoptimized
-                    className="h-auto w-full rounded-[1.25rem]"
+                    className="h-auto w-full rounded-[1rem] border-4 border-black"
                   />
                 </div>
               </div>
@@ -188,33 +204,71 @@ export default function HomePage() {
         <section id="contact" className="px-4 pb-24 pt-10 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <ScrollReveal>
-              <div className="relative overflow-hidden rounded-[2.25rem] border border-white/70 bg-navy px-6 py-10 text-white shadow-[0_30px_120px_rgba(15,23,42,0.24)] sm:px-10 sm:py-12">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(15,157,154,0.24),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(255,122,24,0.28),_transparent_36%)]" />
+              <div className="neo-panel-lg relative overflow-hidden bg-[var(--orange)] px-6 py-10 text-black sm:px-10 sm:py-12">
                 <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
                   <div>
-                    <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-white/80">
+                    <div className="neo-chip inline-flex items-center gap-2 bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.22em] text-black">
                       <Github className="h-3.5 w-3.5" />
                       <span>Available for collaboration</span>
                     </div>
-                    <h2 className="mt-5 max-w-3xl font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-                      Let&apos;s build something smooth, premium, and impossible to ignore.
+                    <h2 className="mt-5 max-w-3xl font-display text-3xl font-black uppercase tracking-[-0.05em] sm:text-4xl">
+                      Let&apos;s build scalable web products and AI-powered systems that actually ship.
                     </h2>
-                    <p className="mt-4 max-w-2xl text-base leading-8 text-slate-200">
-                      If you want a frontend experience with stronger motion, cleaner structure,
-                      and a more cinematic feel, this portfolio is already showing the direction I
-                      like to build in.
+                    <p className="mt-4 max-w-2xl text-base leading-8 text-black/80">
+                      If you need a full-stack engineer who can handle product UI, frontend
+                      systems, integration work, and a sharper design direction, I&apos;m ready to
+                      talk.
                     </p>
+
+                    <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                      <a
+                        href={siteConfig.links.phone}
+                        className="neo-panel-lg flex items-center gap-3 bg-white px-4 py-4 text-sm font-black uppercase tracking-[0.1em] text-black"
+                      >
+                        <Phone className="h-4 w-4" />
+                        {siteConfig.contact.phoneDisplay}
+                      </a>
+                      <a
+                        href={siteConfig.links.email}
+                        className="neo-panel-lg flex items-center gap-3 bg-[var(--yellow)] px-4 py-4 text-sm font-black uppercase tracking-[0.1em] text-black"
+                      >
+                        <Mail className="h-4 w-4" />
+                        {siteConfig.contact.email}
+                      </a>
+                      <a
+                        href={siteConfig.links.linkedin}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="neo-panel-lg flex items-center gap-3 bg-[var(--cyan)] px-4 py-4 text-sm font-black uppercase tracking-[0.1em] text-black"
+                      >
+                        <Linkedin className="h-4 w-4" />
+                        LinkedIn
+                      </a>
+                      <a
+                        href={siteConfig.links.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="neo-panel-lg flex items-center gap-3 bg-[var(--lime)] px-4 py-4 text-sm font-black uppercase tracking-[0.1em] text-black"
+                      >
+                        <Github className="h-4 w-4" />
+                        GitHub
+                      </a>
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-4 sm:flex-row lg:flex-col">
-                    <AnimatedButton
-                      href="https://github.com/Suraj1812"
-                      external
-                      className="justify-center bg-white text-ink hover:bg-shell"
-                    >
+                    <AnimatedButton href={siteConfig.links.github} external className="justify-center">
                       GitHub Profile
                     </AnimatedButton>
-                    <AnimatedButton href="#work" variant="secondary" className="justify-center border-white/15 bg-white/8 text-white hover:bg-white/12">
+                    <AnimatedButton
+                      href={siteConfig.links.linkedin}
+                      external
+                      variant="secondary"
+                      className="justify-center"
+                    >
+                      LinkedIn
+                    </AnimatedButton>
+                    <AnimatedButton href="#work" variant="secondary" className="justify-center">
                       Featured Work
                     </AnimatedButton>
                   </div>
@@ -222,10 +276,6 @@ export default function HomePage() {
               </div>
             </ScrollReveal>
           </div>
-        </section>
-
-        <section className="sr-only">
-          <a href={absoluteUrl("/sitemap.xml")}>Sitemap</a>
         </section>
       </main>
     </>

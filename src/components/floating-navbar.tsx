@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Github } from "lucide-react";
+import { Github, Phone } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 
 import { navItems } from "@/lib/data";
+import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export function FloatingNavbar() {
@@ -25,17 +26,20 @@ export function FloatingNavbar() {
     >
       <div
         className={cn(
-          "flex w-full max-w-6xl items-center justify-between rounded-full border px-3 py-2 transition-all duration-300 sm:px-4",
-          "border-white/10 bg-slate-950/55 shadow-[0_18px_60px_rgba(0,0,0,0.18)] backdrop-blur-xl"
+          "neo-panel flex w-full max-w-6xl items-center justify-between bg-[var(--yellow)] px-3 py-2 transition-all duration-300 sm:px-4"
         )}
       >
-        <Link href="#top" className="flex items-center gap-3 rounded-full px-3 py-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-sm font-bold text-ink">
+        <Link href="#top" className="flex items-center gap-3 rounded-[1rem] px-3 py-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-[0.9rem] border-2 border-black bg-white text-sm font-black text-black">
             SS
           </div>
           <div className="hidden sm:block">
-            <p className="font-display text-sm font-semibold text-white">Suraj Singh</p>
-            <p className="text-xs text-slate-300">Frontend / Full-Stack Engineer</p>
+            <p className="font-display text-sm font-black uppercase tracking-[0.12em] text-black">
+              Suraj Singh
+            </p>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-black/70">
+              Full-Stack + AI Systems
+            </p>
           </div>
         </Link>
 
@@ -44,22 +48,31 @@ export function FloatingNavbar() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-full px-4 py-2 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+              className="rounded-[0.9rem] px-4 py-2 text-sm font-bold uppercase tracking-[0.12em] text-black transition-colors hover:bg-white"
             >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <Link
-          href="https://github.com/Suraj1812"
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-ember to-amber-400 px-4 py-2 text-sm font-medium text-white transition-transform hover:-translate-y-0.5"
-        >
-          <Github className="h-4 w-4" />
-          <span className="hidden sm:inline">GitHub</span>
-        </Link>
+        <div className="flex items-center gap-2">
+          <a
+            href={siteConfig.links.phone}
+            className="hidden items-center gap-2 rounded-[0.95rem] border-2 border-black bg-white px-3 py-2 text-sm font-black uppercase tracking-[0.12em] text-black sm:inline-flex"
+          >
+            <Phone className="h-4 w-4" />
+            Call
+          </a>
+          <Link
+            href={siteConfig.links.github}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-[0.95rem] border-2 border-black bg-[var(--cyan)] px-4 py-2 text-sm font-black uppercase tracking-[0.12em] text-black transition-transform hover:-translate-y-0.5"
+          >
+            <Github className="h-4 w-4" />
+            <span className="hidden sm:inline">GitHub</span>
+          </Link>
+        </div>
       </div>
     </motion.header>
   );
