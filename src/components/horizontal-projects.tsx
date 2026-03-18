@@ -118,32 +118,32 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
 
   return (
     <section id="work" ref={sectionRef} className="relative overflow-hidden bg-black py-20 text-white sm:py-24">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl">
-          <div className="neo-chip inline-flex items-center gap-2 bg-[var(--yellow)] px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-black">
-            <Sparkles className="h-4 w-4 text-black" />
-            <span>Horizontal Projects</span>
+      <div ref={stageRef} className="relative flex min-h-screen flex-col justify-center">
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <div className="neo-chip inline-flex items-center gap-2 bg-[var(--yellow)] px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-black">
+              <Sparkles className="h-4 w-4 text-black" />
+              <span>Horizontal Projects</span>
+            </div>
+            <h2 className="mt-6 font-display text-3xl font-black uppercase tracking-[-0.05em] sm:text-4xl lg:text-5xl">
+              Featured work unfolds as a pinned project rail with brutal cards and full breakdowns.
+            </h2>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
+              On desktop, the rail pins and scrolls sideways. On smaller screens it stays readable
+              as a stacked layout, so the interaction still feels intentional without sacrificing
+              usability.
+            </p>
           </div>
-          <h2 className="mt-6 font-display text-3xl font-black uppercase tracking-[-0.05em] sm:text-4xl lg:text-5xl">
-            Featured work unfolds as a pinned project rail with brutal cards and full breakdowns.
-          </h2>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
-            On desktop, the rail pins and scrolls sideways. On smaller screens it stays readable
-            as a stacked layout, so the interaction still feels intentional without sacrificing
-            usability.
-          </p>
         </div>
-      </div>
 
-      <div ref={stageRef} className="relative mt-12 lg:mt-16 lg:flex lg:min-h-screen lg:items-center">
-        <div className="overflow-visible">
+        <div className="mt-12 overflow-visible">
           <div
             ref={railRef}
             className="flex flex-col gap-5 px-4 sm:px-6 lg:w-max lg:flex-row lg:gap-8 lg:px-8"
           >
             <div
               data-project-card
-              className="neo-panel-lg relative flex min-h-[24rem] w-full shrink-0 overflow-hidden bg-white p-6 text-black sm:min-h-[28rem] sm:p-7 lg:w-[26rem] lg:min-h-[28rem]"
+              className="neo-panel-lg relative flex min-h-[26rem] w-full shrink-0 overflow-hidden bg-white p-6 text-black sm:min-h-[30rem] sm:p-7 lg:w-[28rem] lg:min-h-[32rem]"
             >
               <div className="relative z-10 flex h-full flex-col justify-between">
                 <div>
@@ -179,7 +179,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                 type="button"
                 onClick={() => setSelected(project)}
                 className={cn(
-                  "neo-panel-lg group relative flex min-h-[24rem] w-full shrink-0 flex-col overflow-hidden p-5 text-left text-black sm:min-h-[28rem] sm:p-6 lg:w-[34rem] lg:min-h-[28rem] xl:w-[38rem]",
+                  "neo-panel-lg group relative flex min-h-[26rem] w-full shrink-0 flex-col overflow-hidden p-5 text-left text-black sm:min-h-[30rem] sm:p-6 lg:w-[38rem] lg:min-h-[32rem] xl:w-[42rem]",
                   project.accent
                 )}
                 whileHover={{ y: -8 }}
