@@ -182,12 +182,83 @@ select {
   border-color: var(--ink) !important;
 }
 
-:root[data-theme="dark"] [class~="text-black"],
-:root[data-theme="dark"] [class~="text-white"] {
+:root[data-theme="dark"] :is(
+    [class*="bg-[var(--yellow)]"],
+    [class*="bg-[var(--pink)]"],
+    [class*="bg-[var(--cyan)]"],
+    [class*="bg-[var(--lime)]"],
+    [class*="bg-[var(--orange)]"],
+    [class*="bg-[var(--blue)]"]
+  ) {
+  color: #111111;
+}
+
+:root[data-theme="dark"]
+  :is(
+    [class*="bg-[var(--yellow)]"],
+    [class*="bg-[var(--pink)]"],
+    [class*="bg-[var(--cyan)]"],
+    [class*="bg-[var(--lime)]"],
+    [class*="bg-[var(--orange)]"],
+    [class*="bg-[var(--blue)]"]
+  )
+  :is([class~="text-black"], [class~="text-white"]),
+:root[data-theme="dark"]
+  :is(
+    [class*="bg-[var(--yellow)]"],
+    [class*="bg-[var(--pink)]"],
+    [class*="bg-[var(--cyan)]"],
+    [class*="bg-[var(--lime)]"],
+    [class*="bg-[var(--orange)]"],
+    [class*="bg-[var(--blue)]"]
+  ):is([class~="text-black"], [class~="text-white"]) {
+  color: #111111 !important;
+}
+
+:root[data-theme="dark"]
+  :is(
+    [class*="bg-[var(--yellow)]"],
+    [class*="bg-[var(--pink)]"],
+    [class*="bg-[var(--cyan)]"],
+    [class*="bg-[var(--lime)]"],
+    [class*="bg-[var(--orange)]"],
+    [class*="bg-[var(--blue)]"]
+  )
+  :is([class*="text-black/"], [class*="text-white/"]),
+:root[data-theme="dark"]
+  :is(
+    [class*="bg-[var(--yellow)]"],
+    [class*="bg-[var(--pink)]"],
+    [class*="bg-[var(--cyan)]"],
+    [class*="bg-[var(--lime)]"],
+    [class*="bg-[var(--orange)]"],
+    [class*="bg-[var(--blue)]"]
+  ):is([class*="text-black/"], [class*="text-white/"]) {
+  color: rgba(17, 17, 17, 0.76) !important;
+}
+
+:root[data-theme="dark"] :is([class~="bg-white"], [class~="bg-black"], [class*="bg-black/"]) {
+  color: var(--ink);
+}
+
+:root[data-theme="dark"]
+  :is([class~="bg-white"], [class~="bg-black"], [class*="bg-black/"])
+  :is([class~="text-black"], [class~="text-white"]),
+:root[data-theme="dark"]
+  :is([class~="bg-white"], [class~="bg-black"], [class*="bg-black/"]):is(
+    [class~="text-black"],
+    [class~="text-white"]
+  ) {
   color: var(--ink) !important;
 }
 
-:root[data-theme="dark"] [class*="text-black/"],
-:root[data-theme="dark"] [class*="text-white/"] {
+:root[data-theme="dark"]
+  :is([class~="bg-white"], [class~="bg-black"], [class*="bg-black/"])
+  :is([class*="text-black/"], [class*="text-white/"]),
+:root[data-theme="dark"]
+  :is([class~="bg-white"], [class~="bg-black"], [class*="bg-black/"]):is(
+    [class*="text-black/"],
+    [class*="text-white/"]
+  ) {
   color: var(--ink-muted) !important;
 }
