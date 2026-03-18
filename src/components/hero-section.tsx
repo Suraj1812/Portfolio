@@ -78,8 +78,8 @@ export function HeroSection() {
         className="absolute bottom-24 left-[12%] hidden h-28 w-28 rounded-[1.5rem] border-4 border-black bg-[var(--lime)] md:block"
         style={{ y: visualY }}
       />
-      <div className="flex min-h-screen items-center lg:sticky lg:top-0">
-        <div className="relative mx-auto grid w-full max-w-6xl gap-8 px-4 py-24 sm:px-6 sm:py-28 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10 lg:px-8">
+      <div className="flex min-h-screen items-center pt-20 sm:pt-24 lg:sticky lg:top-0 lg:pt-16">
+        <div className="relative mx-auto grid w-full max-w-6xl gap-8 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10 lg:px-8 lg:py-24">
           <motion.div style={{ y: contentY, opacity: contentOpacity }}>
             <h1 className="max-w-5xl font-display text-4xl font-black uppercase leading-[0.9] tracking-[-0.06em] text-black sm:text-5xl lg:text-7xl">
               Suraj Singh
