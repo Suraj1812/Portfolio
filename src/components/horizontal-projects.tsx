@@ -82,8 +82,8 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
             pin: stage,
             scrub: 1,
             anticipatePin: 1,
-            invalidateOnRefresh: true
-          }
+            invalidateOnRefresh: true,
+          },
         });
 
         const cards = gsap.utils.toArray<HTMLElement>("[data-project-card]");
@@ -102,9 +102,9 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                 containerAnimation: tween,
                 start: "left 72%",
                 end: "center center",
-                scrub: true
-              }
-            }
+                scrub: true,
+              },
+            },
           );
         });
       });
@@ -117,24 +117,15 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
   }, [projects.length]);
 
   return (
-    <section id="work" ref={sectionRef} className="relative overflow-hidden bg-black py-20 text-white sm:py-24">
-      <div ref={stageRef} className="relative flex min-h-screen flex-col justify-center">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <div className="neo-chip inline-flex items-center gap-2 bg-[var(--yellow)] px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-black">
-              <Sparkles className="h-4 w-4 text-black" />
-              <span>Horizontal Projects</span>
-            </div>
-            <h2 className="mt-6 font-display text-3xl font-black uppercase tracking-[-0.05em] sm:text-4xl lg:text-5xl">
-              Featured work unfolds as a pinned project rail with brutal cards and full breakdowns.
-            </h2>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
-              On desktop, the rail pins and scrolls sideways. On smaller screens it stays readable
-              as a stacked layout, so the interaction still feels intentional without sacrificing
-              usability.
-            </p>
-          </div>
-        </div>
+    <section
+      id="work"
+      ref={sectionRef}
+      className="relative overflow-hidden bg-black py-20 text-white sm:py-24"
+    >
+      <div
+        ref={stageRef}
+        className="relative flex flex-col justify-center"
+      >
 
         <div className="mt-12 overflow-visible">
           <div
@@ -151,16 +142,22 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                     Scroll instruction
                   </p>
                   <h3 className="mt-5 font-display text-3xl font-black uppercase tracking-[-0.05em]">
-                    Keep scrolling to move through selected projects horizontally.
+                    Keep scrolling to move through selected projects
+                    horizontally.
                   </h3>
                   <p className="mt-5 text-base leading-8 text-black/75">
-                    This is where the portfolio shifts from narrative into proof: shipped product
-                    work, creative experiments, and motion-rich interfaces with stronger personality.
+                    This is where the portfolio shifts from narrative into
+                    proof: shipped product work, creative experiments, and
+                    motion-rich interfaces with stronger personality.
                   </p>
                 </div>
 
                 <div className="grid gap-3">
-                  {["Pinned section", "GSAP ScrollTrigger", "Project detail modal"].map((item) => (
+                  {[
+                    "Pinned section",
+                    "GSAP ScrollTrigger",
+                    "Project detail modal",
+                  ].map((item) => (
                     <div
                       key={item}
                       className="neo-panel-sm bg-[var(--yellow)] px-4 py-3 text-sm font-black uppercase tracking-[0.12em] text-black"
@@ -180,7 +177,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                 onClick={() => setSelected(project)}
                 className={cn(
                   "neo-panel-lg group relative flex min-h-[26rem] w-full shrink-0 flex-col overflow-hidden p-5 text-left text-black sm:min-h-[30rem] sm:p-6 lg:w-[38rem] lg:min-h-[32rem] xl:w-[42rem]",
-                  project.accent
+                  project.accent,
                 )}
                 whileHover={{ y: -8 }}
                 transition={{ duration: 0.3 }}
@@ -199,7 +196,9 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                   </div>
                 </div>
 
-                <p className="mt-5 max-w-2xl text-base leading-8 text-black/80">{project.tagline}</p>
+                <p className="mt-5 max-w-2xl text-base leading-8 text-black/80">
+                  {project.tagline}
+                </p>
 
                 <div className="mt-6 flex flex-wrap gap-2">
                   {project.stack.map((item) => (
@@ -217,7 +216,11 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                     aria-hidden="true"
                     className="absolute -right-10 -top-12 h-36 w-36 rounded-[1.5rem] border-4 border-black bg-[var(--pink)]"
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 20, ease: "linear", repeat: Infinity }}
+                    transition={{
+                      duration: 20,
+                      ease: "linear",
+                      repeat: Infinity,
+                    }}
                   />
                   <motion.div
                     aria-hidden="true"
@@ -287,7 +290,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                 <div
                   className={cn(
                     "neo-panel-lg relative min-h-[18rem] overflow-hidden p-5 text-black sm:min-h-[24rem] sm:p-6",
-                    selected.accent
+                    selected.accent,
                   )}
                 >
                   <div className="relative z-10 flex h-full flex-col justify-between">
@@ -301,7 +304,9 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                       >
                         {selected.title}
                       </h3>
-                      <p className="mt-5 max-w-md text-sm leading-7 text-black/80">{selected.tagline}</p>
+                      <p className="mt-5 max-w-md text-sm leading-7 text-black/80">
+                        {selected.tagline}
+                      </p>
                     </div>
 
                     <div className="grid gap-3">
@@ -321,7 +326,9 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                   <p className="text-xs font-black uppercase tracking-[0.22em] text-black/60">
                     Project overview
                   </p>
-                  <p className="mt-5 text-base leading-8 text-black/80">{selected.description}</p>
+                  <p className="mt-5 text-base leading-8 text-black/80">
+                    {selected.description}
+                  </p>
 
                   <div className="mt-6 flex flex-wrap gap-2">
                     {selected.stack.map((item) => (
@@ -336,7 +343,9 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
 
                   <div className="mt-8 grid gap-5 sm:grid-cols-2">
                     <div className="neo-panel-lg bg-white p-5">
-                      <p className="text-sm font-black uppercase tracking-[0.12em] text-black">Features</p>
+                      <p className="text-sm font-black uppercase tracking-[0.12em] text-black">
+                        Features
+                      </p>
                       <ul className="mt-4 space-y-3 text-sm leading-7 text-black/75">
                         {selected.features.map((feature) => (
                           <li key={feature}>{feature}</li>
@@ -345,14 +354,22 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                     </div>
 
                     <div className="neo-panel-lg bg-[var(--cream)] p-5">
-                      <p className="text-sm font-black uppercase tracking-[0.12em] text-black">Architecture</p>
-                      <p className="mt-4 text-sm leading-7 text-black/75">{selected.architecture}</p>
+                      <p className="text-sm font-black uppercase tracking-[0.12em] text-black">
+                        Architecture
+                      </p>
+                      <p className="mt-4 text-sm leading-7 text-black/75">
+                        {selected.architecture}
+                      </p>
                     </div>
                   </div>
 
                   <div className="neo-panel-lg mt-5 bg-[var(--lime)] p-5">
-                    <p className="text-sm font-black uppercase tracking-[0.12em] text-black">Why it matters</p>
-                    <p className="mt-4 text-sm leading-7 text-black/75">{selected.impact}</p>
+                    <p className="text-sm font-black uppercase tracking-[0.12em] text-black">
+                      Why it matters
+                    </p>
+                    <p className="mt-4 text-sm leading-7 text-black/75">
+                      {selected.impact}
+                    </p>
                   </div>
 
                   <div className="mt-8 flex flex-col gap-3 sm:flex-row">
