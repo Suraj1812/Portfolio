@@ -28,7 +28,7 @@ export function AnimatedButton({
         target={external ? "_blank" : undefined}
         rel={external ? "noreferrer" : undefined}
         className={cn(
-          "group inline-flex items-center gap-2 border-4 px-5 py-3 text-sm font-black uppercase tracking-[0.16em] transition-transform duration-200",
+          "group inline-flex w-full items-center justify-center gap-2 border-4 px-5 py-3 text-center text-sm font-black uppercase tracking-[0.16em] transition-transform duration-200 sm:w-auto",
           variant === "primary"
             ? "rounded-[1.15rem] border-black bg-[var(--yellow)] text-black shadow-[8px_8px_0_#111111]"
             : "rounded-[1.15rem] border-black bg-white text-black shadow-[8px_8px_0_#111111]",

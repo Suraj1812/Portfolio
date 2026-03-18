@@ -117,7 +117,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
   }, [projects.length]);
 
   return (
-    <section id="work" ref={sectionRef} className="relative overflow-hidden bg-black py-24 text-white">
+    <section id="work" ref={sectionRef} className="relative overflow-hidden bg-black py-20 text-white sm:py-24">
       <div ref={stageRef} className="relative flex min-h-screen flex-col justify-center">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
@@ -125,10 +125,10 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
               <Sparkles className="h-4 w-4 text-black" />
               <span>Horizontal Projects</span>
             </div>
-            <h2 className="mt-6 font-display text-4xl font-black uppercase tracking-[-0.05em] sm:text-5xl">
+            <h2 className="mt-6 font-display text-3xl font-black uppercase tracking-[-0.05em] sm:text-4xl lg:text-5xl">
               Featured work unfolds as a pinned project rail with brutal cards and full breakdowns.
             </h2>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-white/75">
+            <p className="mt-5 max-w-2xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
               On desktop, the rail pins and scrolls sideways. On smaller screens it stays readable
               as a stacked layout, so the interaction still feels intentional without sacrificing
               usability.
@@ -143,7 +143,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
           >
             <div
               data-project-card
-              className="neo-panel-lg relative flex min-h-[32rem] w-full shrink-0 overflow-hidden bg-white p-7 text-black lg:w-[28rem]"
+              className="neo-panel-lg relative flex min-h-[26rem] w-full shrink-0 overflow-hidden bg-white p-6 text-black sm:min-h-[30rem] sm:p-7 lg:w-[28rem] lg:min-h-[32rem]"
             >
               <div className="relative z-10 flex h-full flex-col justify-between">
                 <div>
@@ -179,7 +179,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                 type="button"
                 onClick={() => setSelected(project)}
                 className={cn(
-                  "neo-panel-lg group relative flex min-h-[32rem] w-full shrink-0 flex-col overflow-hidden p-6 text-left text-black lg:w-[38rem] xl:w-[42rem]",
+                  "neo-panel-lg group relative flex min-h-[26rem] w-full shrink-0 flex-col overflow-hidden p-5 text-left text-black sm:min-h-[30rem] sm:p-6 lg:w-[38rem] lg:min-h-[32rem] xl:w-[42rem]",
                   project.accent
                 )}
                 whileHover={{ y: -8 }}
@@ -190,7 +190,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                     <p className="text-xs font-black uppercase tracking-[0.22em] text-black/65">
                       {project.category}
                     </p>
-                    <h3 className="mt-4 font-display text-3xl font-black uppercase tracking-[-0.05em]">
+                    <h3 className="mt-4 font-display text-2xl font-black uppercase tracking-[-0.05em] sm:text-3xl">
                       {project.title}
                     </h3>
                   </div>
@@ -226,7 +226,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                     transition={{ duration: 4.2, repeat: Infinity }}
                   />
 
-                  <div className="relative z-10 mt-auto grid gap-3 sm:grid-cols-3">
+                  <div className="relative z-10 mt-auto grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                     {project.metrics.map((metric) => (
                       <div
                         key={metric}
@@ -238,7 +238,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                   </div>
                 </div>
 
-                <div className="mt-6 flex items-center justify-between">
+                <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <span className="text-sm font-bold uppercase tracking-[0.1em] text-black/70">
                     Click to expand project
                   </span>
@@ -256,7 +256,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
       <AnimatePresence>
         {selected ? (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 overflow-y-auto bg-black/60 p-4 backdrop-blur-sm sm:flex sm:items-center sm:justify-center sm:p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -267,7 +267,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.98 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="neo-panel-lg relative max-h-[90vh] w-full max-w-5xl overflow-y-auto overscroll-contain bg-[var(--paper)] p-6 text-black sm:p-8"
+              className="neo-panel-lg relative my-4 max-h-[calc(100vh-2rem)] w-full max-w-5xl overflow-y-auto overscroll-contain bg-[var(--paper)] p-4 text-black sm:my-0 sm:max-h-[90vh] sm:p-6 lg:p-8"
               onClick={(event) => event.stopPropagation()}
               role="dialog"
               aria-modal="true"
@@ -286,7 +286,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
               <div className="mt-2 grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
                 <div
                   className={cn(
-                    "neo-panel-lg relative min-h-[24rem] overflow-hidden p-6 text-black",
+                    "neo-panel-lg relative min-h-[18rem] overflow-hidden p-5 text-black sm:min-h-[24rem] sm:p-6",
                     selected.accent
                   )}
                 >
@@ -297,7 +297,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                       </p>
                       <h3
                         id={`project-${selected.slug}`}
-                        className="mt-4 font-display text-4xl font-black uppercase tracking-[-0.05em]"
+                        className="mt-4 font-display text-3xl font-black uppercase tracking-[-0.05em] sm:text-4xl"
                       >
                         {selected.title}
                       </h3>
@@ -360,7 +360,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                       href={selected.liveUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center justify-center gap-2 rounded-[1.1rem] border-4 border-black bg-[var(--yellow)] px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-black transition-transform hover:-translate-y-0.5"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-[1.1rem] border-4 border-black bg-[var(--yellow)] px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-black transition-transform hover:-translate-y-0.5 sm:w-auto"
                     >
                       <ExternalLink className="h-4 w-4" />
                       Live project
@@ -370,7 +370,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                         href={selected.repoUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center justify-center gap-2 rounded-[1.1rem] border-4 border-black bg-white px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-black transition-transform hover:-translate-y-0.5"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-[1.1rem] border-4 border-black bg-white px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-black transition-transform hover:-translate-y-0.5 sm:w-auto"
                       >
                         <Github className="h-4 w-4" />
                         {selected.repoLabel ?? "GitHub"}

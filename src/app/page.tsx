@@ -266,35 +266,35 @@ export default function HomePage() {
                     <div className="mt-8 grid gap-4 sm:grid-cols-2">
                       <a
                         href={siteConfig.links.phone}
-                        className="neo-panel-lg flex items-center gap-3 bg-white px-4 py-4 text-sm font-black uppercase tracking-[0.1em] text-black"
+                        className="neo-panel-lg flex min-w-0 items-start gap-3 bg-white px-4 py-4 text-[13px] font-black uppercase tracking-[0.1em] text-black sm:items-center sm:text-sm"
                       >
-                        <Phone className="h-4 w-4" />
-                        {siteConfig.contact.phoneDisplay}
+                        <Phone className="mt-0.5 h-4 w-4 shrink-0 sm:mt-0" />
+                        <span className="min-w-0 break-all">{siteConfig.contact.phoneDisplay}</span>
                       </a>
                       <a
                         href={siteConfig.links.email}
-                        className="neo-panel-lg flex items-center gap-3 bg-[var(--yellow)] px-4 py-4 text-sm font-black uppercase tracking-[0.1em] text-black"
+                        className="neo-panel-lg flex min-w-0 items-start gap-3 bg-[var(--yellow)] px-4 py-4 text-[13px] font-black uppercase tracking-[0.08em] text-black sm:items-center sm:text-sm"
                       >
-                        <Mail className="h-4 w-4" />
-                        {siteConfig.contact.email}
+                        <Mail className="mt-0.5 h-4 w-4 shrink-0 sm:mt-0" />
+                        <span className="min-w-0 break-all">{siteConfig.contact.email}</span>
                       </a>
                       <a
                         href={siteConfig.links.linkedin}
                         target="_blank"
                         rel="noreferrer"
-                        className="neo-panel-lg flex items-center gap-3 bg-[var(--cyan)] px-4 py-4 text-sm font-black uppercase tracking-[0.1em] text-black"
+                        className="neo-panel-lg flex min-w-0 items-start gap-3 bg-[var(--cyan)] px-4 py-4 text-[13px] font-black uppercase tracking-[0.1em] text-black sm:items-center sm:text-sm"
                       >
-                        <Linkedin className="h-4 w-4" />
-                        LinkedIn
+                        <Linkedin className="mt-0.5 h-4 w-4 shrink-0 sm:mt-0" />
+                        <span className="min-w-0 break-all">LinkedIn</span>
                       </a>
                       <a
                         href={siteConfig.links.github}
                         target="_blank"
                         rel="noreferrer"
-                        className="neo-panel-lg flex items-center gap-3 bg-[var(--lime)] px-4 py-4 text-sm font-black uppercase tracking-[0.1em] text-black"
+                        className="neo-panel-lg flex min-w-0 items-start gap-3 bg-[var(--lime)] px-4 py-4 text-[13px] font-black uppercase tracking-[0.1em] text-black sm:items-center sm:text-sm"
                       >
-                        <Github className="h-4 w-4" />
-                        GitHub
+                        <Github className="mt-0.5 h-4 w-4 shrink-0 sm:mt-0" />
+                        <span className="min-w-0 break-all">GitHub</span>
                       </a>
                     </div>
                   </div>

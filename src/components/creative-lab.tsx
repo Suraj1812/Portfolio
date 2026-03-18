@@ -24,7 +24,7 @@ export function CreativeLab({ items }: CreativeLabProps) {
   }
 
   return (
-    <section id="lab" className="px-4 py-24 sm:px-6 lg:px-8">
+    <section id="lab" className="px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <ScrollReveal>
           <SectionHeading
@@ -40,11 +40,11 @@ export function CreativeLab({ items }: CreativeLabProps) {
               href={featured.link}
               target="_blank"
               rel="noreferrer"
-              className="neo-panel-lg group relative block min-h-[28rem] overflow-hidden bg-[var(--pink)] p-7 text-black"
+              className="neo-panel-lg group relative block min-h-[22rem] overflow-hidden bg-[var(--pink)] p-6 text-black sm:min-h-[28rem] sm:p-7"
             >
               <motion.div
                 aria-hidden="true"
-                className="absolute right-8 top-8 h-36 w-36 rounded-[1.5rem] border-4 border-black bg-[var(--yellow)]"
+                className="absolute right-6 top-6 h-24 w-24 rounded-[1.3rem] border-4 border-black bg-[var(--yellow)] sm:right-8 sm:top-8 sm:h-36 sm:w-36 sm:rounded-[1.5rem]"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 26, ease: "linear", repeat: Infinity }}
               />
@@ -54,13 +54,13 @@ export function CreativeLab({ items }: CreativeLabProps) {
                     <Sparkles className="h-4 w-4 text-black" />
                     <span>Featured experiment</span>
                   </div>
-                  <h3 className="mt-6 max-w-xl font-display text-4xl font-black uppercase tracking-[-0.05em]">
+                  <h3 className="mt-6 max-w-xl font-display text-3xl font-black uppercase tracking-[-0.05em] sm:text-4xl">
                     {featured.title}
                   </h3>
                   <p className="mt-5 max-w-lg text-base leading-8 text-black/75">{featured.description}</p>
                 </div>
 
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="neo-chip inline-flex items-center gap-3 bg-black px-4 py-2 text-sm font-black uppercase tracking-[0.12em] text-white">
                     <Play className="h-4 w-4 fill-current" />
                     <span>Open live experiment</span>
@@ -81,7 +81,7 @@ export function CreativeLab({ items }: CreativeLabProps) {
                   className="neo-panel-lg group relative flex min-h-[11rem] flex-col justify-between overflow-hidden bg-white p-6"
                 >
                   <div className="relative z-10 flex items-center justify-between gap-4">
-                    <p className="font-display text-2xl font-black uppercase tracking-[-0.05em] text-black">
+                    <p className="font-display text-xl font-black uppercase tracking-[-0.05em] text-black sm:text-2xl">
                       {item.title}
                     </p>
                     <ArrowUpRight className="h-5 w-5 text-black transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />

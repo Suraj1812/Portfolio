@@ -84,17 +84,17 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
   const activeStep = steps[activeIndex] ?? steps[0];
 
   return (
-    <section id="about" ref={sectionRef} className="relative px-4 py-24 sm:px-6 lg:px-8">
+    <section id="about" ref={sectionRef} className="relative px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="max-w-3xl">
           <div className="neo-chip inline-flex items-center gap-2 bg-[var(--yellow)] px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-black">
             <Sparkles className="h-4 w-4 text-black" />
             <span>Scroll Story</span>
           </div>
-          <h2 className="mt-6 font-display text-4xl font-black uppercase tracking-[-0.05em] text-black sm:text-5xl">
+          <h2 className="mt-6 font-display text-3xl font-black uppercase tracking-[-0.05em] text-black sm:text-4xl lg:text-5xl">
             A scroll-led breakdown of how I design, ship, and scale product work.
           </h2>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-black/75">
+          <p className="mt-5 max-w-2xl text-base leading-7 text-black/75 sm:text-lg sm:leading-8">
             This section turns the portfolio into a story about clarity, engineering systems, AI
             product thinking, and the delivery proof behind the visuals.
           </p>
@@ -135,7 +135,7 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
                     <p className="mt-4 text-sm leading-7 text-black/75">{activeStep.description}</p>
                   </div>
 
-                  <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                  <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
                     {activeStep.highlights.map((highlight) => (
                       <div
                         key={highlight}
@@ -157,7 +157,7 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
                 ref={(node) => {
                   itemRefs.current[index] = node;
                 }}
-                className="flex min-h-[70vh] items-center"
+                className="flex min-h-[auto] items-center md:min-h-[55vh] lg:min-h-[70vh]"
               >
                 <div className={cn("neo-panel-lg w-full p-7 sm:p-8", step.accent)}>
                   <div className="flex flex-col gap-5 border-b-4 border-black pb-6 sm:flex-row sm:items-end sm:justify-between">
@@ -165,7 +165,7 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
                       <p className="text-xs font-black uppercase tracking-[0.22em] text-black/70">
                         {step.label}
                       </p>
-                      <h3 className="mt-4 font-display text-3xl font-black uppercase tracking-[-0.05em] text-black">
+                      <h3 className="mt-4 font-display text-2xl font-black uppercase tracking-[-0.05em] text-black sm:text-3xl">
                         {step.title}
                       </h3>
                     </div>
@@ -178,7 +178,7 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
                   <p className="mt-6 text-base leading-8 text-black/80">{step.description}</p>
                   <p className="mt-4 text-base leading-8 text-black/80">{step.detail}</p>
 
-                  <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                  <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                     {step.highlights.map((highlight) => (
                       <div
                         key={highlight}

@@ -61,34 +61,34 @@ export function HeroSection() {
     <section
       id="top"
       ref={sectionRef}
-      className="neo-grid-bg relative h-[170vh] overflow-hidden bg-[var(--paper)]"
+      className="neo-grid-bg relative overflow-hidden bg-[var(--paper)] lg:h-[170vh]"
     >
       <motion.div
         aria-hidden="true"
-        className="absolute -left-20 top-28 h-52 w-52 rounded-[2rem] border-4 border-black bg-[var(--cyan)]"
+        className="absolute -left-20 top-28 hidden h-52 w-52 rounded-[2rem] border-4 border-black bg-[var(--cyan)] sm:block"
         style={{ y: gridY, rotate: gridRotate }}
       />
       <motion.div
         aria-hidden="true"
-        className="absolute right-[6%] top-24 h-40 w-40 rounded-[1.8rem] border-4 border-black bg-[var(--pink)]"
+        className="absolute right-[6%] top-24 hidden h-40 w-40 rounded-[1.8rem] border-4 border-black bg-[var(--pink)] sm:block"
         style={{ x: tagX, rotate: visualRotate }}
       />
       <motion.div
         aria-hidden="true"
-        className="absolute bottom-24 left-[12%] h-28 w-28 rounded-[1.5rem] border-4 border-black bg-[var(--lime)]"
+        className="absolute bottom-24 left-[12%] hidden h-28 w-28 rounded-[1.5rem] border-4 border-black bg-[var(--lime)] md:block"
         style={{ y: visualY }}
       />
-      <div className="sticky top-0 flex min-h-screen items-center">
-        <div className="relative mx-auto grid w-full max-w-6xl gap-10 px-4 py-28 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:px-8">
+      <div className="flex min-h-screen items-center lg:sticky lg:top-0">
+        <div className="relative mx-auto grid w-full max-w-6xl gap-8 px-4 py-24 sm:px-6 sm:py-28 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10 lg:px-8">
           <motion.div style={{ y: contentY, opacity: contentOpacity }}>
-            <h1 className="max-w-5xl font-display text-5xl font-black uppercase leading-[0.88] tracking-[-0.06em] text-black sm:text-6xl lg:text-7xl">
+            <h1 className="max-w-5xl font-display text-4xl font-black uppercase leading-[0.9] tracking-[-0.06em] text-black sm:text-5xl lg:text-7xl">
               Suraj Singh
-              <span className="mt-4 block max-w-4xl text-2xl leading-tight tracking-[-0.05em] sm:text-3xl lg:text-4xl">
+              <span className="mt-4 block max-w-4xl text-xl leading-tight tracking-[-0.05em] sm:text-2xl lg:text-4xl">
                 {siteConfig.name}
               </span>
             </h1>
 
-            <p className="mt-7 max-w-3xl text-lg leading-8 text-black/75 sm:text-xl">
+            <p className="mt-6 max-w-3xl text-base leading-7 text-black/75 sm:mt-7 sm:text-lg sm:leading-8 lg:text-xl">
               I build product-grade interfaces, AI-assisted workflows, and scalable web systems
               with strong frontend architecture, bold design direction, and clean implementation.
             </p>
@@ -120,10 +120,10 @@ export function HeroSection() {
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noreferrer" : undefined}
-                  className="neo-panel-sm flex items-center gap-3 bg-[var(--cream)] px-4 py-3 text-sm font-bold uppercase tracking-[0.1em] text-black"
+                  className="neo-panel-sm flex min-w-0 items-start gap-3 bg-[var(--cream)] px-4 py-3 text-[13px] font-bold uppercase tracking-[0.1em] text-black sm:items-center sm:text-sm"
                 >
-                  <Icon className="h-4 w-4" />
-                  <span className="truncate">{label}</span>
+                  <Icon className="mt-0.5 h-4 w-4 shrink-0 sm:mt-0" />
+                  <span className="min-w-0 break-all">{label}</span>
                 </a>
               ))}
             </div>
@@ -138,20 +138,20 @@ export function HeroSection() {
             style={{ y: visualY, rotate: visualRotate, scale: visualScale }}
             className="relative lg:pt-8"
           >
-            <div className="neo-panel-lg neo-stripes relative overflow-hidden bg-[var(--blue)] p-5 xl:p-6">
+            <div className="neo-panel-lg neo-stripes relative overflow-hidden bg-[var(--blue)] p-4 sm:p-5 xl:p-6">
               <div className="relative flex items-center justify-between rounded-[1.1rem] border-4 border-black bg-white px-4 py-3">
                 <div className="flex items-center gap-2">
                   <span className="h-3 w-3 rounded-full border-2 border-black bg-[var(--pink)]" />
                   <span className="h-3 w-3 rounded-full border-2 border-black bg-[var(--yellow)]" />
                   <span className="h-3 w-3 rounded-full border-2 border-black bg-[var(--lime)]" />
                 </div>
-                <div className="text-xs font-black uppercase tracking-[0.16em] text-black">
+                <div className="text-[10px] font-black uppercase tracking-[0.16em] text-black sm:text-xs">
                   Production-ready stack
                 </div>
               </div>
 
-              <div className="relative mt-4 rounded-[1.6rem] border-4 border-black bg-black p-5 text-sm text-white xl:p-6">
-                <div className="space-y-3 font-mono text-[13px] leading-6 text-white">
+              <div className="relative mt-4 rounded-[1.6rem] border-4 border-black bg-black p-4 text-sm text-white sm:p-5 xl:p-6">
+                <div className="space-y-3 font-mono text-[12px] leading-6 text-white sm:text-[13px]">
                   {snippet.map((line, index) => (
                     <div key={line} className="flex items-start gap-4">
                       <span className="w-4 text-right text-white/45">{index + 1}</span>

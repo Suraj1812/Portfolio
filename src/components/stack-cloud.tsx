@@ -74,15 +74,26 @@ export function StackCloud({ skills, tools }: StackCloudProps) {
         </div>
       </div>
 
-      <div className="neo-panel-lg neo-grid-bg relative min-h-[30rem] overflow-hidden bg-[var(--yellow)] p-6">
+      <div className="neo-panel-lg neo-grid-bg relative min-h-[24rem] overflow-hidden bg-[var(--yellow)] p-6 lg:min-h-[30rem]">
         <div className="relative z-10">
           <p className="text-xs font-black uppercase tracking-[0.22em] text-black">Tech cloud</p>
-          <h3 className="mt-3 font-display text-2xl font-black uppercase tracking-[-0.04em] text-black">
+          <h3 className="mt-3 font-display text-xl font-black uppercase tracking-[-0.04em] text-black sm:text-2xl">
             Floating tools I reach for when building scalable web and AI products.
           </h3>
         </div>
 
-        <div className="relative z-10 mt-8 h-[23rem]">
+        <div className="relative z-10 mt-8 flex flex-wrap gap-3 lg:hidden">
+          {tools.map((tool, index) => (
+            <div
+              key={tool}
+              className={`neo-chip ${chipColors[index % chipColors.length]} px-4 py-2 text-xs font-black uppercase tracking-[0.1em] text-black sm:text-sm`}
+            >
+              {tool}
+            </div>
+          ))}
+        </div>
+
+        <div className="relative z-10 mt-8 hidden h-[23rem] lg:block">
           {tools.map((tool, index) => (
             <motion.div
               key={tool}

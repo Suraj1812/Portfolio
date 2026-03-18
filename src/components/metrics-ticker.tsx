@@ -37,7 +37,7 @@ export function MetricsTicker({ items }: MetricsTickerProps) {
         {loopItems.map((item, index) => (
           <div
             key={`${item}-${index}`}
-            className="neo-chip bg-[var(--yellow)] px-4 py-2 text-sm font-black uppercase tracking-[0.12em] text-black"
+            className="neo-chip bg-[var(--yellow)] px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-black sm:px-4 sm:text-sm"
           >
             {item}
           </div>
