@@ -1,20 +1,22 @@
 import Image from "next/image";
-import { ArrowUpRight, Github, Layers3, Sparkles } from "lucide-react";
+import { ArrowUpRight, Github } from "lucide-react";
 
 import { AnimatedButton } from "@/components/animated-button";
+import { CreativeLab } from "@/components/creative-lab";
 import { FloatingNavbar } from "@/components/floating-navbar";
 import { HeroSection } from "@/components/hero-section";
+import { HorizontalProjects } from "@/components/horizontal-projects";
 import { MetricsTicker } from "@/components/metrics-ticker";
-import { ProjectShowcase } from "@/components/project-showcase";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { ScrollStory } from "@/components/scroll-story";
 import { SectionHeading } from "@/components/section-heading";
 import { StackCloud } from "@/components/stack-cloud";
 import { TiltCard } from "@/components/tilt-card";
 import {
-  capabilityCards,
   clientProjects,
   featuredProjects,
   skills,
+  storySteps,
   techCloud,
   tickerItems,
   uiExperiments
@@ -28,42 +30,16 @@ export default function HomePage() {
       <main className="relative overflow-hidden">
         <HeroSection />
         <MetricsTicker items={tickerItems} />
-
-        <section id="about" className="px-4 py-24 sm:px-6 lg:px-8">
-          <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-            <ScrollReveal>
-              <SectionHeading
-                eyebrow="About"
-                title="Frontend work that feels deliberate, expressive, and ready for real users."
-                description="I focus on product-minded UI engineering: clean systems, thoughtful motion, and launches that work across devices instead of just looking good in screenshots."
-              />
-            </ScrollReveal>
-
-            <div className="grid gap-5 sm:grid-cols-3">
-              {capabilityCards.map((item, index) => (
-                <ScrollReveal key={item.title} delay={index * 0.08}>
-                  <div className="h-full rounded-[1.75rem] border border-white/70 bg-white/75 p-6 shadow-card backdrop-blur">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-navy text-white">
-                      <Layers3 className="h-5 w-5" />
-                    </div>
-                    <h3 className="mt-5 font-display text-xl font-semibold text-ink">{item.title}</h3>
-                    <p className="mt-3 text-sm leading-7 text-slate">{item.description}</p>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <ProjectShowcase projects={featuredProjects} />
+        <ScrollStory steps={storySteps} />
+        <HorizontalProjects projects={featuredProjects} />
 
         <section id="clients" className="px-4 py-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <ScrollReveal>
               <SectionHeading
                 eyebrow="Client Work"
-                title="Production projects where clarity, trust, and delivery mattered."
-                description="Alongside personal experiments, I have shipped client-facing experiences across SaaS, healthcare, commerce, and brand-led web products."
+                title="Real production work that backs up the narrative with shipped outcomes."
+                description="These projects show the other side of the portfolio: delivery, responsiveness, product framing, and interfaces built for actual users and businesses."
               />
             </ScrollReveal>
 
@@ -83,6 +59,16 @@ export default function HomePage() {
                       </div>
                       <p className="mt-3 text-sm font-medium text-ember">{project.focus}</p>
                       <p className="mt-4 text-sm leading-7 text-slate">{project.summary}</p>
+                      <div className="mt-5 flex flex-wrap gap-2">
+                        {project.stack.map((item) => (
+                          <span
+                            key={item}
+                            className="rounded-full border border-ink/10 bg-shell px-3 py-1 text-xs font-medium text-slate"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
                     </a>
                   </TiltCard>
                 </ScrollReveal>
@@ -91,49 +77,15 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="px-4 py-24 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-6xl">
-            <ScrollReveal>
-              <SectionHeading
-                eyebrow="UI Experiments"
-                title="Creative playground work that keeps the portfolio from feeling generic."
-                description="These experiments are where I push visual direction, interaction ideas, and layout personality further than a typical product brief would allow."
-              />
-            </ScrollReveal>
-
-            <div className="mt-12 grid gap-5 lg:grid-cols-4">
-              {uiExperiments.map((item, index) => (
-                <ScrollReveal key={item.title} delay={index * 0.06}>
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group relative flex h-full min-h-[18rem] flex-col justify-between overflow-hidden rounded-[1.75rem] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.8),rgba(255,250,242,0.72))] p-6 shadow-card backdrop-blur"
-                  >
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(15,157,154,0.1),_transparent_32%),radial-gradient(circle_at_bottom_left,_rgba(255,122,24,0.12),_transparent_40%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                    <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/70 bg-white/80 text-ink">
-                      <Sparkles className="h-5 w-5" />
-                    </div>
-                    <div className="relative z-10">
-                      <h3 className="font-display text-2xl font-semibold tracking-tight text-ink">
-                        {item.title}
-                      </h3>
-                      <p className="mt-3 text-sm leading-7 text-slate">{item.description}</p>
-                    </div>
-                  </a>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
+        <CreativeLab items={uiExperiments} />
 
         <section id="stack" className="px-4 py-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <ScrollReveal>
               <SectionHeading
                 eyebrow="Tech Stack"
-                title="A focused build stack designed for premium frontend work."
-                description="Next.js, React, TypeScript, Tailwind, and motion tooling form the core. I use them to build fast landing pages, product UIs, and expressive interactions without losing maintainability."
+                title="A focused stack for premium frontend experiences and motion-heavy product work."
+                description="Next.js, React, TypeScript, Tailwind, Framer Motion, GSAP, and Lenis stay at the center so the build can feel expressive without becoming hard to maintain."
               />
             </ScrollReveal>
 
@@ -148,8 +100,8 @@ export default function HomePage() {
             <ScrollReveal>
               <SectionHeading
                 eyebrow="GitHub"
-                title="A mix of shipped products, experiments, and ongoing frontend exploration."
-                description="Most of my personal and experimental builds live on GitHub, where I keep exploring interface direction, product surfaces, and motion-heavy concepts."
+                title="Real developer activity, experiments, and ongoing frontend exploration."
+                description="GitHub is where the public side of the work lives: experiments, shipped ideas, prototypes, and the habit of building beyond client deadlines."
               />
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -199,11 +151,12 @@ export default function HomePage() {
                       <span>Available for collaboration</span>
                     </div>
                     <h2 className="mt-5 max-w-3xl font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-                      Building interfaces that feel fast, premium, and distinctly yours.
+                      Let&apos;s build something smooth, premium, and impossible to ignore.
                     </h2>
                     <p className="mt-4 max-w-2xl text-base leading-8 text-slate-200">
                       If you want a frontend experience with stronger motion, cleaner structure,
-                      and sharper visual direction, this portfolio is built to show exactly that.
+                      and a more cinematic feel, this portfolio is already showing the direction I
+                      like to build in.
                     </p>
                   </div>
 

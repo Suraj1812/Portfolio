@@ -17,6 +17,7 @@ body {
     radial-gradient(circle at top right, rgba(255, 122, 24, 0.12), transparent 26%),
     linear-gradient(180deg, #fbf8f2 0%, #f5efe6 45%, #f2ece4 100%);
   color: #111827;
+  overflow-x: hidden;
 }
 
 * {

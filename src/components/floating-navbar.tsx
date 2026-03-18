@@ -11,12 +11,10 @@ import { cn } from "@/lib/utils";
 export function FloatingNavbar() {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   useMotionValueEvent(scrollY, "change", (current) => {
     const previous = scrollY.getPrevious() ?? 0;
     setHidden(current > previous && current > 140);
-    setScrolled(current > 24);
   });
 
   return (
@@ -28,18 +26,16 @@ export function FloatingNavbar() {
       <div
         className={cn(
           "flex w-full max-w-6xl items-center justify-between rounded-full border px-3 py-2 transition-all duration-300 sm:px-4",
-          scrolled
-            ? "border-ink/10 bg-white/78 shadow-card backdrop-blur-xl"
-            : "border-white/50 bg-white/60 backdrop-blur-md"
+          "border-white/10 bg-slate-950/55 shadow-[0_18px_60px_rgba(0,0,0,0.18)] backdrop-blur-xl"
         )}
       >
         <Link href="#top" className="flex items-center gap-3 rounded-full px-3 py-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-navy text-sm font-bold text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-sm font-bold text-ink">
             SS
           </div>
           <div className="hidden sm:block">
-            <p className="font-display text-sm font-semibold text-ink">Suraj Singh</p>
-            <p className="text-xs text-slate">Frontend / Full-Stack Engineer</p>
+            <p className="font-display text-sm font-semibold text-white">Suraj Singh</p>
+            <p className="text-xs text-slate-300">Frontend / Full-Stack Engineer</p>
           </div>
         </Link>
 
@@ -48,7 +44,7 @@ export function FloatingNavbar() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-full px-4 py-2 text-sm text-slate transition-colors hover:bg-white hover:text-ink"
+              className="rounded-full px-4 py-2 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
             >
               {item.label}
             </Link>
@@ -59,7 +55,7 @@ export function FloatingNavbar() {
           href="https://github.com/Suraj1812"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-full bg-navy px-4 py-2 text-sm font-medium text-white transition-transform hover:-translate-y-0.5"
+          className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-ember to-amber-400 px-4 py-2 text-sm font-medium text-white transition-transform hover:-translate-y-0.5"
         >
           <Github className="h-4 w-4" />
           <span className="hidden sm:inline">GitHub</span>

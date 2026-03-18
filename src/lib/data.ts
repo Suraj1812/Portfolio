@@ -3,6 +3,16 @@ export type NavItem = {
   href: string;
 };
 
+export type StoryStep = {
+  id: string;
+  label: string;
+  title: string;
+  description: string;
+  detail: string;
+  highlights: string[];
+  accent: string;
+};
+
 export type FeaturedProject = {
   slug: string;
   title: string;
@@ -22,31 +32,68 @@ export type FeaturedProject = {
 };
 
 export const navItems: NavItem[] = [
-  { label: "About", href: "#about" },
-  { label: "Work", href: "#work" },
+  { label: "Story", href: "#about" },
+  { label: "Projects", href: "#work" },
   { label: "Clients", href: "#clients" },
+  { label: "Lab", href: "#lab" },
   { label: "Stack", href: "#stack" },
   { label: "GitHub", href: "#github" },
   { label: "Contact", href: "#contact" }
 ];
 
 export const tickerItems = [
-  "Next.js App Router",
+  "GSAP ScrollTrigger",
+  "Lenis Smooth Scroll",
+  "Pinned Storytelling",
+  "Horizontal Project Rails",
   "React + TypeScript",
   "Tailwind Systems",
   "Framer Motion",
-  "GSAP Motion",
-  "Lenis Smooth Scroll",
   "Responsive UI Engineering",
   "Frontend Architecture",
-  "Full-Stack Integrations",
   "Launch-Ready Product Work"
 ];
 
 export const heroStats = [
   { value: "10+", label: "Client launches" },
-  { value: "35+", label: "Personal experiments" },
+  { value: "40+", label: "Personal experiments" },
   { value: "100%", label: "Motion-first interfaces" }
+];
+
+export const storySteps: StoryStep[] = [
+  {
+    id: "intro",
+    label: "01 / Scroll Start",
+    title: "Open with a sticky hero that feels like a product launch, not a resume.",
+    description:
+      "The first viewport should carry confidence immediately: strong typography, a living grid, and motion that reacts to scroll instead of waiting for clicks.",
+    detail:
+      "I like using layered depth, paced reveals, and subtle zoom to make the entry feel cinematic while still keeping the message clear in the first few seconds.",
+    highlights: ["Sticky hero pacing", "Layered motion", "Immediate product feel"],
+    accent: "from-cyan-400 via-teal-500 to-emerald-500"
+  },
+  {
+    id: "systems",
+    label: "02 / Build Systems",
+    title: "Use the scroll to reveal frontend systems, not just sections stacked one after another.",
+    description:
+      "Instead of listing skills plainly, I turn them into a guided story about motion, reusable components, performance, and how interface decisions scale.",
+    detail:
+      "That is where floating tech elements, reveal blocks, and tighter rhythm help the page feel intentional instead of template-driven.",
+    highlights: ["Reusable primitives", "Animated stack cloud", "Responsive polish"],
+    accent: "from-amber-300 via-orange-500 to-rose-500"
+  },
+  {
+    id: "delivery",
+    label: "03 / Ship Product Work",
+    title: "Transition into proof: production launches, client outcomes, and experiments with range.",
+    description:
+      "The story works best when the visual style leads naturally into real projects, shipped sites, and ideas that show both product discipline and creative range.",
+    detail:
+      "That is why the portfolio shifts from narrative into a pinned horizontal project rail and then into real client work, GitHub activity, and collaboration.",
+    highlights: ["Project transitions", "Client-ready delivery", "Awwwards-style energy"],
+    accent: "from-sky-300 via-indigo-500 to-violet-600"
+  }
 ];
 
 export const capabilityCards = [
@@ -219,43 +266,50 @@ export const clientProjects = [
     name: "PeopleMaketh",
     url: "https://peoplemaketh.com/",
     focus: "Brand and company web experience",
-    summary: "Production-facing site work built for credibility, storytelling, and a smooth user journey."
+    summary: "Production-facing site work built for credibility, storytelling, and a smooth user journey.",
+    stack: ["React", "Responsive UI", "Brand Systems"]
   },
   {
     name: "Securethread",
     url: "https://www.securethread.io/",
     focus: "Security product presentation",
-    summary: "A product site where trust, clarity, and strong hierarchy matter just as much as speed."
+    summary: "A product site where trust, clarity, and strong hierarchy matter just as much as speed.",
+    stack: ["Next.js", "SaaS UI", "Motion"]
   },
   {
     name: "EaseMyCRM",
     url: "https://easemycrm.com/",
     focus: "SaaS positioning and lead capture",
-    summary: "A customer-facing product surface designed to explain value fast and guide visitors toward action."
+    summary: "A customer-facing product surface designed to explain value fast and guide visitors toward action.",
+    stack: ["React", "Landing Pages", "Conversion UI"]
   },
   {
     name: "Evtaar",
     url: "https://staging.evtaar.com/",
     focus: "Staging product work",
-    summary: "Frontend implementation work shaped around product readiness, responsive behavior, and consistent UI patterns."
+    summary: "Frontend implementation work shaped around product readiness, responsive behavior, and consistent UI patterns.",
+    stack: ["Frontend Systems", "Responsive QA", "Product UI"]
   },
   {
     name: "EkkoMD",
     url: "https://www.ekkomd.com/",
     focus: "Healthcare-oriented digital product",
-    summary: "A cleaner, confidence-building interface where content clarity and structure are critical."
+    summary: "A cleaner, confidence-building interface where content clarity and structure are critical.",
+    stack: ["Clean Hierarchy", "Content UX", "Production Site"]
   },
   {
     name: "Humigy",
     url: "https://humigy.com/",
     focus: "Company website and product framing",
-    summary: "A modern marketing experience with attention to pacing, components, and conversion-focused sections."
+    summary: "A modern marketing experience with attention to pacing, components, and conversion-focused sections.",
+    stack: ["Marketing UI", "React", "Launch Support"]
   },
   {
     name: "The Nexus Store",
     url: "https://www.thenexustore.com",
     focus: "E-commerce storefront",
-    summary: "A retail-facing experience focused on product browsing, presentation, and responsive commerce flows."
+    summary: "A retail-facing experience focused on product browsing, presentation, and responsive commerce flows.",
+    stack: ["Commerce UI", "Responsive Flow", "Product Grids"]
   }
 ];
 
