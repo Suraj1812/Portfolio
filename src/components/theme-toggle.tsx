@@ -1,16 +1,19 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 import { cn } from "@/lib/utils";
 
 type Theme = "light" | "dark";
 const THEME_STORAGE_KEY = "suraj-portfolio-theme-v2";
+const THEME_EVENT = "suraj-portfolio-theme-change";
 
-function getPreferredTheme(): Theme {
-  if (typeof window === "undefined") {
-    return "light";
+function getThemeSnapshot(): Theme {
+  const currentTheme = document.documentElement.dataset.theme;
+
+  if (currentTheme === "light" || currentTheme === "dark") {
+    return currentTheme;
   }
 
   const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
@@ -22,8 +25,23 @@ function getPreferredTheme(): Theme {
   return "light";
 }
 
+function getThemeServerSnapshot(): Theme {
+  return "light";
+}
+
+function subscribeToTheme(onStoreChange: () => void) {
+  window.addEventListener(THEME_EVENT, onStoreChange);
+  window.addEventListener("storage", onStoreChange);
+
+  return () => {
+    window.removeEventListener(THEME_EVENT, onStoreChange);
+    window.removeEventListener("storage", onStoreChange);
+  };
+}
+
 function applyTheme(theme: Theme) {
   document.documentElement.dataset.theme = theme;
+  window.dispatchEvent(new Event(THEME_EVENT));
 }
 
 type ThemeToggleProps = {
@@ -31,18 +49,13 @@ type ThemeToggleProps = {
 };
 
 export function ThemeToggle({ className }: ThemeToggleProps) {
-  const [theme, setTheme] = useState<Theme>(() => getPreferredTheme());
-
-  useEffect(() => {
-    applyTheme(theme);
-  }, [theme]);
+  const theme = useSyncExternalStore(subscribeToTheme, getThemeSnapshot, getThemeServerSnapshot);
 
   const toggleTheme = () => {
     const nextTheme: Theme = theme === "light" ? "dark" : "light";
     window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
     window.localStorage.removeItem("theme");
     applyTheme(nextTheme);
-    setTheme(nextTheme);
   };
 
   return (
