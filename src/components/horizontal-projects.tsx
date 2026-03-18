@@ -267,11 +267,12 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.98 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="neo-panel-lg relative max-h-[90vh] w-full max-w-5xl overflow-auto bg-[var(--paper)] p-6 text-black sm:p-8"
+              className="neo-panel-lg relative max-h-[90vh] w-full max-w-5xl overflow-y-auto overscroll-contain bg-[var(--paper)] p-6 text-black sm:p-8"
               onClick={(event) => event.stopPropagation()}
               role="dialog"
               aria-modal="true"
               aria-labelledby={`project-${selected.slug}`}
+              data-lenis-prevent
             >
               <button
                 type="button"

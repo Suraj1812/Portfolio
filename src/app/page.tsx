@@ -229,16 +229,6 @@ export default function HomePage() {
 
             <ScrollReveal delay={0.1}>
               <div className="grid gap-5">
-                <div className="neo-panel-lg overflow-hidden bg-white p-4">
-                  <Image
-                    src="https://github-readme-stats.vercel.app/api?username=Suraj1812&show_icons=true&hide_border=true&bg_color=00000000&title_color=111827&text_color=475569&icon_color=0f9d9a"
-                    alt="GitHub stats for Suraj Singh"
-                    width={1200}
-                    height={500}
-                    unoptimized
-                    className="h-auto w-full rounded-[1rem] border-4 border-black"
-                  />
-                </div>
                 <div className="neo-panel-lg overflow-hidden bg-[var(--yellow)] p-4">
                   <Image
                     src="https://github-readme-stats.vercel.app/api/top-langs/?username=Suraj1812&layout=compact&hide_border=true&bg_color=00000000&title_color=111827&text_color=475569"

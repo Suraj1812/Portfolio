@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, Github, Linkedin, Mail, Phone, Sparkles } from "lucide-react";
+import { ArrowDown, Github, Linkedin, Mail, Phone } from "lucide-react";
 import { useRef } from "react";
 
 import { AnimatedButton } from "@/components/animated-button";
@@ -81,12 +81,7 @@ export function HeroSection() {
       <div className="sticky top-0 flex min-h-screen items-center">
         <div className="relative mx-auto grid w-full max-w-6xl gap-10 px-4 py-28 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:px-8">
           <motion.div style={{ y: contentY, opacity: contentOpacity }}>
-            <div className="neo-chip inline-flex items-center gap-2 bg-[var(--yellow)] px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-black">
-              <Sparkles className="h-4 w-4 text-black" />
-              <span>Neobrutalist portfolio system</span>
-            </div>
-
-            <h1 className="mt-7 max-w-5xl font-display text-5xl font-black uppercase leading-[0.88] tracking-[-0.06em] text-black sm:text-6xl lg:text-7xl">
+            <h1 className="max-w-5xl font-display text-5xl font-black uppercase leading-[0.88] tracking-[-0.06em] text-black sm:text-6xl lg:text-7xl">
               Suraj Singh
               <span className="mt-4 block max-w-4xl text-2xl leading-tight tracking-[-0.05em] sm:text-3xl lg:text-4xl">
                 {siteConfig.name}
