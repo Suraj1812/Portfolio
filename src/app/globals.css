@@ -9,6 +9,8 @@
   --font-body: "Manrope Variable", "Inter", "Segoe UI", sans-serif;
   --paper: #fff9ef;
   --ink: #111111;
+  --ink-muted: rgba(17, 17, 17, 0.76);
+  --ink-soft: rgba(17, 17, 17, 0.64);
   --yellow: #ffe45e;
   --pink: #ff6ad5;
   --cyan: #63e6ff;
@@ -16,9 +18,39 @@
   --orange: #ff8b3d;
   --blue: #5f7cff;
   --cream: #fff1c9;
+  --surface-0: #111111;
+  --surface-1: #ffffff;
+  --surface-2: #f6ecd7;
+  --grid-line: rgba(17, 17, 17, 0.08);
+  --stripe-line: rgba(17, 17, 17, 0.08);
+  --overlay: rgba(17, 17, 17, 0.6);
   --shadow-sm: 4px 4px 0 var(--ink);
   --shadow-md: 8px 8px 0 var(--ink);
   --shadow-lg: 14px 14px 0 var(--ink);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0f1115;
+  --ink: #f5efdf;
+  --ink-muted: rgba(245, 239, 223, 0.8);
+  --ink-soft: rgba(245, 239, 223, 0.64);
+  --yellow: #ffd84f;
+  --pink: #ff78d9;
+  --cyan: #6be8ff;
+  --lime: #bbff67;
+  --orange: #ff9a54;
+  --blue: #7289ff;
+  --cream: #1c1a14;
+  --surface-0: #090b0f;
+  --surface-1: #161a22;
+  --surface-2: #1f2530;
+  --grid-line: rgba(245, 239, 223, 0.08);
+  --stripe-line: rgba(245, 239, 223, 0.07);
+  --overlay: rgba(5, 6, 10, 0.78);
+  --shadow-sm: 4px 4px 0 rgba(0, 0, 0, 0.55);
+  --shadow-md: 8px 8px 0 rgba(0, 0, 0, 0.55);
+  --shadow-lg: 14px 14px 0 rgba(0, 0, 0, 0.55);
 }
 
 html {
@@ -29,11 +61,14 @@ body {
   min-height: 100vh;
   background-color: var(--paper);
   background-image:
-    linear-gradient(rgba(17, 17, 17, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(17, 17, 17, 0.08) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 30px 30px;
   color: var(--ink);
   overflow-x: hidden;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
 * {
@@ -111,16 +146,16 @@ select {
 
   .neo-grid-bg {
     background-image:
-      linear-gradient(rgba(17, 17, 17, 0.12) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(17, 17, 17, 0.12) 1px, transparent 1px);
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 32px 32px;
   }
 
   .neo-stripes {
     background-image: repeating-linear-gradient(
       -45deg,
-      rgba(17, 17, 17, 0.08),
-      rgba(17, 17, 17, 0.08) 12px,
+      var(--stripe-line),
+      var(--stripe-line) 12px,
       transparent 12px,
       transparent 24px
     );
@@ -129,4 +164,30 @@ select {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+:root[data-theme="dark"] [class~="bg-white"] {
+  background-color: var(--surface-1) !important;
+}
+
+:root[data-theme="dark"] [class~="bg-black"] {
+  background-color: var(--surface-0) !important;
+}
+
+:root[data-theme="dark"] [class*="bg-black/"] {
+  background-color: var(--overlay) !important;
+}
+
+:root[data-theme="dark"] [class*="border-black"] {
+  border-color: var(--ink) !important;
+}
+
+:root[data-theme="dark"] [class~="text-black"],
+:root[data-theme="dark"] [class~="text-white"] {
+  color: var(--ink) !important;
+}
+
+:root[data-theme="dark"] [class*="text-black/"],
+:root[data-theme="dark"] [class*="text-white/"] {
+  color: var(--ink-muted) !important;
 }

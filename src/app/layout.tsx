@@ -2,11 +2,29 @@ import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 
 import "@fontsource-variable/manrope";
 import "@fontsource-variable/space-grotesk";
 import "./globals.css";
+
+const themeScript = `
+(() => {
+  try {
+    const storedTheme = window.localStorage.getItem("theme");
+    const theme =
+      storedTheme === "light" || storedTheme === "dark"
+        ? storedTheme
+        : window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+    document.documentElement.dataset.theme = theme;
+  } catch (error) {
+    document.documentElement.dataset.theme = "light";
+  }
+})();
+`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -95,8 +113,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffe45e",
-  colorScheme: "light"
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffe45e" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1115" }
+  ],
+  colorScheme: "light dark"
 };
 
 export default function RootLayout({
@@ -105,10 +126,12 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="font-body text-ink">
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <SmoothScroll>
           {children}
+          <ThemeToggle />
         </SmoothScroll>
       </body>
     </html>
