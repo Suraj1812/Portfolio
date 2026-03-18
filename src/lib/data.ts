@@ -96,24 +96,6 @@ export const storySteps: StoryStep[] = [
   }
 ];
 
-export const capabilityCards = [
-  {
-    title: "Frontend systems",
-    description:
-      "Reusable UI components, scalable layout patterns, and product-facing interfaces that stay fast as they grow."
-  },
-  {
-    title: "Motion with intent",
-    description:
-      "Scroll reveals, parallax, tactile hover states, and transitions that support the story instead of distracting from it."
-  },
-  {
-    title: "Client-ready delivery",
-    description:
-      "Production deployments, marketing sites, dashboards, and full-stack integrations with an eye on responsiveness and polish."
-  }
-];
-
 export const featuredProjects: FeaturedProject[] = [
   {
     slug: "solar-system",

@@ -1,26 +1,38 @@
 # Suraj Singh Portfolio
 
-A production-style frontend portfolio built with Next.js, TypeScript, Tailwind CSS, Framer Motion, GSAP, and Lenis.
+A production-ready scroll-storytelling portfolio built with Next.js, React, TypeScript, Tailwind CSS, Framer Motion, GSAP, and Lenis.
 
 ## Stack
 
-- Next.js 14
-- React 18
+- Next.js 16
+- React 19
 - TypeScript
 - Tailwind CSS
 - Framer Motion
 - GSAP
 - Lenis
+- Local bundled fonts
+- App Router metadata routes
 
-## Sections
+## Launch Features
 
-- Hero with motion-first visual treatment
-- Featured project showcase with expanding detail modal
-- Client work grid
-- UI experiments section
-- Tech stack and skills visualization
-- GitHub activity
-- Collaboration call-to-action
+- Sticky cinematic hero
+- Scroll-storytelling section
+- GSAP-powered horizontal projects rail
+- Client work and creative lab sections
+- Tech stack visualization and GitHub activity
+- Open Graph image, Twitter image, sitemap, robots, and manifest
+- Security headers and upgraded dependency stack
+
+## Environment
+
+Create a `.env.local` file from `.env.example` and set:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://your-production-domain.com
+```
+
+If this variable is not set, the app falls back to Vercel environment URLs and then `http://localhost:3000` in local development.
 
 ## Scripts
 
@@ -28,5 +40,6 @@ A production-style frontend portfolio built with Next.js, TypeScript, Tailwind C
 npm install
 npm run dev
 npm run lint
+npm run typecheck
 npm run build
 ```

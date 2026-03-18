@@ -4,6 +4,9 @@
 
 :root {
   color-scheme: light;
+  --font-display:
+    "Space Grotesk Variable", "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-body: "Manrope Variable", "Inter", "Segoe UI", sans-serif;
 }
 
 html {

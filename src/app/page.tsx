@@ -21,6 +21,46 @@ import {
   tickerItems,
   uiExperiments
 } from "@/lib/data";
+import { absoluteUrl, siteConfig } from "@/lib/site";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      name: "Suraj Singh",
+      url: siteConfig.url,
+      sameAs: [siteConfig.links.github],
+      jobTitle: "Frontend / Full-Stack Engineer",
+      description: siteConfig.description,
+      knowsAbout: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "GSAP",
+        "Framer Motion",
+        "Frontend Architecture",
+        "Responsive Web Design"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      name: siteConfig.shortName,
+      url: siteConfig.url,
+      description: siteConfig.description
+    },
+    {
+      "@type": "ItemList",
+      name: "Featured projects",
+      itemListElement: featuredProjects.map((project, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: project.liveUrl,
+        name: project.title
+      }))
+    }
+  ]
+};
 
 export default function HomePage() {
   return (
@@ -28,6 +68,10 @@ export default function HomePage() {
       <FloatingNavbar />
 
       <main className="relative overflow-hidden">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
         <HeroSection />
         <MetricsTicker items={tickerItems} />
         <ScrollStory steps={storySteps} />
@@ -122,6 +166,7 @@ export default function HomePage() {
                     alt="GitHub stats for Suraj Singh"
                     width={1200}
                     height={500}
+                    unoptimized
                     className="h-auto w-full rounded-[1.25rem]"
                   />
                 </div>
@@ -131,6 +176,7 @@ export default function HomePage() {
                     alt="Top languages for Suraj Singh"
                     width={1200}
                     height={420}
+                    unoptimized
                     className="h-auto w-full rounded-[1.25rem]"
                   />
                 </div>
@@ -176,6 +222,10 @@ export default function HomePage() {
               </div>
             </ScrollReveal>
           </div>
+        </section>
+
+        <section className="sr-only">
+          <a href={absoluteUrl("/sitemap.xml")}>Sitemap</a>
         </section>
       </main>
     </>

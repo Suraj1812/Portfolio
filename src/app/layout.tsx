@@ -1,28 +1,68 @@
 import type { ReactNode } from "react";
-import type { Metadata } from "next";
-import { Manrope, Space_Grotesk } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 
 import { CursorGlow } from "@/components/cursor-glow";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { absoluteUrl, siteConfig } from "@/lib/site";
 
+import "@fontsource-variable/manrope";
+import "@fontsource-variable/space-grotesk";
 import "./globals.css";
 
-const display = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["400", "500", "600", "700"]
-});
-
-const body = Manrope({
-  subsets: ["latin"],
-  variable: "--font-body",
-  weight: ["400", "500", "600", "700"]
-});
-
 export const metadata: Metadata = {
-  title: "Suraj Singh | Frontend Portfolio",
-  description:
-    "Frontend and full-stack portfolio for Suraj Singh featuring premium UI engineering, motion systems, and curated production work."
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.shortName}`
+  },
+  description: siteConfig.description,
+  applicationName: siteConfig.shortName,
+  keywords: [...siteConfig.keywords],
+  authors: [{ name: "Suraj Singh", url: siteConfig.links.github }],
+  creator: "Suraj Singh",
+  publisher: "Suraj Singh",
+  alternates: {
+    canonical: "/"
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteConfig.url,
+    siteName: siteConfig.shortName,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [
+      {
+        url: absoluteUrl(siteConfig.ogImage),
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [absoluteUrl("/twitter-image")]
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1
+    }
+  },
+  category: "technology"
+};
+
+export const viewport: Viewport = {
+  themeColor: "#07111f",
+  colorScheme: "light"
 };
 
 export default function RootLayout({
@@ -32,7 +72,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${display.variable} ${body.variable} font-body text-ink`}>
+      <body className="font-body text-ink">
         <SmoothScroll>
           <CursorGlow />
           {children}

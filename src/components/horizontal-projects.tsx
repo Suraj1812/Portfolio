@@ -31,6 +31,24 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
     };
   }, [selected]);
 
+  useEffect(() => {
+    if (!selected) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelected(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selected]);
+
   useLayoutEffect(() => {
     const section = sectionRef.current;
     const stage = stageRef.current;
