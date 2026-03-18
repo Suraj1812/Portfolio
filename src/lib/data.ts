@@ -55,7 +55,7 @@ export const tickerItems = [
 ];
 
 export const heroStats = [
-  { value: "10+", label: "Production projects" },
+  { value: "15+", label: "Production projects" },
   { value: "40+", label: "Personal builds" },
   { value: "AI + Web", label: "Delivery focus" }
 ];
