@@ -25,7 +25,10 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
   useLayoutEffect(() => {
     const section = sectionRef.current;
 
-    if (!section || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (
+      !section ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       return;
     }
 
@@ -48,9 +51,9 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
               end: "top 38%",
               scrub: 0.9,
               onEnter: () => setActiveIndex(index),
-              onEnterBack: () => setActiveIndex(index)
-            }
-          }
+              onEnterBack: () => setActiveIndex(index),
+            },
+          },
         );
       });
 
@@ -60,8 +63,8 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
           trigger: section,
           start: "top bottom",
           end: "bottom top",
-          scrub: 1
-        }
+          scrub: 1,
+        },
       });
 
       gsap.to("[data-story-orb='two']", {
@@ -71,8 +74,8 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
           trigger: section,
           start: "top bottom",
           end: "bottom top",
-          scrub: 1
-        }
+          scrub: 1,
+        },
       });
     }, section);
 
@@ -84,19 +87,26 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
   const activeStep = steps[activeIndex] ?? steps[0];
 
   return (
-    <section id="about" ref={sectionRef} className="relative px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
+    <section
+      id="about"
+      ref={sectionRef}
+      className="relative px-4 py-20 sm:px-6 sm:py-24 lg:px-8"
+    >
       <div className="mx-auto max-w-6xl">
         <div className="max-w-3xl">
           <div className="neo-chip inline-flex items-center gap-2 bg-[var(--yellow)] px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-black">
             <Sparkles className="h-4 w-4 text-black" />
             <span>Scroll Story</span>
           </div>
-          <h2 className="mt-6 font-display text-3xl font-black uppercase tracking-[-0.05em] text-black sm:text-4xl lg:text-5xl">
-            A scroll-led breakdown of how I design, ship, and scale product work.
+          <h2 className="mt-6 font-display text-3xl font-black uppercase tracking-[-0.05em] text-black dark:text-white sm:text-4xl lg:text-5xl">
+            A scroll-led breakdown of how I design, ship, and scale product
+            work.
           </h2>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-black/75 sm:text-lg sm:leading-8">
-            This section turns the portfolio into a story about clarity, engineering systems, AI
-            product thinking, and the delivery proof behind the visuals.
+
+          <p className="mt-5 max-w-2xl text-base leading-7 text-black/75 dark:text-white/80 sm:text-lg sm:leading-8">
+            This section turns the portfolio into a story about clarity,
+            engineering systems, AI product thinking, and the delivery proof
+            behind the visuals.
           </p>
         </div>
 
@@ -127,12 +137,21 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
                     <span>{activeStep.label}</span>
                   </div>
 
-                  <div className={cn("neo-panel-lg mt-6 p-6 text-black", activeStep.accent)}>
-                    <p className="text-sm font-black uppercase tracking-[0.22em]">Story focus</p>
+                  <div
+                    className={cn(
+                      "neo-panel-lg mt-6 p-6 text-black",
+                      activeStep.accent,
+                    )}
+                  >
+                    <p className="text-sm font-black uppercase tracking-[0.22em]">
+                      Story focus
+                    </p>
                     <h3 className="mt-4 font-display text-2xl font-black uppercase tracking-[-0.04em]">
                       {activeStep.title}
                     </h3>
-                    <p className="mt-4 text-sm leading-7 text-black/75">{activeStep.description}</p>
+                    <p className="mt-4 text-sm leading-7 text-black/75">
+                      {activeStep.description}
+                    </p>
                   </div>
 
                   <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
@@ -159,7 +178,9 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
                 }}
                 className="flex min-h-[auto] items-center md:min-h-[55vh] lg:min-h-[70vh]"
               >
-                <div className={cn("neo-panel-lg w-full p-7 sm:p-8", step.accent)}>
+                <div
+                  className={cn("neo-panel-lg w-full p-7 sm:p-8", step.accent)}
+                >
                   <div className="flex flex-col gap-5 border-b-4 border-black pb-6 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                       <p className="text-xs font-black uppercase tracking-[0.22em] text-black/70">
@@ -175,8 +196,12 @@ export function ScrollStory({ steps }: ScrollStoryProps) {
                     </div>
                   </div>
 
-                  <p className="mt-6 text-base leading-8 text-black/80">{step.description}</p>
-                  <p className="mt-4 text-base leading-8 text-black/80">{step.detail}</p>
+                  <p className="mt-6 text-base leading-8 text-black/80">
+                    {step.description}
+                  </p>
+                  <p className="mt-4 text-base leading-8 text-black/80">
+                    {step.detail}
+                  </p>
 
                   <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                     {step.highlights.map((highlight) => (
