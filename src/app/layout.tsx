@@ -13,12 +13,7 @@ const themeScript = `
 (() => {
   try {
     const storedTheme = window.localStorage.getItem("theme");
-    const theme =
-      storedTheme === "light" || storedTheme === "dark"
-        ? storedTheme
-        : window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
+    const theme = storedTheme === "light" || storedTheme === "dark" ? storedTheme : "light";
     document.documentElement.dataset.theme = theme;
   } catch (error) {
     document.documentElement.dataset.theme = "light";

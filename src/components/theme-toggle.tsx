@@ -18,7 +18,7 @@ function getPreferredTheme(): Theme {
     return storedTheme;
   }
 
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return "light";
 }
 
 function applyTheme(theme: Theme) {
@@ -48,7 +48,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
       type="button"
       onClick={toggleTheme}
       className={cn(
-        "neo-chip fixed bottom-4 left-4 z-50 inline-flex h-12 w-12 items-center justify-center bg-white text-black transition-transform hover:-translate-y-0.5 sm:bottom-6 sm:left-6 sm:h-14 sm:w-14",
+        "neo-chip fixed bottom-4 right-4 z-50 inline-flex h-12 w-12 items-center justify-center bg-white text-black transition-transform hover:-translate-y-0.5 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14",
         className
       )}
       aria-label="Toggle color theme"
