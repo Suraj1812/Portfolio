@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Suraj Singh neobrutalist portfolio";
+export const alt = "Suraj Singh AI full-stack software engineer portfolio";
 export const size = {
   width: 1200,
   height: 630
@@ -95,7 +95,7 @@ export default function OpenGraphImage() {
             >
               SS
             </div>
-            Neobrutalist Portfolio
+            AI Portfolio
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "18px", maxWidth: 980 }}>
@@ -121,14 +121,14 @@ export default function OpenGraphImage() {
           </div>
 
           <div style={{ display: "flex", gap: "18px" }}>
-            {["Next.js", "React", "AI Products", "Scalable Systems"].map((item) => (
+            {["Next.js", "React", "AI Apps", "AI Systems"].map((item) => (
               <div
                 key={item}
                 style={{
                   display: "flex",
                   borderRadius: 999,
                   border: "4px solid #111111",
-                  background: item === "AI Products" ? "#ff6ad5" : "#ffffff",
+                  background: item.startsWith("AI") ? "#ff6ad5" : "#ffffff",
                   boxShadow: "8px 8px 0 #111111",
                   padding: "12px 20px",
                   fontSize: 24,

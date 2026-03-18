@@ -21,26 +21,38 @@ import {
   tickerItems,
   uiExperiments
 } from "@/lib/data";
-import { siteConfig } from "@/lib/site";
+import { absoluteUrl, siteConfig } from "@/lib/site";
 
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "Person",
+      "@id": `${siteConfig.url}#person`,
       name: "Suraj Singh",
       url: siteConfig.url,
+      image: absoluteUrl(siteConfig.ogImage),
       sameAs: [siteConfig.links.github, siteConfig.links.linkedin],
       jobTitle: "Full-Stack Software Engineer",
       description: siteConfig.description,
       email: siteConfig.contact.email,
       telephone: siteConfig.contact.phoneRaw,
+      mainEntityOfPage: siteConfig.url,
+      nationality: siteConfig.country,
+      knowsLanguage: ["English", "Hindi"],
+      hasOccupation: {
+        "@type": "Occupation",
+        name: "Full-Stack Software Engineer",
+        skills:
+          "AI-powered applications, scalable web systems, Next.js, React, TypeScript, frontend architecture, API integrations"
+      },
       contactPoint: [
         {
           "@type": "ContactPoint",
-          contactType: "sales",
+          contactType: "business inquiries",
           email: siteConfig.contact.email,
-          telephone: siteConfig.contact.phoneRaw
+          telephone: siteConfig.contact.phoneRaw,
+          availableLanguage: ["English", "Hindi"]
         }
       ],
       knowsAbout: [
@@ -48,6 +60,8 @@ const structuredData = {
         "React",
         "TypeScript",
         "AI Applications",
+        "Artificial Intelligence",
+        "AI Product Engineering",
         "GSAP",
         "Framer Motion",
         "Frontend Architecture",
@@ -57,13 +71,52 @@ const structuredData = {
     },
     {
       "@type": "WebSite",
+      "@id": `${siteConfig.url}#website`,
       name: siteConfig.shortName,
+      alternateName: siteConfig.name,
       url: siteConfig.url,
-      description: siteConfig.description
+      description: siteConfig.description,
+      inLanguage: "en-IN",
+      publisher: {
+        "@id": `${siteConfig.url}#person`
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${siteConfig.url}#webpage`,
+      url: siteConfig.url,
+      name: siteConfig.name,
+      description: siteConfig.description,
+      isPartOf: {
+        "@id": `${siteConfig.url}#website`
+      },
+      about: {
+        "@id": `${siteConfig.url}#person`
+      },
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: absoluteUrl(siteConfig.ogImage)
+      },
+      inLanguage: "en-IN"
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": `${siteConfig.url}#portfolio`,
+      url: siteConfig.url,
+      name: "AI-Powered Full-Stack Software Engineering Portfolio",
+      description:
+        "Portfolio of Suraj Singh featuring AI-powered applications, scalable web systems, client projects, and interactive frontend engineering work.",
+      isPartOf: {
+        "@id": `${siteConfig.url}#website`
+      },
+      about: {
+        "@id": `${siteConfig.url}#person`
+      },
+      inLanguage: "en-IN"
     },
     {
       "@type": "ItemList",
-      name: "Featured projects",
+      name: "Featured AI and web projects",
       itemListElement: featuredProjects.map((project, index) => ({
         "@type": "ListItem",
         position: index + 1,
@@ -94,8 +147,8 @@ export default function HomePage() {
             <ScrollReveal>
               <SectionHeading
                 eyebrow="Client Work"
-                title="Real production work behind the visual system."
-                description="These launches show the business side of the portfolio too: real delivery, real users, product framing, and interfaces built to support live companies."
+                title="Real production work behind the web and AI product systems."
+                description="These launches show the business side of the portfolio too: real delivery, real users, AI-ready product framing, and interfaces built to support live companies."
               />
             </ScrollReveal>
 
@@ -160,8 +213,8 @@ export default function HomePage() {
             <ScrollReveal>
               <SectionHeading
                 eyebrow="GitHub"
-                title="Public build activity, experiments, and ongoing engineering output."
-                description="GitHub is where the public side of the work lives: experiments, shipped ideas, prototypes, and the habit of building beyond project deadlines."
+                title="Public AI, web, and product engineering output."
+                description="GitHub is where the public side of the work lives: AI experiments, shipped ideas, prototypes, frontend systems, and the habit of building beyond project deadlines."
               />
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">

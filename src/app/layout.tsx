@@ -15,21 +15,44 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.shortName}`
   },
   description: siteConfig.description,
+  abstract: siteConfig.abstract,
   applicationName: siteConfig.shortName,
   keywords: [...siteConfig.keywords],
   authors: [{ name: "Suraj Singh", url: siteConfig.links.github }],
+  referrer: "origin-when-cross-origin",
   creator: "Suraj Singh",
   publisher: "Suraj Singh",
+  classification: siteConfig.classification,
+  formatDetection: {
+    email: true,
+    telephone: true,
+    address: false
+  },
   alternates: {
     canonical: "/"
   },
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    shortcut: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/icon.svg", type: "image/svg+xml" }]
+  },
+  appleWebApp: {
+    capable: true,
+    title: siteConfig.shortName,
+    statusBarStyle: "default"
+  },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: siteConfig.locale,
+    alternateLocale: ["en_US"],
     url: siteConfig.url,
     siteName: siteConfig.shortName,
     title: siteConfig.name,
     description: siteConfig.description,
+    countryName: siteConfig.country,
+    emails: [siteConfig.contact.email],
+    phoneNumbers: [siteConfig.contact.phoneDisplay],
     images: [
       {
         url: absoluteUrl(siteConfig.ogImage),
@@ -56,7 +79,19 @@ export const metadata: Metadata = {
       "max-video-preview": -1
     }
   },
-  category: "technology"
+  category: siteConfig.category,
+  other: {
+    "geo.region": siteConfig.region,
+    "geo.country": siteConfig.country,
+    "geo.placename": siteConfig.country,
+    "contact:email": siteConfig.contact.email,
+    "contact:phone_number": siteConfig.contact.phoneDisplay,
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-title": siteConfig.shortName,
+    "msapplication-TileColor": "#ffe45e",
+    "ai-focus": "AI-powered applications, AI systems, AI product engineering, scalable web platforms"
+  }
 };
 
 export const viewport: Viewport = {
