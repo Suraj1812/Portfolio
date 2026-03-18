@@ -6,13 +6,14 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 type Theme = "light" | "dark";
+const THEME_STORAGE_KEY = "suraj-portfolio-theme-v2";
 
 function getPreferredTheme(): Theme {
   if (typeof window === "undefined") {
     return "light";
   }
 
-  const storedTheme = window.localStorage.getItem("theme");
+  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
 
   if (storedTheme === "light" || storedTheme === "dark") {
     return storedTheme;
@@ -38,7 +39,8 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
 
   const toggleTheme = () => {
     const nextTheme: Theme = theme === "light" ? "dark" : "light";
-    window.localStorage.setItem("theme", nextTheme);
+    window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    window.localStorage.removeItem("theme");
     applyTheme(nextTheme);
     setTheme(nextTheme);
   };
@@ -48,7 +50,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
       type="button"
       onClick={toggleTheme}
       className={cn(
-        "neo-chip fixed bottom-4 right-4 z-50 inline-flex h-12 w-12 items-center justify-center bg-white text-black transition-transform hover:-translate-y-0.5 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14",
+        "neo-chip fixed bottom-4 left-auto right-4 z-50 inline-flex h-12 w-12 items-center justify-center bg-white text-black transition-transform hover:-translate-y-0.5 sm:bottom-6 sm:left-auto sm:right-6 sm:h-14 sm:w-14",
         className
       )}
       aria-label="Toggle color theme"

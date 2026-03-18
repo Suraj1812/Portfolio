@@ -12,8 +12,10 @@ import "./globals.css";
 const themeScript = `
 (() => {
   try {
-    const storedTheme = window.localStorage.getItem("theme");
+    const storageKey = "suraj-portfolio-theme-v2";
+    const storedTheme = window.localStorage.getItem(storageKey);
     const theme = storedTheme === "light" || storedTheme === "dark" ? storedTheme : "light";
+    window.localStorage.removeItem("theme");
     document.documentElement.dataset.theme = theme;
   } catch (error) {
     document.documentElement.dataset.theme = "light";
@@ -121,7 +123,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-theme="light" suppressHydrationWarning>
       <body className="font-body text-ink">
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <SmoothScroll>
