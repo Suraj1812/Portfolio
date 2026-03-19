@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.name,
-    template: `%s | ${siteConfig.shortName}`
+    template: `%s | ${siteConfig.shortName}`,
   },
   description: siteConfig.description,
   abstract: siteConfig.abstract,
@@ -41,21 +41,25 @@ export const metadata: Metadata = {
   formatDetection: {
     email: true,
     telephone: true,
-    address: false
+    address: false,
   },
   alternates: {
-    canonical: "/"
+    canonical: "/",
   },
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    shortcut: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/icon.svg", type: "image/svg+xml" }]
+    icon: [
+      { url: "/logo.png", sizes: "16x16", type: "image/png" },
+      { url: "/logo.png", sizes: "32x32", type: "image/png" },
+      { url: "/logo.png", sizes: "48x48", type: "image/png" },
+    ],
+    shortcut: ["/logo.png"],
+    apple: [{ url: "/logo.png", sizes: "180x180", type: "image/png" }],
   },
   appleWebApp: {
     capable: true,
     title: siteConfig.shortName,
-    statusBarStyle: "default"
+    statusBarStyle: "default",
   },
   openGraph: {
     type: "website",
@@ -73,15 +77,15 @@ export const metadata: Metadata = {
         url: absoluteUrl(siteConfig.ogImage),
         width: 1200,
         height: 630,
-        alt: siteConfig.name
-      }
-    ]
+        alt: siteConfig.name,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [absoluteUrl("/twitter-image")]
+    images: [absoluteUrl("/twitter-image")],
   },
   robots: {
     index: true,
@@ -91,8 +95,8 @@ export const metadata: Metadata = {
       follow: true,
       "max-image-preview": "large",
       "max-snippet": -1,
-      "max-video-preview": -1
-    }
+      "max-video-preview": -1,
+    },
   },
   category: siteConfig.category,
   other: {
@@ -105,20 +109,21 @@ export const metadata: Metadata = {
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-title": siteConfig.shortName,
     "msapplication-TileColor": "#ffe45e",
-    "ai-focus": "AI-powered applications, AI systems, AI product engineering, scalable web platforms"
-  }
+    "ai-focus":
+      "AI-powered applications, AI systems, AI product engineering, scalable web platforms",
+  },
 };
 
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffe45e" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f1115" }
+    { media: "(prefers-color-scheme: dark)", color: "#0f1115" },
   ],
-  colorScheme: "light dark"
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: ReactNode;
 }>) {

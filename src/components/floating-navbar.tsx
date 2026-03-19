@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Github, Menu, Phone, X } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-
+import Image from "next/image";
 import { navItems } from "@/lib/data";
 import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -32,14 +32,21 @@ export function FloatingNavbar() {
     >
       <div
         className={cn(
-          "neo-panel flex w-full max-w-6xl flex-col bg-[var(--yellow)] px-3 py-2 transition-all duration-300 sm:px-4"
+          "neo-panel flex w-full max-w-6xl flex-col bg-[var(--yellow)] px-3 py-2 transition-all duration-300 sm:px-4",
         )}
       >
         <div className="flex w-full items-center justify-between gap-2">
-          <Link href="#top" className="flex min-w-0 items-center gap-3 rounded-[1rem] px-2 py-2 sm:px-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] border-2 border-black bg-white text-sm font-black text-black">
-              SS
-            </div>
+          <Link
+            href="#top"
+            className="flex min-w-0 items-center gap-3 rounded-[1rem] px-2 py-2 sm:px-3"
+          >
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={48}
+              height={48}
+              className="rounded-full border-2 border-black object-cover"
+            />
             <div className="min-w-0">
               <p className="truncate font-display text-sm font-black uppercase tracking-[0.12em] text-black">
                 Suraj Singh
@@ -86,9 +93,15 @@ export function FloatingNavbar() {
               onClick={() => setMenuOpen((current) => !current)}
               className="inline-flex items-center justify-center rounded-[0.95rem] border-2 border-black bg-white p-2 text-black md:hidden"
               aria-expanded={menuOpen}
-              aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-label={
+                menuOpen ? "Close navigation menu" : "Open navigation menu"
+              }
             >
-              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {menuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
             </button>
           </div>
         </div>
