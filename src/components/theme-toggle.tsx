@@ -68,6 +68,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
       )}
       aria-label="Toggle color theme"
       title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+      style={{display:'none'}}
     >
       {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
     </button>
