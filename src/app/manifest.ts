@@ -16,9 +16,9 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#ffe45e",
     icons: [
       {
-        src: "/icon.svg",
-        type: "image/svg+xml",
-        sizes: "any"
+        src: "/suraj-logo.png",
+        type: "image/png",
+        sizes: "512x512"
       }
     ]
   };
