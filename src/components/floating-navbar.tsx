@@ -49,7 +49,7 @@ export function FloatingNavbar() {
                 className="h-full w-full rounded-full object-cover"
               />
             </span>
-            <div className="min-w-0">
+            <div className="hidden min-w-0 sm:block">
               <p className="truncate font-display text-sm font-black uppercase tracking-[0.12em] text-black">
                 Suraj Singh
               </p>
