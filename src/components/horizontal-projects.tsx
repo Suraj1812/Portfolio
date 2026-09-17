@@ -212,9 +212,24 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                 </div>
 
                 <div className="neo-panel-lg neo-stripes relative mt-8 flex flex-1 overflow-hidden bg-white p-5">
+                  {project.imageUrl ? (
+                    <div className="absolute inset-0 overflow-hidden bg-black">
+                      <img
+                        src={project.imageUrl}
+                        alt={project.imageAlt ?? `${project.title} project visual`}
+                        loading="lazy"
+                        className="h-full w-full object-cover opacity-85 transition duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+                    </div>
+                  ) : null}
+
                   <motion.div
                     aria-hidden="true"
-                    className="absolute -right-10 -top-12 h-36 w-36 rounded-[1.5rem] border-4 border-black bg-[var(--pink)]"
+                    className={cn(
+                      "absolute -right-10 -top-12 h-36 w-36 rounded-[1.5rem] border-4 border-black bg-[var(--pink)]",
+                      project.imageUrl && "opacity-60",
+                    )}
                     animate={{ rotate: 360 }}
                     transition={{
                       duration: 20,
@@ -224,7 +239,10 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                   />
                   <motion.div
                     aria-hidden="true"
-                    className="absolute bottom-6 left-6 h-20 w-20 rounded-[1.2rem] border-4 border-black bg-[var(--cyan)]"
+                    className={cn(
+                      "absolute bottom-6 left-6 h-20 w-20 rounded-[1.2rem] border-4 border-black bg-[var(--cyan)]",
+                      project.imageUrl && "opacity-60",
+                    )}
                     animate={{ y: [0, -8, 0], x: [0, 6, 0] }}
                     transition={{ duration: 4.2, repeat: Infinity }}
                   />
@@ -233,7 +251,10 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                     {project.metrics.map((metric) => (
                       <div
                         key={metric}
-                        className="neo-panel-sm bg-[var(--yellow)] px-4 py-3 text-sm font-black uppercase tracking-[0.1em] text-black"
+                        className={cn(
+                          "neo-panel-sm bg-[var(--yellow)] px-4 py-3 text-sm font-black uppercase tracking-[0.1em] text-black",
+                          project.imageUrl && "bg-white/95",
+                        )}
                       >
                         {metric}
                       </div>
@@ -293,6 +314,17 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                     selected.accent,
                   )}
                 >
+                  {selected.imageUrl ? (
+                    <div className="absolute inset-0 overflow-hidden bg-black">
+                      <img
+                        src={selected.imageUrl}
+                        alt={selected.imageAlt ?? `${selected.title} project visual`}
+                        className="h-full w-full object-cover opacity-35"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+                    </div>
+                  ) : null}
+
                   <div className="relative z-10 flex h-full flex-col justify-between">
                     <div>
                       <p className="text-xs font-black uppercase tracking-[0.22em] text-black/65">

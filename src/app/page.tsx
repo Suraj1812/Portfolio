@@ -1,14 +1,13 @@
-import Image from "next/image";
 import { ArrowUpRight, Github, Linkedin, Mail, Phone } from "lucide-react";
 
 import { AnimatedButton } from "@/components/animated-button";
 import { CreativeLab } from "@/components/creative-lab";
 import { FloatingNavbar } from "@/components/floating-navbar";
+import { GithubLanguageCard } from "@/components/github-language-card";
 import { HeroSection } from "@/components/hero-section";
 import { HorizontalProjects } from "@/components/horizontal-projects";
 import { MetricsTicker } from "@/components/metrics-ticker";
 import { ScrollReveal } from "@/components/scroll-reveal";
-import { ScrollStory } from "@/components/scroll-story";
 import { SectionHeading } from "@/components/section-heading";
 import { StackCloud } from "@/components/stack-cloud";
 import { TiltCard } from "@/components/tilt-card";
@@ -16,7 +15,6 @@ import {
   clientProjects,
   featuredProjects,
   skills,
-  storySteps,
   techCloud,
   tickerItems,
   uiExperiments
@@ -139,7 +137,6 @@ export default function HomePage() {
         />
         <HeroSection />
         <MetricsTicker items={tickerItems} />
-        <ScrollStory steps={storySteps} />
         <HorizontalProjects projects={featuredProjects} />
 
         <section id="clients" className="bg-[var(--cream)] px-4 py-24 sm:px-6 lg:px-8">
@@ -229,16 +226,7 @@ export default function HomePage() {
 
             <ScrollReveal delay={0.1}>
               <div className="grid gap-5">
-                <div className="neo-panel-lg overflow-hidden bg-[var(--yellow)] p-4">
-                  <Image
-                    src="https://github-readme-stats.vercel.app/api/top-langs/?username=Suraj1812&layout=compact&hide_border=true&bg_color=00000000&title_color=111827&text_color=475569"
-                    alt="Top languages for Suraj Singh"
-                    width={1200}
-                    height={420}
-                    unoptimized
-                    className="h-auto w-full rounded-[1rem] border-4 border-black"
-                  />
-                </div>
+                <GithubLanguageCard />
               </div>
             </ScrollReveal>
           </div>

@@ -13,25 +13,6 @@ type StackCloudProps = {
   tools: string[];
 };
 
-const chipPositions = [
-  "left-[8%] top-[8%]",
-  "left-[46%] top-[10%]",
-  "left-[68%] top-[22%]",
-  "left-[14%] top-[34%]",
-  "left-[48%] top-[38%]",
-  "left-[72%] top-[48%]",
-  "left-[10%] top-[58%]",
-  "left-[42%] top-[62%]",
-  "left-[68%] top-[74%]",
-  "left-[24%] top-[78%]",
-  "left-[56%] top-[16%]",
-  "left-[26%] top-[50%]",
-  "left-[62%] top-[60%]",
-  "left-[36%] top-[26%]",
-  "left-[54%] top-[84%]",
-  "left-[76%] top-[82%]"
-];
-
 const chipColors = [
   "bg-[var(--yellow)]",
   "bg-[var(--pink)]",
@@ -82,30 +63,17 @@ export function StackCloud({ skills, tools }: StackCloudProps) {
           </h3>
         </div>
 
-        <div className="relative z-10 mt-8 flex flex-wrap gap-3 lg:hidden">
-          {tools.map((tool, index) => (
-            <div
-              key={tool}
-              className={`neo-chip ${chipColors[index % chipColors.length]} px-4 py-2 text-xs font-black uppercase tracking-[0.1em] text-black sm:text-sm`}
-            >
-              {tool}
-            </div>
-          ))}
-        </div>
-
-        <div className="relative z-10 mt-8 hidden h-[23rem] lg:block">
+        <div className="relative z-10 mt-8 flex flex-wrap gap-3">
           {tools.map((tool, index) => (
             <motion.div
               key={tool}
-              className={`neo-chip absolute ${chipPositions[index]} ${
-                chipColors[index % chipColors.length]
-              } px-4 py-2 text-sm font-black uppercase tracking-[0.1em] text-black`}
-              animate={{ y: [0, -10, 0], x: index % 2 === 0 ? [0, 6, 0] : [0, -6, 0] }}
+              className={`neo-chip ${chipColors[index % chipColors.length]} px-4 py-2 text-xs font-black uppercase tracking-[0.1em] text-black sm:text-sm`}
+              animate={{ y: [0, -5, 0], x: index % 2 === 0 ? [0, 3, 0] : [0, -3, 0] }}
               transition={{
                 duration: 5 + (index % 4),
                 repeat: Infinity,
                 ease: "easeInOut",
-                delay: index * 0.08
+                delay: index * 0.04
               }}
             >
               {tool}

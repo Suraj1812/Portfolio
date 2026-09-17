@@ -3,16 +3,6 @@ export type NavItem = {
   href: string;
 };
 
-export type StoryStep = {
-  id: string;
-  label: string;
-  title: string;
-  description: string;
-  detail: string;
-  highlights: string[];
-  accent: string;
-};
-
 export type FeaturedProject = {
   slug: string;
   title: string;
@@ -29,10 +19,11 @@ export type FeaturedProject = {
   impact: string;
   accent: string;
   metrics: string[];
+  imageUrl?: string;
+  imageAlt?: string;
 };
 
 export const navItems: NavItem[] = [
-  { label: "About", href: "#about" },
   { label: "Projects", href: "#work" },
   { label: "Clients", href: "#clients" },
   { label: "Lab", href: "#lab" },
@@ -60,43 +51,82 @@ export const heroStats = [
   { value: "AI + Web", label: "Delivery focus" }
 ];
 
-export const storySteps: StoryStep[] = [
-  {
-    id: "intro",
-    label: "01 / Brutal Clarity",
-    title: "Lead with bold messaging, hard contrast, and a product story that feels intentional.",
-    description:
-      "The portfolio opens like a landing page, not a template. Strong type, strict borders, and bright blocks make the message impossible to miss from the first viewport.",
-    detail:
-      "Even with a louder visual system, the structure stays clean: headline, proof, contact paths, and a clear sense of the problems I like solving.",
-    highlights: ["Hard-shadow layout", "Clear first-fold proof", "Fast contact access"],
-    accent: "bg-[var(--yellow)]"
-  },
-  {
-    id: "systems",
-    label: "02 / Build Systems",
-    title: "Show reusable systems, AI integration thinking, and frontend architecture as one story.",
-    description:
-      "Instead of dumping a skills list, the middle of the page explains how I build modern applications: component systems, API-backed flows, motion, and scalable UI decisions.",
-    detail:
-      "That balance matters for AI-powered products especially, because the UI has to feel expressive while still being understandable, maintainable, and fast.",
-    highlights: ["Reusable primitives", "AI product UX", "Responsive engineering"],
-    accent: "bg-[var(--cyan)]"
-  },
-  {
-    id: "delivery",
-    label: "03 / Ship Outcomes",
-    title: "Back the visual identity with real launches, shipped client work, and experiments that prove range.",
-    description:
-      "The portfolio still has to do the real work: show production experience, working products, experiments, and enough technical depth to support serious conversations.",
-    detail:
-      "That is why the page moves from story into proof, then into client delivery, GitHub activity, and direct ways to connect for product or freelance work.",
-    highlights: ["Pinned project rail", "Client-ready delivery", "Public build history"],
-    accent: "bg-[var(--lime)]"
-  }
-];
-
 export const featuredProjects: FeaturedProject[] = [
+  {
+    slug: "amze",
+    title: "AMZE",
+    tagline:
+      "A modern commerce experience for discovering technology, gaming, components, and everyday electronics without losing the human buying journey.",
+    description:
+      "AMZE is a Spanish technology and electronics storefront built around fast product discovery. The experience brings computers, components, phones, displays, networking, gaming, software, and smart-home products into one structured catalogue, with shipping visibility and support cues close to the buying path.",
+    category: "E-commerce Experience",
+    year: "2026",
+    liveUrl: "https://amze.es/en/store",
+    stack: ["E-commerce", "Product Discovery", "Responsive UI", "Trust Signals"],
+    features: [
+      "Category-led browsing across tech, gaming, mobility, and home",
+      "Product carousels that surface new, popular, and category-specific inventory",
+      "Commerce reassurance through delivery tracking, returns, secure payment, and expert support"
+    ],
+    architecture:
+      "The interface is shaped as a modular storefront: global search and category navigation establish orientation, while reusable product rails and value-proposition blocks create a consistent path from discovery to product detail.",
+    impact:
+      "This project shows how I think about commerce beyond a grid of products: reduce search friction, make the catalogue feel navigable, and place confidence-building information where purchase decisions happen.",
+    accent: "bg-[var(--yellow)]",
+    metrics: ["Tech commerce", "Fast discovery", "Trust at checkout"],
+    imageUrl: "/amze-store-banner.png",
+    imageAlt: "AMZE technology and electronics storefront banner"
+  },
+  {
+    slug: "cricket-connect-ai",
+    title: "Cricket Connect AI",
+    tagline:
+      "An AI-native cricket intelligence platform that turns match data, context, and strategy into analysis people can actually act on.",
+    description:
+      "Cricket Connect is built around a simple but ambitious idea: cricket deserves more than headlines, gut feel, or opaque statistics. Its professional CC Pro product supports coaches, analysts, franchises, and media with performance analysis, opposition profiling, tactical modelling, and situational forecasting, while CC AI brings the same analytical engine to fans as a real-time match companion.",
+    category: "AI Sports Intelligence",
+    year: "2026",
+    liveUrl: "https://cricketconnect.ai/",
+    stack: ["AI Product UX", "Sports Analytics", "Data Storytelling", "Responsive Web"],
+    features: [
+      "Pattern-based analysis across players, teams, matches, tournaments, and seasons",
+      "Context-aware insight that considers venue, pitch, matchups, game phase, and pressure",
+      "Probabilistic forecasting designed to explain likelihood rather than make promises"
+    ],
+    architecture:
+      "The product story is organised around one intelligence layer serving two audiences: a deeper professional workspace for decision-makers and a clearer match companion for fans. That separation keeps the analytical depth intact while changing the amount of context exposed at each moment.",
+    impact:
+      "This is a strong example of AI product thinking: make complex analysis explainable, keep the interface grounded in the sport, and treat transparency and limitations as part of the experience rather than footnotes.",
+    accent: "bg-[var(--cyan)]",
+    metrics: ["AI-native product", "Explainable insight", "Live match context"],
+    imageUrl: "/cricket-connect.png",
+    imageAlt: "Cricket Connect AI brand mark"
+  },
+  {
+    slug: "fashion-pattern-lab",
+    title: "Fashion Pattern Lab",
+    tagline:
+      "A specialist learning and commerce platform helping designers turn fashion ideas into accurate, wearable patterns.",
+    description:
+      "Fashion Pattern Lab combines one-on-one online education with practical pattern-making services. The platform focuses on women’s wear pattern making across bodices, skirts, trousers, corsets, kameez shalwar, western wear, and digital patterns, while also giving learners and designers a route to courses, custom patterns, and student work.",
+    category: "Education + Digital Commerce",
+    year: "2026",
+    liveUrl: "https://fashionpatternlab.com/",
+    stack: ["LMS Experience", "Digital Products", "Pattern Education", "WordPress Commerce"],
+    features: [
+      "Clear separation between courses, pattern store, custom pattern work, and student projects",
+      "Education-led content that connects fit, proportion, construction, and garment outcomes",
+      "A focused path for students, designers, brands, and people looking for ready-to-use digital patterns"
+    ],
+    architecture:
+      "The experience works as a content-to-commerce system: educational authority establishes trust, course and service routes make the offer understandable, and digital pattern products give visitors a direct next step after learning.",
+    impact:
+      "This project demonstrates how I design for a specialist audience: respect the technical depth of the subject, make the learning path approachable, and connect expertise to practical outcomes instead of treating education and commerce as separate worlds.",
+    accent: "bg-[var(--pink)]",
+    metrics: ["Fashion education", "Custom patterns", "Digital learning"],
+    imageUrl: "/fashion-pattern-lab.jpg",
+    imageAlt: "Fashion Pattern Lab women’s wear pattern-making course poster"
+  },
   {
     slug: "solar-system",
     title: "Solar System Explorer",
@@ -286,13 +316,6 @@ export const clientProjects = [
     summary: "A modern marketing experience with attention to pacing, components, and conversion-focused sections.",
     stack: ["Marketing UI", "React", "Launch Support"]
   },
-  {
-    name: "The Nexus Store",
-    url: "https://www.thenexustore.com",
-    focus: "E-commerce storefront",
-    summary: "A retail-facing experience focused on product browsing, presentation, and responsive commerce flows.",
-    stack: ["Commerce UI", "Responsive Flow", "Product Grids"]
-  }
 ];
 
 export const uiExperiments = [
@@ -330,18 +353,44 @@ export const skills = [
 export const techCloud = [
   "Next.js",
   "React",
+  "React Native",
   "TypeScript",
+  "Angular",
+  "HTML",
+  "CSS",
+  "JavaScript",
   "Tailwind",
+  "Redux",
   "Framer Motion",
   "GSAP",
   "Lenis",
   "Node.js",
+  "Go",
+  "NestJS",
+  "Django",
+  "FastAPI",
+  ".NET Core",
   "REST APIs",
+  "API Integrations",
+  "PostgreSQL",
+  "MongoDB",
+  "MySQL",
+  "Docker",
+  "Firebase",
+  "Git",
   "OpenAI APIs",
+  "LLM Integration",
+  "Prompt Engineering",
+  "RAG Systems",
+  "Vector Databases",
+  "LangChain",
+  "AI Chatbots",
+  "Automation Workflows",
+  "Embeddings",
+  "AI Agents",
   "Responsive UI",
   "Vercel",
   "Three.js",
-  "JavaScript",
   "UI Systems",
   "Scalable Apps"
 ];

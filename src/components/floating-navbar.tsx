@@ -40,13 +40,15 @@ export function FloatingNavbar() {
             href="#top"
             className="flex min-w-0 items-center gap-3 rounded-[1rem] px-2 py-2 sm:px-3"
           >
-            <Image
-              src="/logo.png"
-              alt="Logo"
-              width={48}
-              height={48}
-              className="rounded-full border-2 border-black object-cover"
-            />
+            <span className="flex h-[3.25rem] w-[3.25rem] shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-black bg-gradient-to-br from-white via-gray-100 to-gray-400 p-0.5">
+              <Image
+                src="/suraj-logo.png"
+                alt="Suraj Singh logo"
+                width={48}
+                height={48}
+                className="h-full w-full rounded-full object-cover"
+              />
+            </span>
             <div className="min-w-0">
               <p className="truncate font-display text-sm font-black uppercase tracking-[0.12em] text-black">
                 Suraj Singh
