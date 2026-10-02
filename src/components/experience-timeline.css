@@ -1,0 +1,109 @@
+.experience-chapters-intro { display: grid; grid-template-columns: minmax(0, 1fr) 290px; align-items: start; gap: 48px; margin-bottom: 44px; }
+.experience-chapters-eyebrow { display: inline-flex; align-items: center; gap: 8px; border: 2px solid #111; border-radius: 8px; padding: 8px 11px; background: var(--lime); color: #111; box-shadow: 3px 3px 0 #111; font-size: 10px; line-height: 1.4; font-weight: 900; letter-spacing: .11em; }
+.experience-chapters h2 { margin: 21px 0 0; font-size: clamp(2rem, 3.4vw, 2.8rem); line-height: 1.1; font-weight: 900; letter-spacing: -.05em; }
+.experience-chapters h2 > span { display: inline-block; padding: 2px 7px 4px; background: var(--pink); color: #111; transform: rotate(-1deg); }
+.experience-chapters-intro > div:first-child > p { max-width: 620px; margin-top: 17px; color: var(--ink-muted); font-size: 15px; line-height: 1.8; }
+.experience-chapters-resume { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 12px; color: var(--ink); font-size: 13px; font-weight: 800; text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+.experience-chapters-resume:hover svg { transform: translate(2px, -2px); }
+.experience-chapters-resume svg { transition: transform .2s; }
+.experience-chapters-total { display: flex; flex-direction: column; padding: 21px; border: 2px solid var(--ink); border-radius: 15px; background: var(--surface-1); color: var(--ink); box-shadow: 5px 5px 0 var(--ink); }
+.experience-chapters-total-label { display: inline-flex; align-items: center; gap: 7px; font-size: 9px; font-weight: 900; letter-spacing: .11em; }
+.experience-chapters-total-duration { display: inline-block; align-self: flex-start; margin-top: 14px; border: 2px solid #111; border-radius: 7px; padding: 7px 9px; background: var(--yellow); color: #111; font-family: var(--font-display); font-size: 24px; line-height: 1.15; font-weight: 900; letter-spacing: -.035em; }
+.experience-chapters-total > p { margin-top: 12px; font-size: 11px; line-height: 1.6; color: var(--ink-muted); }
+.experience-chapters-total .experience-as-of { display: block; margin-top: 10px; font-size: 9px; line-height: 1.6; color: var(--ink-soft); }
+.experience-chapters-timeline { display: grid; gap: 24px; margin: 0; padding: 0; list-style: none; }
+.experience-chapter { --chapter-accent: var(--cyan); display: grid; position: relative; grid-template-columns: 172px 42px minmax(0, 1fr); gap: 18px; align-items: start; }
+.experience-chapter-1 { --chapter-accent: var(--pink); }
+.experience-chapter-2 { --chapter-accent: var(--lime); }
+.experience-chapter-3 { --chapter-accent: var(--yellow); }
+.experience-chapter::after { content: ""; position: absolute; left: 209px; top: 44px; bottom: -24px; width: 3px; background: var(--ink); z-index: 0; opacity: .2; }
+.experience-chapter:last-child::after { display: none; }
+.experience-chapter-date { display: flex; flex-direction: column; gap: 10px; padding-top: 10px; }
+.experience-chapter-period { color: var(--ink); font-family: var(--font-display); font-size: 13px; line-height: 1.55; font-weight: 800; }
+.experience-chapter-tenure { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-muted); font-size: 11px; font-weight: 700; line-height: 1.5; }
+.experience-chapter-type { align-self: flex-start; border: 1px solid var(--ink); border-radius: 5px; background: var(--surface-1); padding: 4px 7px; color: var(--ink-soft); font-size: 9px; font-weight: 800; }
+.experience-chapter-marker { position: relative; display: grid; place-items: center; width: 42px; height: 42px; z-index: 1; margin-top: 6px; border: 2px solid #111; border-radius: 11px; background: var(--chapter-accent); color: #111; box-shadow: 3px 3px 0 #111; font-family: var(--font-display); font-size: 12px; font-weight: 900; transform: rotate(-3deg); }
+.experience-chapter-card { overflow: hidden; border: 2px solid var(--ink); border-radius: 15px; background: var(--surface-1); box-shadow: 4px 4px 0 var(--ink); padding: 22px 24px 0; transition: transform .2s, box-shadow .2s; }
+.experience-chapter-card:hover { transform: translateY(-2px); box-shadow: 4px 6px 0 var(--ink); }
+.experience-chapter-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.experience-chapter-role { min-width: 0; }
+.experience-chapter-company { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; color: var(--ink-soft); font-size: 11px; font-weight: 800; letter-spacing: .03em; }
+.experience-chapter-current { display: inline-flex; align-items: center; gap: 5px; padding: 4px 6px; border: 1px solid #111; border-radius: 4px; background: var(--lime); color: #111; font-size: 7px; font-weight: 900; letter-spacing: .06em; }
+.experience-chapter-current > span { display: block; width: 5px; height: 5px; border-radius: 50%; background: #111; }
+.experience-chapter h3 { margin-top: 9px; font-size: 25px; line-height: 1.2; font-weight: 900; letter-spacing: -.035em; }
+.experience-chapter-logo { display: grid; flex-shrink: 0; place-items: center; width: 122px; height: 48px; padding: 8px 11px; border: 1.5px solid #111; border-radius: 9px; }
+.experience-chapter-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.experience-chapter-logo-dark { background: #111; }
+.experience-chapter-logo-light { background: #fff; }
+.experience-chapter-role-icon { display: grid; place-items: center; flex-shrink: 0; width: 48px; height: 48px; border: 2px solid #111; border-radius: 12px; background: var(--chapter-accent); color: #111; box-shadow: 3px 3px 0 #111; transform: rotate(5deg); }
+.experience-chapter-summary { margin-top: 15px; color: var(--ink-muted); font-size: 14px; line-height: 1.75; }
+.experience-chapter-outcomes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 17px; }
+.experience-chapter-outcomes > div { display: inline-flex; align-items: center; gap: 8px; border-left: 3px solid var(--chapter-accent); background: var(--surface-2); padding: 8px 10px; border-radius: 0 7px 7px 0; }
+.experience-chapter-outcomes strong { font-family: var(--font-display); font-size: 20px; line-height: 1; font-weight: 900; letter-spacing: -.04em; }
+.experience-chapter-outcomes span { font-size: 10px; font-weight: 700; color: var(--ink-soft); }
+.experience-chapter-tools { display: flex; flex-wrap: wrap; gap: 6px; margin: 17px 0 20px; }
+.experience-chapter-tools > span { border: 1px solid var(--ink); border-radius: 5px; padding: 5px 7px; background: var(--surface-1); color: var(--ink-muted); font-size: 9px; font-weight: 800; }
+.experience-chapter-details { margin: 0 -24px; border-top: 1.5px solid var(--ink); background: var(--paper); }
+.experience-chapter-details > summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 47px; padding: 10px 24px; cursor: pointer; color: var(--ink); font-size: 11px; font-weight: 800; list-style: none; }
+.experience-chapter-details > summary::-webkit-details-marker { display: none; }
+.experience-chapter-details > summary svg { transition: transform .2s; }
+.experience-chapter-details[open] > summary svg { transform: rotate(180deg); }
+.experience-chapter-details > ul { display: grid; gap: 13px; padding: 0 24px 21px; }
+.experience-chapter-details li { display: flex; align-items: flex-start; gap: 9px; color: var(--ink-muted); font-size: 12px; line-height: 1.7; }
+.experience-chapter-details li > svg { flex-shrink: 0; margin-top: 3px; color: var(--ink); }
+.experience-chapters :is(a, summary):focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
+.experience-chapter-details > summary:focus-visible { outline-offset: -5px; }
+@media (max-width: 900px) {
+  .experience-chapters-intro { grid-template-columns: minmax(0, 1fr) 260px; gap: 28px; }
+  .experience-chapter { grid-template-columns: 135px 36px minmax(0, 1fr); gap: 12px; }
+  .experience-chapter::after { left: 163.5px; }
+  .experience-chapter-marker { width: 36px; height: 36px; border-radius: 9px; }
+  .experience-chapter-card { padding: 20px 20px 0; }
+  .experience-chapter-details { margin: 0 -20px; }
+  .experience-chapter h3 { font-size: 23px; }
+  .experience-chapter-logo { width: 98px; height: 44px; padding: 7px; }
+}
+@media (max-width: 700px) {
+  .experience-chapters-intro { grid-template-columns: 1fr; gap: 24px; margin-bottom: 32px; }
+  .experience-chapters-total { max-width: 400px; padding: 17px 19px; }
+  .experience-chapters-total-duration { font-size: 25px; }
+  .experience-chapters h2 { font-size: 32px; line-height: 1.15; }
+  .experience-chapters-intro > div:first-child > p { font-size: 14px; }
+  .experience-chapters-timeline { gap: 26px; }
+  .experience-chapter { grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .experience-chapter-marker { grid-column: 1; grid-row: 1; width: 27px; height: 27px; margin-top: 2px; border-radius: 7px; font-size: 9px; box-shadow: 2px 2px 0 #111; }
+  .experience-chapter-date { grid-column: 2; grid-row: 1; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 7px 12px; padding: 0; }
+  .experience-chapter-period { font-size: 12px; }
+  .experience-chapter-tenure { font-size: 10px; }
+  .experience-chapter-type { font-size: 8px; padding: 3px 5px; }
+  .experience-chapter::after { left: 12px; top: 30px; bottom: -26px; }
+  .experience-chapter-card { grid-column: 2; grid-row: 2; padding: 17px 16px 0; border-radius: 12px; }
+  .experience-chapter-header { align-items: flex-start; gap: 10px; }
+  .experience-chapter-company { font-size: 10px; gap: 7px; }
+  .experience-chapter h3 { font-size: 22px; }
+  .experience-chapter-logo { width: 77px; height: 37px; border-radius: 7px; padding: 6px; }
+  .experience-chapter-role-icon { width: 35px; height: 35px; border-radius: 9px; }
+  .experience-chapter-role-icon svg { width: 21px; height: 21px; }
+  .experience-chapter-summary { font-size: 12px; line-height: 1.8; margin-top: 12px; }
+  .experience-chapter-outcomes { gap: 8px; margin-top: 13px; }
+  .experience-chapter-outcomes > div { padding: 8px; gap: 7px; }
+  .experience-chapter-outcomes strong { font-size: 18px; }
+  .experience-chapter-outcomes span { font-size: 9px; }
+  .experience-chapter-tools { margin: 14px 0 16px; gap: 5px; }
+  .experience-chapter-tools > span { font-size: 8px; padding: 4px 6px; }
+  .experience-chapter-details { margin: 0 -16px; }
+  .experience-chapter-details > summary { padding: 10px 16px; }
+  .experience-chapter-details > ul { padding: 0 16px 17px; gap: 10px; }
+  .experience-chapter-details li { font-size: 11px; }
+}
+@media (max-width: 360px) {
+  .experience-chapters { padding-left: 12px; padding-right: 12px; }
+  .experience-chapter-card { padding-left: 12px; padding-right: 12px; }
+  .experience-chapter-details { margin-left: -12px; margin-right: -12px; }
+  .experience-chapter h3 { font-size: 20px; }
+  .experience-chapter-logo { width: 65px; height: 34px; padding: 4px; }
+  .experience-chapter-header { flex-wrap: nowrap; }
+  .experience-chapter-role-icon { display: none; }
+  .experience-chapters-eyebrow { font-size: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .experience-chapters *, .experience-chapter-card { transition: none !important; transform: none !important; } }

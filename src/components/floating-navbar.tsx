@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
-import { Github, Menu, Phone, X } from "lucide-react";
+import { FileText, Github, Menu, X } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import Image from "next/image";
-import { navItems } from "@/lib/data";
+import { ThemeToggle } from "@/components/theme-toggle";
+
+const navItems = [
+  { label: "Projects", href: "#work" },
+  { label: "Experience", href: "#experience" },
+  { label: "Stack", href: "#stack" },
+  { label: "Contact", href: "#contact" },
+];
 import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +20,7 @@ export function FloatingNavbar() {
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useMotionValueEvent(scrollY, "change", (current) => {
     if (menuOpen) {
@@ -27,6 +35,13 @@ export function FloatingNavbar() {
   return (
     <motion.header
       className="fixed inset-x-0 top-0 z-40 mx-auto flex justify-center px-4 py-4"
+      onFocusCapture={() => setHidden(false)}
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && menuOpen) {
+          setMenuOpen(false);
+          menuButtonRef.current?.focus();
+        }
+      }}
       animate={{ y: hidden ? -120 : 0, opacity: hidden ? 0.85 : 1 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
     >
@@ -54,12 +69,12 @@ export function FloatingNavbar() {
                 Suraj Singh
               </p>
               <p className="hidden text-xs font-semibold uppercase tracking-[0.12em] text-black/70 sm:block">
-                Full-Stack + AI Systems
+                AI + Full-Stack Engineer
               </p>
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-1 md:flex">
+          <nav className="hidden items-center gap-1 lg:flex">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -72,13 +87,14 @@ export function FloatingNavbar() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <a
-              href={siteConfig.links.phone}
+              href="/resume"
               className="inline-flex items-center gap-2 rounded-[0.95rem] border-2 border-black bg-white px-3 py-2 text-sm font-black uppercase tracking-[0.12em] text-black"
-              aria-label="Call Suraj Singh"
+              aria-label="Preview Suraj Singh resume"
             >
-              <Phone className="h-4 w-4" />
-              <span className="hidden sm:inline">Call</span>
+              <FileText className="h-4 w-4" />
+              <span className="hidden sm:inline">Resume</span>
             </a>
             <Link
               href={siteConfig.links.github}
@@ -91,10 +107,12 @@ export function FloatingNavbar() {
               <span className="hidden sm:inline">GitHub</span>
             </Link>
             <button
+              ref={menuButtonRef}
               type="button"
               onClick={() => setMenuOpen((current) => !current)}
-              className="inline-flex items-center justify-center rounded-[0.95rem] border-2 border-black bg-white p-2 text-black md:hidden"
+              className="inline-flex items-center justify-center rounded-[0.95rem] border-2 border-black bg-white p-2 text-black lg:hidden"
               aria-expanded={menuOpen}
+              aria-controls="mobile-navigation"
               aria-label={
                 menuOpen ? "Close navigation menu" : "Open navigation menu"
               }
@@ -109,7 +127,10 @@ export function FloatingNavbar() {
         </div>
 
         {menuOpen ? (
-          <nav className="mt-3 grid w-full grid-cols-2 gap-2 border-t-4 border-black pt-3 md:hidden">
+          <nav
+            id="mobile-navigation"
+            className="mt-3 grid w-full grid-cols-2 gap-2 border-t-4 border-black pt-3 lg:hidden"
+          >
             {navItems.map((item) => (
               <Link
                 key={item.href}

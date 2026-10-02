@@ -1,229 +1,206 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, Github, Linkedin, Mail, Phone } from "lucide-react";
-import { useRef } from "react";
-
-import { AnimatedButton } from "@/components/animated-button";
+import { useSyncExternalStore } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import {
+  ArrowDown,
+  ArrowUpRight,
+  Github,
+  Linkedin,
+  Mail,
+  MapPin,
+} from "lucide-react";
+import { HeroOrbit } from "@/components/hero-orbit";
+import { ExperienceDuration } from "@/components/experience-duration";
 import { MagneticButton } from "@/components/magnetic-button";
-import { heroStats } from "@/lib/data";
+import { AnimatedButton } from "@/components/animated-button";
 import { siteConfig } from "@/lib/site";
+import { portfolioProjects } from "@/lib/portfolio-data";
 
-const snippet = [
-  "const suraj = {",
-  "  role: 'Full-Stack Software Engineer',",
-  "  focus: ['AI-powered apps', 'scalable systems'],",
-  "  stack: ['Next.js', 'React', 'TypeScript', 'Node.js'],",
-  "  style: 'neobrutal, bold, production-ready',",
-  "};",
-];
+const subscribeToHydration = () => () => {};
+const clientSnapshot = () => true;
+const serverSnapshot = () => false;
 
-const contactLinks = [
-  {
-    label: siteConfig.contact.phoneDisplay,
-    href: siteConfig.links.phone,
-    icon: Phone,
-  },
-  {
-    label: siteConfig.contact.email,
-    href: siteConfig.links.email,
-    icon: Mail,
-  },
-  {
-    label: "LinkedIn",
-    href: siteConfig.links.linkedin,
-    icon: Linkedin,
-  },
-  {
-    label: "GitHub",
-    href: siteConfig.links.github,
-    icon: Github,
-  },
-] as const;
-
-export function HeroSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  const gridY = useTransform(scrollYProgress, [0, 1], [0, 180]);
-  const gridRotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, -90]);
-  const contentOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.72, 1],
-    [1, 1, 0.12],
+export function HeroSection({ initialMonth }: { initialMonth: string }) {
+  const hydrated = useSyncExternalStore(
+    subscribeToHydration,
+    clientSnapshot,
+    serverSnapshot,
   );
-  const visualY = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const visualRotate = useTransform(scrollYProgress, [0, 1], [0, 5]);
-  const visualScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
-  const tagX = useTransform(scrollYProgress, [0, 1], [0, 80]);
-
+  const reduced = useReducedMotion();
+  const motionEnabled = hydrated && !reduced;
+  // The hero starts at the document top, so window scroll gives it a stable
+  // parallax range without measuring a target against a static scroll container.
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 1000], [0, -80]);
+  const rotate = useTransform(scrollY, [0, 1000], [0, -7]);
+  const shapeY = useTransform(scrollY, [0, 1000], [0, 150]);
   return (
     <section
       id="top"
-      ref={sectionRef}
-      className="neo-grid-bg relative overflow-hidden bg-[var(--paper)] lg:h-[170vh]"
+      className="neo-grid-bg relative overflow-hidden lg:min-h-[125vh]"
     >
       <motion.div
         aria-hidden="true"
-        className="absolute -left-20 top-28 hidden h-52 w-52 rounded-[2rem] border-4 border-black bg-[var(--cyan)] sm:block"
-        style={{ y: gridY, rotate: gridRotate }}
+        initial={false}
+        style={{
+          y: motionEnabled ? shapeY : 0,
+          rotate: motionEnabled ? rotate : 0,
+        }}
+        className="absolute -left-14 top-48 h-40 w-40 rounded-[2rem] border-4 border-black bg-[var(--cyan)] opacity-60 sm:h-56 sm:w-56"
       />
       <motion.div
         aria-hidden="true"
-        className="absolute right-[6%] top-24 hidden h-40 w-40 rounded-[1.8rem] border-4 border-black bg-[var(--pink)] sm:block"
-        style={{ x: tagX, rotate: visualRotate }}
+        initial={false}
+        animate={motionEnabled ? { rotate: [10, 25, 10] } : { rotate: 0 }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -right-9 top-32 h-48 w-48 rounded-[2.5rem] border-4 border-black bg-[var(--pink)]"
       />
-      <motion.div
-        aria-hidden="true"
-        className="absolute bottom-24 left-[12%] hidden h-28 w-28 rounded-[1.5rem] border-4 border-black bg-[var(--lime)] md:block"
-        style={{ y: visualY }}
-      />
-      <div className="flex min-h-screen items-center pt-20 sm:pt-24 lg:sticky lg:top-0 lg:pt-16">
-        <div className="relative mx-auto grid w-full max-w-6xl gap-8 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10 lg:px-8 lg:py-24">
-          <motion.div style={{ y: contentY, opacity: contentOpacity }}>
-            <h1 className="max-w-5xl font-display text-4xl font-black uppercase leading-[0.9] tracking-[-0.06em] text-black dark:text-white sm:text-5xl lg:text-7xl">
-              Suraj Singh
-              <span className="mt-4 block max-w-4xl text-xl leading-tight tracking-[-0.05em] sm:text-2xl lg:text-4xl">
-                {siteConfig.name}
-              </span>
-            </h1>
-
-            <p className="mt-6 max-w-3xl text-base leading-7 text-black/75 dark:text-white/80 sm:mt-7 sm:text-lg sm:leading-8 lg:text-xl">
-              I build product-grade interfaces, AI-assisted workflows, and
-              scalable web systems with strong frontend architecture, bold
-              design direction, and clean implementation.
-            </p>
-
-            <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-              <MagneticButton href="#work">View Projects</MagneticButton>
-              <AnimatedButton
-                href={siteConfig.links.github}
-                external
-                variant="secondary"
-              >
-                Visit GitHub
-              </AnimatedButton>
-            </div>
-
-            <div className="mt-10 grid gap-4 sm:grid-cols-3">
-              {heroStats.map((stat) => (
-                <div key={stat.label} className="neo-panel-sm bg-white p-5">
-                  <p className="font-display text-3xl font-black uppercase text-black">
-                    {stat.value}
+      <div className="relative flex min-h-screen items-center pb-16 pt-36 sm:pt-40 lg:sticky lg:top-0 lg:py-36">
+        <div className="mx-auto grid w-full max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-10">
+          <motion.div
+            initial={false}
+            style={{ y: motionEnabled ? y : 0 }}
+            className="relative z-10"
+          >
+            <motion.div
+              initial={false}
+              animate={
+                motionEnabled
+                  ? { opacity: [0, 1], y: [24, 0] }
+                  : { opacity: 1, y: 0 }
+              }
+              transition={{ duration: 0.7 }}
+            >
+              <div className="neo-chip inline-flex items-center gap-2 bg-[var(--lime)] px-4 py-2 text-[10px] font-black uppercase tracking-[.12em] text-black sm:text-xs">
+                <span className="h-2 w-2 rounded-full border border-black bg-black" />{" "}
+                AI × Full-stack × 3D
+              </div>
+              <h1 className="mt-7 font-display text-[clamp(3.7rem,7.2vw,7rem)] font-black uppercase leading-[.86] tracking-[-.07em]">
+                Suraj
+                <br />
+                Singh<span className="text-[var(--blue)]">.</span>
+              </h1>
+              <div className="mt-7 inline-block -rotate-2 rounded-xl border-4 border-black bg-[var(--yellow)] px-4 py-3 text-black shadow-[7px_7px_0_#111] sm:px-5">
+                <p className="font-display text-xl font-black uppercase leading-tight tracking-[-.04em] sm:text-3xl">
+                  AI Developer ×<br />
+                  Full-Stack Engineer
+                </p>
+              </div>
+              <p className="mt-8 max-w-xl text-base leading-8 text-[var(--ink-muted)] sm:text-lg">
+                I build AI-assisted products, automation workflows, and
+                full-stack applications — from expressive interfaces to the
+                APIs, databases, and services behind them.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-5">
+                <MagneticButton href="#work">Explore projects</MagneticButton>
+                <AnimatedButton href="/resume" variant="secondary">
+                  My resume
+                </AnimatedButton>
+              </div>
+              <div className="mt-9 grid grid-cols-2 gap-4">
+                <div className="neo-panel-sm bg-white p-4 text-black">
+                  <p className="font-display text-lg font-black leading-snug sm:text-xl">
+                    <ExperienceDuration total initialMonth={initialMonth} />
                   </p>
-                  <p className="mt-1 text-sm font-semibold uppercase tracking-[0.12em] text-black/70">
-                    {stat.label}
+                  <p className="mt-2 text-[10px] font-bold uppercase tracking-[.1em] text-black/65">
+                    Engineering experience
                   </p>
                 </div>
-              ))}
-            </div>
-
-            <div className="mt-10 grid gap-3 sm:grid-cols-2">
-              {contactLinks.map(({ label, href, icon: Icon }) => (
+                <div className="neo-panel-sm bg-[var(--cyan)] p-4 text-black">
+                  <p className="font-display text-3xl font-black">
+                    {portfolioProjects.length}
+                    <span className="text-xl"> projects</span>
+                  </p>
+                  <p className="mt-2 text-[10px] font-bold uppercase tracking-[.1em] text-black/65">
+                    AI · Backend · Web · 3D
+                  </p>
+                </div>
+              </div>
+              <div className="mt-7 flex flex-wrap items-center gap-5 text-sm font-bold">
                 <a
-                  key={label}
-                  href={href}
-                  target={href.startsWith("http") ? "_blank" : undefined}
-                  rel={href.startsWith("http") ? "noreferrer" : undefined}
-                  className="neo-panel-sm flex min-w-0 items-start gap-3 bg-[var(--cream)] px-4 py-3 text-[13px] font-bold uppercase tracking-[0.1em] text-black dark:text-white sm:items-center sm:text-sm"
+                  href={siteConfig.links.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 hover:underline"
                 >
-                  <Icon className="mt-0.5 h-4 w-4 shrink-0 sm:mt-0" />
-                  <span className="min-w-0 break-all">{label}</span>
+                  <Github size={17} /> GitHub <ArrowUpRight size={14} />
                 </a>
-              ))}
-            </div>
-
-            <div className="mt-10 inline-flex items-center gap-3 text-sm font-black uppercase tracking-[0.12em] text-black/70 dark:text-white/70">
-              <ArrowDown className="h-4 w-4 animate-bounce" />
-              <span>Scroll to enter the system</span>
-            </div>
+                <a
+                  href={siteConfig.links.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 hover:underline"
+                >
+                  <Linkedin size={17} /> LinkedIn
+                </a>
+                <a
+                  href={siteConfig.links.email}
+                  className="inline-flex items-center gap-2 hover:underline"
+                >
+                  <Mail size={17} /> Email
+                </a>
+              </div>
+            </motion.div>
           </motion.div>
-
           <motion.div
-            style={{ y: visualY, rotate: visualRotate, scale: visualScale }}
-            className="relative lg:pt-8"
+            initial={false}
+            style={{
+              y: motionEnabled ? y : 0,
+              rotate: motionEnabled ? rotate : 0,
+            }}
+            className="relative z-10 lg:pt-8"
           >
-            <div className="neo-panel-lg neo-stripes relative overflow-hidden bg-[var(--blue)] p-4 sm:p-5 xl:p-6">
-              <div className="relative flex items-center justify-between rounded-[1.1rem] border-4 border-black bg-white px-4 py-3">
-                <div className="flex items-center gap-2">
+            <div className="neo-panel-lg relative bg-[var(--blue)] p-4 text-black sm:p-5">
+              <div className="relative z-10 flex items-center justify-between rounded-xl border-4 border-black bg-white px-4 py-3 text-[10px] font-black uppercase tracking-[.12em]">
+                <div className="flex gap-2">
                   <span className="h-3 w-3 rounded-full border-2 border-black bg-[var(--pink)]" />
                   <span className="h-3 w-3 rounded-full border-2 border-black bg-[var(--yellow)]" />
                   <span className="h-3 w-3 rounded-full border-2 border-black bg-[var(--lime)]" />
                 </div>
-                <div className="text-[10px] font-black uppercase tracking-[0.16em] text-black sm:text-xs">
-                  Production-ready stack
-                </div>
+                <span>The engineering playground</span>
               </div>
-
-              <div className="relative mt-4 rounded-[1.6rem] border-4 border-black bg-black p-4 text-sm text-white sm:p-5 xl:p-6">
-                <div className="space-y-3 font-mono text-[12px] leading-6 text-white sm:text-[13px]">
-                  {snippet.map((line, index) => (
-                    <div key={line} className="flex items-start gap-4">
-                      <span className="w-4 text-right text-white/45">
-                        {index + 1}
-                      </span>
-                      <span>{line}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {[
-                    "AI-powered apps",
-                    "Scalable systems",
-                    "GSAP + Lenis",
-                    "React architecture",
-                  ].map((tag, index) => (
-                    <motion.div
-                      key={tag}
-                      className="rounded-[1rem] border-2 border-black bg-[var(--yellow)] px-4 py-3 text-sm font-black uppercase tracking-[0.12em] text-black"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.24 + index * 0.08, duration: 0.5 }}
-                    >
-                      {tag}
-                    </motion.div>
-                  ))}
-                </div>
+              <div className="mt-4 overflow-hidden rounded-[1.5rem] border-4 border-black bg-[var(--cream)]">
+                <HeroOrbit />
               </div>
-
-              <div className="relative mt-5 grid gap-4 sm:grid-cols-2">
-                <div className="neo-panel-sm bg-[var(--pink)] p-5 text-black">
-                  <p className="text-xs font-black uppercase tracking-[0.22em]">
-                    Core promise
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <div className="neo-panel-sm bg-[var(--pink)] p-4">
+                  <p className="text-xs font-black uppercase tracking-[.12em]">
+                    AI + Automation
                   </p>
-                  <p className="mt-3 text-sm leading-7">
-                    Build product experiences that feel memorable without
-                    sacrificing clarity, performance, or engineering discipline.
+                  <p className="mt-2 text-xs leading-6">
+                    LLMs, retrieval, local agents, and connected workflows.
                   </p>
                 </div>
-                <div className="neo-panel-sm bg-[var(--lime)] p-5 text-black">
-                  <p className="text-xs font-black uppercase tracking-[0.22em]">
-                    What this shows
+                <div className="neo-panel-sm bg-[var(--lime)] p-4">
+                  <p className="text-xs font-black uppercase tracking-[.12em]">
+                    Full-stack thinking
                   </p>
-                  <p className="mt-3 text-sm leading-7">
-                    Client delivery, experimental range, AI product direction,
-                    and a frontend system with a point of view.
+                  <p className="mt-2 text-xs leading-6">
+                    React, Next.js, Node.js, Go, and database-backed systems.
                   </p>
                 </div>
               </div>
-
-              <div className="neo-panel-sm relative mt-5 bg-white p-5">
-                <p className="text-xs font-black uppercase tracking-[0.22em] text-black">
-                  Shipping focus
-                </p>
-                <p className="mt-3 max-w-lg text-sm leading-7 text-black/75">
-                  Full-stack software engineer with strong frontend instincts,
-                  real client launches, and a growing focus on AI-powered
-                  product workflows.
-                </p>
+              <div className="mt-4 flex items-center justify-between rounded-xl border-2 border-black bg-[var(--yellow)] px-4 py-3 text-[10px] font-black uppercase tracking-[.1em]">
+                <span className="inline-flex items-center gap-2">
+                  <MapPin size={13} /> Faridabad, India
+                </span>
+                <span>Move your cursor ↗</span>
               </div>
             </div>
           </motion.div>
+          <div className="col-span-full mt-2 flex items-center gap-3 text-xs font-black uppercase tracking-[.12em]">
+            <ArrowDown
+              size={17}
+              className={motionEnabled ? "animate-bounce" : ""}
+            />{" "}
+            Scroll into the work
+          </div>
         </div>
       </div>
     </section>

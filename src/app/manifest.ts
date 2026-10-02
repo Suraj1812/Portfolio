@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: siteConfig.name,
     short_name: siteConfig.shortName,
     description: siteConfig.description,
-    categories: ["technology", "portfolio", "developer", "artificial intelligence", "software"],
+    categories: ["technology", "portfolio", "developer", "software"],
     lang: "en-IN",
     scope: "/",
     start_url: "/",
@@ -18,8 +18,8 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         src: "/suraj-logo.png",
         type: "image/png",
-        sizes: "512x512"
-      }
-    ]
+        sizes: "512x512",
+      },
+    ],
   };
 }

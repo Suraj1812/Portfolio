@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 
-import { SmoothScroll } from "@/components/smooth-scroll";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { absoluteUrl, siteConfig } from "@/lib/site";
+import { MotionProvider } from "@/components/motion-provider";
 
 import "@fontsource-variable/manrope";
 import "@fontsource-variable/space-grotesk";
@@ -110,14 +109,14 @@ export const metadata: Metadata = {
     "apple-mobile-web-app-title": siteConfig.shortName,
     "msapplication-TileColor": "#ffe45e",
     "ai-focus":
-      "AI-powered applications, AI systems, AI product engineering, scalable web platforms",
+      "LLM integration, retrieval-augmented applications, automation workflows, full-stack development",
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffe45e" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f1115" },
+    { media: "(prefers-color-scheme: light)", color: "#fff9ef" },
+    { media: "(prefers-color-scheme: dark)", color: "#191d1a" },
   ],
   colorScheme: "light dark",
 };
@@ -129,12 +128,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="light" suppressHydrationWarning>
-      <body className="font-body text-ink">
+      <body>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <SmoothScroll>
-          {children}
-          <ThemeToggle />
-        </SmoothScroll>
+        <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
   );

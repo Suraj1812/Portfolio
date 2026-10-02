@@ -1,7 +1,12 @@
 "use client";
 
 import type { MouseEvent, ReactNode } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useReducedMotion,
+} from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -11,6 +16,7 @@ type TiltCardProps = {
 };
 
 export function TiltCard({ children, className }: TiltCardProps) {
+  const reduced = useReducedMotion();
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
 
@@ -18,6 +24,7 @@ export function TiltCard({ children, className }: TiltCardProps) {
   const smoothRotateY = useSpring(rotateY, { stiffness: 140, damping: 18 });
 
   const handleMove = (event: MouseEvent<HTMLDivElement>) => {
+    if (reduced) return;
     const bounds = event.currentTarget.getBoundingClientRect();
     const percentX = (event.clientX - bounds.left) / bounds.width;
     const percentY = (event.clientY - bounds.top) / bounds.height;
@@ -34,10 +41,15 @@ export function TiltCard({ children, className }: TiltCardProps) {
   return (
     <motion.div
       className={cn("transform-gpu", className)}
-      style={{ rotateX: smoothRotateX, rotateY: smoothRotateY, transformStyle: "preserve-3d" }}
+      style={{
+        rotateX: reduced ? 0 : smoothRotateX,
+        rotateY: reduced ? 0 : smoothRotateY,
+        transformStyle: "preserve-3d",
+        perspective: 1000,
+      }}
       onMouseMove={handleMove}
       onMouseLeave={reset}
-      whileHover={{ y: -8 }}
+      whileHover={reduced ? undefined : { y: -8 }}
       transition={{ type: "spring", stiffness: 160, damping: 18 }}
     >
       <div className="h-full" style={{ transform: "translateZ(18px)" }}>

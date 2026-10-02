@@ -11,6 +11,11 @@ export function CursorGlow() {
   const smoothY = useSpring(y, { stiffness: 220, damping: 28, mass: 0.6 });
 
   useEffect(() => {
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)")
+        .matches
+    )
+      return;
     const handleMove = (event: MouseEvent) => {
       x.set(event.clientX - 90);
       y.set(event.clientY - 90);

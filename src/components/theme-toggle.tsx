@@ -49,12 +49,20 @@ type ThemeToggleProps = {
 };
 
 export function ThemeToggle({ className }: ThemeToggleProps) {
-  const theme = useSyncExternalStore(subscribeToTheme, getThemeSnapshot, getThemeServerSnapshot);
+  const theme = useSyncExternalStore(
+    subscribeToTheme,
+    getThemeSnapshot,
+    getThemeServerSnapshot,
+  );
 
   const toggleTheme = () => {
     const nextTheme: Theme = theme === "light" ? "dark" : "light";
-    window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
-    window.localStorage.removeItem("theme");
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+      window.localStorage.removeItem("theme");
+    } catch {
+      // Theme switching still works when the browser restricts storage.
+    }
     applyTheme(nextTheme);
   };
 
@@ -62,15 +70,15 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     <button
       type="button"
       onClick={toggleTheme}
-      className={cn(
-        "neo-chip fixed bottom-4 left-auto right-4 z-50 inline-flex h-12 w-12 items-center justify-center bg-white text-black transition-transform hover:-translate-y-0.5 sm:bottom-6 sm:left-auto sm:right-6 sm:h-14 sm:w-14",
-        className
-      )}
+      className={cn("theme-toggle", className)}
       aria-label="Toggle color theme"
       title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
-      style={{display:'none'}}
     >
-      {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+      {theme === "light" ? (
+        <Moon className="h-4 w-4" />
+      ) : (
+        <Sun className="h-4 w-4" />
+      )}
     </button>
   );
 }

@@ -11,9 +11,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
       alternates: {
         languages: {
-          "en-IN": siteConfig.url
-        }
-      }
-    }
+          "en-IN": siteConfig.url,
+        },
+      },
+    },
+    {
+      url: `${siteConfig.url}/resume`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
   ];
 }

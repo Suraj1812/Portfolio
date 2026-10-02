@@ -1,7 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { motion } from "framer-motion";
+import { useSyncExternalStore, type ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -12,17 +12,32 @@ type ScrollRevealProps = {
   y?: number;
 };
 
+const subscribeToHydration = () => () => {};
+const clientSnapshot = () => true;
+const serverSnapshot = () => false;
+
 export function ScrollReveal({
   children,
   className,
   delay = 0,
-  y = 36
+  y = 36,
 }: ScrollRevealProps) {
+  const hydrated = useSyncExternalStore(
+    subscribeToHydration,
+    clientSnapshot,
+    serverSnapshot,
+  );
+  const reduced = useReducedMotion();
+  const motionEnabled = hydrated && !reduced;
+
   return (
     <motion.div
       className={cn(className)}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={false}
+      animate={{ opacity: 1, y: 0 }}
+      whileInView={
+        motionEnabled ? { opacity: [0, 1], y: [y, 0] } : undefined
+      }
       viewport={{ once: true, margin: "-120px" }}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
     >

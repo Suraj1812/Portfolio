@@ -56,9 +56,9 @@ export const featuredProjects: FeaturedProject[] = [
     slug: "amze",
     title: "AMZE",
     tagline:
-      "A modern commerce experience for discovering technology, gaming, components, and everyday electronics without losing the human buying journey.",
+      "A technology storefront for electronics, gaming, and computer components.",
     description:
-      "AMZE is a Spanish technology and electronics storefront built around fast product discovery. The experience brings computers, components, phones, displays, networking, gaming, software, and smart-home products into one structured catalogue, with shipping visibility and support cues close to the buying path.",
+      "A Spanish electronics catalogue with category browsing, product collections, and delivery and support information alongside the buying journey.",
     category: "E-commerce Experience",
     year: "2026",
     liveUrl: "https://amze.es/en/store",
@@ -69,9 +69,9 @@ export const featuredProjects: FeaturedProject[] = [
       "Commerce reassurance through delivery tracking, returns, secure payment, and expert support"
     ],
     architecture:
-      "The interface is shaped as a modular storefront: global search and category navigation establish orientation, while reusable product rails and value-proposition blocks create a consistent path from discovery to product detail.",
+      "Search, category navigation, and product rails organize the catalogue into clear browsing paths.",
     impact:
-      "This project shows how I think about commerce beyond a grid of products: reduce search friction, make the catalogue feel navigable, and place confidence-building information where purchase decisions happen.",
+      "Product discovery sits alongside delivery, returns, payment, and support information.",
     accent: "bg-[var(--yellow)]",
     metrics: ["Tech commerce", "Fast discovery", "Trust at checkout"],
     imageUrl: "/amze-store-banner.png",
@@ -81,9 +81,9 @@ export const featuredProjects: FeaturedProject[] = [
     slug: "cricket-connect-ai",
     title: "Cricket Connect AI",
     tagline:
-      "An AI-native cricket intelligence platform that turns match data, context, and strategy into analysis people can actually act on.",
+      "Cricket intelligence for fans and professional analysts.",
     description:
-      "Cricket Connect is built around a simple but ambitious idea: cricket deserves more than headlines, gut feel, or opaque statistics. Its professional CC Pro product supports coaches, analysts, franchises, and media with performance analysis, opposition profiling, tactical modelling, and situational forecasting, while CC AI brings the same analytical engine to fans as a real-time match companion.",
+      "The platform presents two products: CC Pro for professional match analysis and CC AI for fans, with insight spanning match preparation, live decisions, and review.",
     category: "AI Sports Intelligence",
     year: "2026",
     liveUrl: "https://cricketconnect.ai/",
@@ -94,9 +94,9 @@ export const featuredProjects: FeaturedProject[] = [
       "Probabilistic forecasting designed to explain likelihood rather than make promises"
     ],
     architecture:
-      "The product story is organised around one intelligence layer serving two audiences: a deeper professional workspace for decision-makers and a clearer match companion for fans. That separation keeps the analytical depth intact while changing the amount of context exposed at each moment.",
+      "Two product paths introduce a shared intelligence layer to professional and fan audiences.",
     impact:
-      "This is a strong example of AI product thinking: make complex analysis explainable, keep the interface grounded in the sport, and treat transparency and limitations as part of the experience rather than footnotes.",
+      "Pattern analysis, tactical insight, forecasting, and match context frame the product's capabilities.",
     accent: "bg-[var(--cyan)]",
     metrics: ["AI-native product", "Explainable insight", "Live match context"],
     imageUrl: "/cricket-connect.png",
@@ -106,22 +106,22 @@ export const featuredProjects: FeaturedProject[] = [
     slug: "fashion-pattern-lab",
     title: "Fashion Pattern Lab",
     tagline:
-      "A specialist learning and commerce platform helping designers turn fashion ideas into accurate, wearable patterns.",
+      "Pattern-making courses, digital patterns, and custom services in one place.",
     description:
-      "Fashion Pattern Lab combines one-on-one online education with practical pattern-making services. The platform focuses on women’s wear pattern making across bodices, skirts, trousers, corsets, kameez shalwar, western wear, and digital patterns, while also giving learners and designers a route to courses, custom patterns, and student work.",
+      "A specialist education and commerce platform with one-on-one pattern-making courses, a pattern store, custom pattern services, and student projects.",
     category: "Education + Digital Commerce",
     year: "2026",
     liveUrl: "https://fashionpatternlab.com/",
-    stack: ["LMS Experience", "Digital Products", "Pattern Education", "WordPress Commerce"],
+    stack: ["Course Discovery", "Digital Patterns", "Pattern Education", "Custom Services"],
     features: [
       "Clear separation between courses, pattern store, custom pattern work, and student projects",
       "Education-led content that connects fit, proportion, construction, and garment outcomes",
       "A focused path for students, designers, brands, and people looking for ready-to-use digital patterns"
     ],
     architecture:
-      "The experience works as a content-to-commerce system: educational authority establishes trust, course and service routes make the offer understandable, and digital pattern products give visitors a direct next step after learning.",
+      "Separate navigation routes connect courses, the pattern store, custom services, and student work.",
     impact:
-      "This project demonstrates how I design for a specialist audience: respect the technical depth of the subject, make the learning path approachable, and connect expertise to practical outcomes instead of treating education and commerce as separate worlds.",
+      "Learners can explore courses and practical pattern services through one focused storefront.",
     accent: "bg-[var(--pink)]",
     metrics: ["Fashion education", "Custom patterns", "Digital learning"],
     imageUrl: "/fashion-pattern-lab.jpg",
@@ -136,9 +136,9 @@ export const featuredProjects: FeaturedProject[] = [
     category: "Interactive Experience",
     year: "2025",
     liveUrl: "https://the-solar-system-six.vercel.app/",
-    repoUrl: "https://github.com/Suraj1812",
-    repoLabel: "GitHub profile",
-    stack: ["Next.js", "React", "Tailwind", "Framer Motion", "Three.js"],
+    repoUrl: "https://github.com/Suraj1812/The-Solar-System",
+    repoLabel: "View source",
+    stack: ["React", "Vite", "Three.js", "GSAP", "Framer Motion"],
     features: [
       "Cinematic section reveals",
       "Immersive visual storytelling",
@@ -160,9 +160,9 @@ export const featuredProjects: FeaturedProject[] = [
     category: "Full-Stack Product",
     year: "2025",
     liveUrl: "https://chatapp-production-1674.up.railway.app/",
-    repoUrl: "https://github.com/Suraj1812",
-    repoLabel: "GitHub profile",
-    stack: ["React", "JavaScript", "Node", "Realtime Events", "Responsive UI"],
+    repoUrl: "https://github.com/Suraj1812/ChatApp",
+    repoLabel: "View source",
+    stack: ["Node.js", "Express", "Socket.IO", "SQLite", "JavaScript"],
     features: [
       "Fast conversation flows",
       "Product-style layout system",
@@ -184,9 +184,9 @@ export const featuredProjects: FeaturedProject[] = [
     category: "AI Product",
     year: "2025",
     liveUrl: "https://aipedia-production.up.railway.app/",
-    repoUrl: "https://github.com/Suraj1812",
-    repoLabel: "GitHub profile",
-    stack: ["React", "Tailwind", "JavaScript", "API Integration", "UI Systems"],
+    repoUrl: "https://github.com/Suraj1812/AIpedia",
+    repoLabel: "View source",
+    stack: ["Node.js", "JavaScript", "Ollama"],
     features: [
       "Information-first layout",
       "Clear content hierarchy",
@@ -208,9 +208,9 @@ export const featuredProjects: FeaturedProject[] = [
     category: "Business Website",
     year: "2025",
     liveUrl: "https://dattamsha-data-labs.vercel.app/",
-    repoUrl: "https://github.com/Suraj1812",
-    repoLabel: "GitHub profile",
-    stack: ["Next.js", "Tailwind", "Framer Motion", "Responsive Design"],
+    repoUrl: "https://github.com/Suraj1812/Dattamsha-Data-Labs",
+    repoLabel: "View source",
+    stack: ["React", "Vite", "TypeScript", "Framer Motion", "Express"],
     features: [
       "Premium SaaS-style sections",
       "Conversion-minded visual flow",
@@ -232,9 +232,9 @@ export const featuredProjects: FeaturedProject[] = [
     category: "Creative Experiment",
     year: "2025",
     liveUrl: "https://wildverse-theta.vercel.app/",
-    repoUrl: "https://github.com/Suraj1812",
-    repoLabel: "GitHub profile",
-    stack: ["React", "Framer Motion", "Tailwind", "Visual Design"],
+    repoUrl: "https://github.com/Suraj1812/wildverse",
+    repoLabel: "View source",
+    stack: ["Next.js", "React", "TypeScript", "Framer Motion", "GSAP"],
     features: [
       "Expressive art direction",
       "Animated card choreography",
@@ -256,9 +256,9 @@ export const featuredProjects: FeaturedProject[] = [
     category: "UI Experiment",
     year: "2025",
     liveUrl: "https://brutal-design.vercel.app/",
-    repoUrl: "https://github.com/Suraj1812",
-    repoLabel: "GitHub profile",
-    stack: ["React", "Tailwind", "Motion", "Layout Design"],
+    repoUrl: "https://github.com/Suraj1812/BrutalDesign",
+    repoLabel: "View source",
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Motion"],
     features: [
       "Bold typographic hierarchy",
       "Hover states with character",

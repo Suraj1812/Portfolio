@@ -2,20 +2,19 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-screen items-center justify-center px-4 py-20 sm:px-6 lg:px-8">
-      <div className="neo-panel-lg w-full max-w-2xl bg-[var(--yellow)] p-8 text-center sm:p-10">
-        <p className="text-xs font-black uppercase tracking-[0.22em] text-black">404</p>
-        <h1 className="mt-4 font-display text-4xl font-black uppercase tracking-[-0.05em] text-black sm:text-5xl">
-          This page punched through the layout.
-        </h1>
-        <p className="mt-5 text-base leading-8 text-black/75">
-          The route you were looking for does not exist, but the portfolio is still live and ready
-          to explore.
+    <main className="portfolio-container flex min-h-screen items-center py-20">
+      <div className="max-w-xl">
+        <p className="text-sm font-medium uppercase tracking-[0.18em] text-[#cb4a27]">
+          404 / Page not found
         </p>
-        <Link
-          href="/"
-          className="mt-8 inline-flex rounded-[1rem] border-4 border-black bg-white px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-black transition-transform hover:-translate-y-0.5"
-        >
+        <h1 className="mt-5 font-display text-5xl font-medium leading-tight tracking-[-0.04em] text-[#222422] sm:text-6xl">
+          A little off course.
+        </h1>
+        <p className="mt-5 text-base leading-7 text-[#222422]/65">
+          This page could not be found. Head back to explore my selected work or
+          get in touch.
+        </p>
+        <Link href="/" className="button button-primary mt-8">
           Return home
         </Link>
       </div>

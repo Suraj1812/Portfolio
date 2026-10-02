@@ -1,0 +1,250 @@
+.branded-clients {
+  padding-block: 54px 72px;
+}
+.branded-clients-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 35px;
+}
+.branded-clients-eyebrow {
+  display: inline-flex;
+  padding: 7px 11px;
+  border: 2px solid #111;
+  border-radius: 7px;
+  background: var(--cyan);
+  color: #111;
+  box-shadow: 3px 3px 0 #111;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+.branded-clients-heading h2 {
+  max-width: 720px;
+  margin-top: 22px;
+  font-size: clamp(32px, 3.5vw, 46px);
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.055em;
+}
+.branded-clients-heading h2 > span {
+  display: inline-block;
+  margin-top: 9px;
+  font-size: 0.67em;
+  letter-spacing: -0.04em;
+}
+.branded-clients-heading > p {
+  max-width: 260px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--ink-muted);
+}
+.branded-client-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 23px;
+}
+.branded-client-reveal,
+.branded-client-shell {
+  min-width: 0;
+  height: 100%;
+}
+.branded-client-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  border: 3px solid var(--ink);
+  border-radius: 17px;
+  background: var(--surface-1);
+  color: var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.branded-client-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+  padding: 12px 15px;
+  border-bottom: 2px solid #111;
+  background: var(--client-accent);
+  color: #111;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.025em;
+}
+.branded-client-domain {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.72;
+  font-weight: 700;
+}
+.branded-client-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 102px;
+  padding: 18px 22px;
+  margin: 16px 16px 0;
+  border: 2px solid #111;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+.branded-client-logo-dark {
+  background: #101316;
+}
+.branded-client-image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.branded-client-logo-compact .branded-client-image {
+  width: 78px;
+  height: 78px;
+}
+.branded-client-name-only {
+  font-family: var(--font-display);
+  color: #111;
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+.branded-client-details {
+  flex: 1;
+  padding: 17px 19px 12px;
+}
+.branded-client-details h3 {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+.branded-client-details p {
+  margin-top: 7px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+.branded-client-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 18px;
+  padding: 11px 0 14px;
+  border-top: 1px solid var(--ink);
+  font-size: 10px;
+  font-weight: 800;
+}
+.branded-client-arrow {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid #111;
+  border-radius: 50%;
+  background: var(--client-accent);
+  color: #111;
+  transition: transform 180ms ease;
+}
+.branded-client-card:hover .branded-client-arrow {
+  transform: rotate(45deg);
+}
+.branded-client-card:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 6px;
+}
+@media (max-width: 800px) {
+  .branded-clients {
+    padding-block: 45px 60px;
+  }
+  .branded-clients-heading {
+    display: block;
+  }
+  .branded-clients-heading > p {
+    max-width: 480px;
+    margin-top: 18px;
+  }
+  .branded-client-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+@media (max-width: 600px) {
+  .branded-clients {
+    padding-inline: 12px;
+    padding-block: 40px 52px;
+  }
+  .branded-clients-heading {
+    margin-bottom: 26px;
+  }
+  .branded-clients-heading h2 {
+    font-size: 35px;
+  }
+  .branded-client-grid {
+    gap: 12px;
+  }
+  .branded-client-card {
+    border-width: 2px;
+    border-radius: 12px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .branded-client-topline {
+    padding: 9px;
+    font-size: 7px;
+  }
+  .branded-client-domain {
+    display: none;
+  }
+  .branded-client-logo {
+    height: 73px;
+    padding: 12px;
+    margin: 10px 10px 0;
+    border-radius: 7px;
+    border-width: 1px;
+  }
+  .branded-client-logo-compact .branded-client-image {
+    width: 53px;
+    height: 53px;
+  }
+  .branded-client-name-only {
+    font-size: 16px;
+  }
+  .branded-client-details {
+    padding: 12px 11px 10px;
+  }
+  .branded-client-details h3 {
+    font-size: 15px;
+  }
+  .branded-client-details p {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  .branded-client-footer {
+    margin: 0 10px;
+    font-size: 9px;
+    padding-block: 9px;
+    gap: 4px;
+  }
+  .branded-client-arrow {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .branded-client-arrow {
+    transition: none;
+  }
+  .branded-client-card:hover .branded-client-arrow {
+    transform: none;
+  }
+}

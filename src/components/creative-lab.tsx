@@ -1,7 +1,8 @@
 "use client";
 
 import { ArrowUpRight, Play, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { useSyncExternalStore } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SectionHeading } from "@/components/section-heading";
@@ -16,7 +17,18 @@ type CreativeLabProps = {
   items: CreativeLabItem[];
 };
 
+const subscribeToHydration = () => () => {};
+const clientSnapshot = () => true;
+const serverSnapshot = () => false;
+
 export function CreativeLab({ items }: CreativeLabProps) {
+  const hydrated = useSyncExternalStore(
+    subscribeToHydration,
+    clientSnapshot,
+    serverSnapshot,
+  );
+  const reduced = useReducedMotion();
+  const motionEnabled = hydrated && !reduced;
   const [featured, ...rest] = items;
 
   if (!featured) {
@@ -29,8 +41,8 @@ export function CreativeLab({ items }: CreativeLabProps) {
         <ScrollReveal>
           <SectionHeading
             eyebrow="Creative Lab"
-            title="A sandbox for stronger visual direction, bolder interactions, and experimental UI energy."
-            description="This is where I push the style further: richer motion, more expressive layout choices, and interface experiments that keep the work from feeling predictable."
+            title="Small experiments. Big interaction ideas."
+            description="A collection of live interface studies in motion, layout, and playful web interactions."
           />
         </ScrollReveal>
 
@@ -45,8 +57,13 @@ export function CreativeLab({ items }: CreativeLabProps) {
               <motion.div
                 aria-hidden="true"
                 className="absolute right-6 top-6 h-24 w-24 rounded-[1.3rem] border-4 border-black bg-[var(--yellow)] sm:right-8 sm:top-8 sm:h-36 sm:w-36 sm:rounded-[1.5rem]"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 26, ease: "linear", repeat: Infinity }}
+                initial={false}
+                animate={{ rotate: motionEnabled ? 360 : 0 }}
+                transition={
+                  motionEnabled
+                    ? { duration: 26, ease: "linear", repeat: Infinity }
+                    : { duration: 0 }
+                }
               />
               <div className="relative z-10 flex h-full flex-col justify-between">
                 <div>
@@ -57,7 +74,9 @@ export function CreativeLab({ items }: CreativeLabProps) {
                   <h3 className="mt-6 max-w-xl font-display text-3xl font-black uppercase tracking-[-0.05em] sm:text-4xl">
                     {featured.title}
                   </h3>
-                  <p className="mt-5 max-w-lg text-base leading-8 text-black/75">{featured.description}</p>
+                  <p className="mt-5 max-w-lg text-base leading-8 text-black/75">
+                    {featured.description}
+                  </p>
                 </div>
 
                 <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -86,7 +105,9 @@ export function CreativeLab({ items }: CreativeLabProps) {
                     </p>
                     <ArrowUpRight className="h-5 w-5 text-black transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />
                   </div>
-                  <p className="relative z-10 mt-4 text-sm leading-7 text-black/75">{item.description}</p>
+                  <p className="relative z-10 mt-4 text-sm leading-7 text-black/75">
+                    {item.description}
+                  </p>
                 </a>
               </ScrollReveal>
             ))}
