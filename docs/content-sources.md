@@ -59,7 +59,7 @@ The custom 3D icons are decorative artwork generated for the portfolio and provi
 
 ## Experience duration
 
-Role dates are stored as year/month values. Completed roles include their final calendar month; current roles show elapsed months through the current month boundary. The total merges employment intervals so simultaneous roles are counted once. February 2023 through October 2026 produces 3 years 8 months, including the internship. The current month uses Asia/Kolkata time, and client-side displays refresh on page load, minute checks, and tab/window focus, so a static deployment does not require a rebuild to update the visible duration.
+Role dates are stored as year/month values. Completed roles include their final calendar month; current roles show elapsed months through the current month boundary. The total merges employment intervals so simultaneous roles are counted once. The owner corrected NEXUS SP Solutions to December 2025 through July 2026. The resulting total is 42 months (3 years 6 months), including the internship, and remains fixed after the last completed role. The current month uses Asia/Kolkata time, and client-side displays refresh on page load, minute checks, and tab/window focus, so ongoing roles can update without rebuilding a static deployment.
 
 ## Demo availability
 

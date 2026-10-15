@@ -10,7 +10,7 @@ import {
 } from "../src/lib/experience-duration.ts";
 
 const resumeRoles = [
-  { start: { year: 2025, month: 12 } },
+  { start: { year: 2025, month: 12 }, end: { year: 2026, month: 7 } },
   { start: { year: 2025, month: 6 }, end: { year: 2026, month: 1 } },
   { start: { year: 2023, month: 8 }, end: { year: 2025, month: 5 } },
   { start: { year: 2023, month: 2 }, end: { year: 2023, month: 7 } },
@@ -36,15 +36,15 @@ test("December and January boundaries preserve endpoint semantics", () => {
 
 test("NEXUS and Evtaar overlap is counted once", () => {
   const overlapping = resumeRoles.slice(0, 2);
-  assert.equal(totalExperienceMonths(overlapping, "2026-10"), 16);
-  assert.equal(totalExperienceMonths(overlapping.toReversed(), "2026-10"), 16);
+  assert.equal(totalExperienceMonths(overlapping, "2026-10"), 14);
+  assert.equal(totalExperienceMonths(overlapping.toReversed(), "2026-10"), 14);
 });
 
-test("the four resume roles total 44 months in October 2026", () => {
-  assert.deepEqual(resumeRoles.map(({ start, end }) => monthsBetween(start, "2026-10", end)), [10, 8, 22, 6]);
-  assert.equal(totalExperienceMonths(resumeRoles, "2026-10"), 44);
-  assert.equal(formatDuration(totalExperienceMonths(resumeRoles, "2026-10")), "3 years 8 months");
-  assert.equal(totalExperienceMonths(resumeRoles, "2026-11"), 45);
+test("completed portfolio roles total 42 months without growing after July 2026", () => {
+  assert.deepEqual(resumeRoles.map(({ start, end }) => monthsBetween(start, "2026-10", end)), [8, 8, 22, 6]);
+  assert.equal(totalExperienceMonths(resumeRoles, "2026-10"), 42);
+  assert.equal(formatDuration(totalExperienceMonths(resumeRoles, "2026-10")), "3 years 6 months");
+  assert.equal(totalExperienceMonths(resumeRoles, "2026-11"), 42);
 });
 
 test("gaps add no experience and nested or duplicate roles add no extra months", () => {

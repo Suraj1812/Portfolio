@@ -19,7 +19,7 @@ export type PortfolioProject = {
 };
 
 // Project implementation details come from the linked public repositories.
-// Employment, dates, and professional skills come from the supplied resume.
+// Employment, dates, and skills come from the resume and the owner's corrections.
 export const portfolioProjects: PortfolioProject[] = [
   {
     id: "grounded-notes",
@@ -887,8 +887,9 @@ export const experience = [
     company: "NEXUS SP Solutions",
     role: "Full-Stack Developer",
     type: "Freelance",
-    period: "Dec 2025 — Present",
+    period: "Dec 2025 — Jul 2026",
     start: { year: 2025, month: 12 },
+    end: { year: 2026, month: 7 },
     summary:
       "Full-stack commerce platforms, REST APIs, and AI automation for product recommendations and customer interaction.",
     details: [
