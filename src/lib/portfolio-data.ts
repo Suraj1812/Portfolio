@@ -886,7 +886,14 @@ export const portfolioProjects: PortfolioProject[] = [
 
 export type ProfessionalExperience = {
   company: string;
-  website?: string;
+  website: string;
+  office: {
+    label: string;
+    address?: string;
+    mapsUrl: string;
+    cityOnly?: boolean;
+    note?: string;
+  };
   role: string;
   type: string;
   period: string;
@@ -909,11 +916,16 @@ export const experience: ProfessionalExperience[] = [
   {
     company: "WellM",
     website: "https://wellm.co/",
+    office: {
+      label: "Gurugram, India",
+      address: "A-184, The Pinnacle, DLF Phase 5, Gurugram, Haryana 122009, India",
+      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Wellness%20Mandala%20Private%20Limited%2C%20A-184%2C%20The%20Pinnacle%2C%20DLF%20Phase%205%2C%20Gurugram%2C%20Haryana%20122009%2C%20India",
+    },
     role: "AI Full Stack Engineer",
     type: "Full-time · Hybrid",
     period: "Oct 2026 — Present",
     start: { year: 2026, month: 10 },
-    context: "Product & Technology · Gurugram, India",
+    context: "Product & Technology",
     summary:
       "Mobile and web application engineering for WellM's client and in-house wellness products, with a focus on on-device AI and assistants grounded in approved content.",
     details: [
@@ -927,6 +939,12 @@ export const experience: ProfessionalExperience[] = [
   {
     company: "Fashion Pattern Lab",
     website: "https://fashionpatternlab.com/",
+    office: {
+      label: "Delhi, India",
+      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Fashion%20Pattern%20Lab%2C%20Delhi%2C%20India",
+      cityOnly: true,
+      note: "Online sessions worldwide",
+    },
     role: "Web Developer",
     type: "Freelance",
     period: "Aug 2026 — Oct 2026",
@@ -950,6 +968,12 @@ export const experience: ProfessionalExperience[] = [
   },
   {
     company: "NEXUS SP Solutions",
+    website: "https://www.nexusspsolutions.com/",
+    office: {
+      label: "Ceuta, Spain",
+      address: "Paseo de las Palmeras, 3, Local B, 51001 Ceuta, Spain",
+      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Nexus%20SP%20Solutions%2C%20Paseo%20de%20las%20Palmeras%203%2C%20Local%20B%2C%2051001%20Ceuta%2C%20Spain",
+    },
     role: "Full-Stack Developer",
     type: "Freelance",
     period: "Dec 2025 — Jul 2026",
@@ -966,6 +990,13 @@ export const experience: ProfessionalExperience[] = [
   },
   {
     company: "Evtaar",
+    website: "https://www.evtaar.com/",
+    office: {
+      label: "Dubai, UAE",
+      mapsUrl: "https://www.google.com/maps/place/Dubai,+United+Arab+Emirates",
+      cityOnly: true,
+      note: "Also based in Hyderabad, India",
+    },
     role: "Software Engineer",
     type: "Remote",
     period: "Jun 2025 — Jan 2026",
@@ -982,6 +1013,12 @@ export const experience: ProfessionalExperience[] = [
   },
   {
     company: "People Maketh",
+    website: "https://peoplemaketh.com/",
+    office: {
+      label: "Bengaluru, India",
+      address: "69, 4th Cross, VST Road, Lingarajapuram, Bengaluru, Karnataka 560084, India",
+      mapsUrl: "https://maps.app.goo.gl/35LjgVHof28ST4Ey5",
+    },
     role: "Full Stack Engineer",
     type: "Remote",
     period: "Aug 2023 — May 2025",
@@ -998,6 +1035,12 @@ export const experience: ProfessionalExperience[] = [
   },
   {
     company: "Encrobytes",
+    website: "https://encrobytes.com/",
+    office: {
+      label: "Faridabad, India",
+      address: "&Work Coworking, Plot 5B, Sector 15A, near Neelam Chowk Ajronda Metro and Crown Plaza, Faridabad, Haryana 121007, India",
+      mapsUrl: "https://www.google.com/maps/search/?api=1&query=Encrobytes%20Technologies%2C%20%26Work%20Coworking%2C%20Plot%205B%2C%20Sector%2015A%2C%20Crown%20Plaza%2C%20Faridabad%2C%20Haryana%20121007",
+    },
     role: "Frontend Developer Intern",
     type: "On-site",
     period: "Feb 2023 — Jul 2023",

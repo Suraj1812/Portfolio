@@ -12,6 +12,21 @@ The portfolio describes AI development as an engineering focus. The resume's emp
 
 The signed offer letter, signature, compensation, and other private employment terms are not copied into the public site. The original downloadable resume remains unchanged; the website timeline contains the later employment updates.
 
+## Company websites and Maps links
+
+On October 15, 2026 the owner requested authentic logos in place of separate company-name text in the experience headers, plus company website and Google Maps links. Every role now has a locally stored official logo with accessible company naming, an official website link, and a Maps link. Contained image wrappers preserve the complete branding, including lettering that is part of an original logo.
+
+| Company | Location evidence | Maps precision |
+| --- | --- | --- |
+| WellM | The publisher's [Google Play listing](https://play.google.com/store/apps/details?id=com.asha.happy_minds) gives A-184, DLF The Pinnacle, DLF Phase 5, Gurugram, Haryana 122009; it matches the supplied letter. | Full-address search; no business Place ID was verified. |
+| Fashion Pattern Lab | The official [contact page](https://fashionpatternlab.com/contact/) lists its studio in Delhi, India, and online sessions worldwide. | City-level search; no street address was published. |
+| NEXUS SP Solutions | The official [company LinkedIn](https://es.linkedin.com/company/nexus-sp-solutions) identifies `www.nexusspsolutions.com` and Paseo de las Palmeras, 3, Local B, 51001 Ceuta, Spain. The indexed [official contact-page footer](https://nexusspsolutions.com/contactus) agrees. | Full-address search; the official website had a DNS failure during direct verification. |
+| Evtaar | The [official company profile](https://www.linkedin.com/company/evtaar) identifies `www.evtaar.com`, Dubai HQ, and Hyderabad. The [live staging website](https://staging.evtaar.com/) links directly to the Dubai city map. | Official city-level map; no street address was verified. |
+| People Maketh | The [official website](https://peoplemaketh.com/) publishes 69, 4th Cross, Lingarajapuram, Bengaluru, Karnataka 560084 and [its Google Maps listing](https://maps.app.goo.gl/35LjgVHof28ST4Ey5). The site's cookie-policy content expands the street to VST Road, Shamanna Layout, Kanakadasa Layout. | Official business-listing link. |
+| Encrobytes | The [official company profile](https://in.linkedin.com/company/encrobytes) gives &Work Coworking, Plot 5B, Sector 15A, near Neelam Chowk Ajronda Metro and Crown Plaza, Faridabad, Haryana 121007. Its official website supplies the logo. | Full-address search; no business Place ID was verified. |
+
+The owner accepted using the locations available from public sources for Fashion Pattern Lab and Evtaar. Their links are explicitly labelled "City map" rather than implying a street-level pin. These are current company contact locations, not claims about the owner's physical workplace during remote or freelance roles. Website links preserve the companies' official public domains even where their current availability could not be confirmed.
+
 ## Implementation evidence
 
 - **Grounded Notes:** [repository](https://github.com/Suraj1812/grounded-notes-qa-assistant). Markdown chunking and retrieval live in `src/server/retrieval`; Ollama generation and low-match refusal live in `src/server/services`. Retrieval uses TF-IDF and cosine scoring, rather than a neural embedding model or dedicated vector database. The card image comes from the repository's `docs/screenshots/assistant.png`.

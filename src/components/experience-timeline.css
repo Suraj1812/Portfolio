@@ -27,20 +27,25 @@
 .experience-chapter-card:hover { transform: translateY(-2px); box-shadow: 4px 6px 0 var(--ink); }
 .experience-chapter-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
 .experience-chapter-role { min-width: 0; }
-.experience-chapter-company { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; color: var(--ink-soft); font-size: 11px; font-weight: 800; letter-spacing: .03em; }
-.experience-chapter-company > a { display: inline-flex; align-items: center; gap: 4px; text-underline-offset: 4px; }
-.experience-chapter-company > a:hover { text-decoration: underline; }
 .experience-chapter-context { margin-top: 8px; color: var(--ink-soft); font-size: 11px; line-height: 1.6; }
 .experience-chapter-current { display: inline-flex; align-items: center; gap: 5px; padding: 4px 6px; border: 1px solid #111; border-radius: 4px; background: var(--lime); color: #111; font-size: 7px; font-weight: 900; letter-spacing: .06em; }
 .experience-chapter-current > span { display: block; width: 5px; height: 5px; border-radius: 50%; background: #111; }
-.experience-chapter h3 { margin-top: 9px; font-size: 25px; line-height: 1.2; font-weight: 900; letter-spacing: -.035em; }
-.experience-chapter-logo { display: grid; flex-shrink: 0; place-items: center; width: 122px; height: 48px; padding: 8px 11px; border: 1.5px solid #111; border-radius: 9px; }
-.experience-chapter-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.experience-chapter h3 { margin: 0; font-size: 25px; line-height: 1.2; font-weight: 900; letter-spacing: -.035em; }
+.experience-chapter-current + h3 { margin-top: 10px; }
+.experience-chapter-logo { display: block; flex-shrink: 0; overflow: hidden; width: 156px; height: 76px; padding: 10px; border: 1.5px solid #111; border-radius: 9px; transition: box-shadow .2s; }
+.experience-chapter-logo:hover { box-shadow: 3px 3px 0 var(--ink); }
+.experience-chapter-logo-image { position: relative; display: block; width: 100%; height: 100%; overflow: hidden; }
+.experience-chapter-logo-image img { object-fit: contain; }
 .experience-chapter-logo-dark { background: #111; }
 .experience-chapter-logo-light { background: #fff; }
-.experience-chapter-logo-mark { width: 58px; height: 58px; padding: 4px; }
-.experience-chapter-role-icon { display: grid; place-items: center; flex-shrink: 0; width: 48px; height: 48px; border: 2px solid #111; border-radius: 12px; background: var(--chapter-accent); color: #111; box-shadow: 3px 3px 0 #111; transform: rotate(5deg); }
+.experience-chapter-logo-mark { width: 64px; height: 64px; padding: 4px; }
 .experience-chapter-summary { margin-top: 15px; color: var(--ink-muted); font-size: 14px; line-height: 1.75; }
+.experience-chapter-links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 15px; }
+.experience-chapter-links > a { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 36px; border: 1px solid var(--ink); border-radius: 6px; background: var(--paper); padding: 7px 9px; color: var(--ink); font-size: 10px; font-weight: 800; transition: box-shadow .2s; }
+.experience-chapter-links > a:hover { box-shadow: 2px 2px 0 var(--ink); }
+.experience-chapter-links svg { flex-shrink: 0; }
+.experience-chapter-map-label { border-left: 1px solid var(--ink-soft); padding-left: 6px; color: var(--ink-muted); font-size: 9px; font-weight: 600; }
+.experience-chapter-address { margin-top: 9px; color: var(--ink-soft); font-size: 10px; line-height: 1.7; }
 .experience-chapter-outcomes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 17px; }
 .experience-chapter-outcomes > div { display: inline-flex; align-items: center; gap: 8px; border-left: 3px solid var(--chapter-accent); background: var(--surface-2); padding: 8px 10px; border-radius: 0 7px 7px 0; }
 .experience-chapter-outcomes strong { font-family: var(--font-display); font-size: 20px; line-height: 1; font-weight: 900; letter-spacing: -.04em; }
@@ -73,7 +78,8 @@
   .experience-chapter-card { padding: 20px 20px 0; }
   .experience-chapter-details { margin: 0 -20px; }
   .experience-chapter h3 { font-size: 23px; }
-  .experience-chapter-logo { width: 98px; height: 44px; padding: 7px; }
+  .experience-chapter-logo { width: 128px; height: 68px; padding: 8px; }
+  .experience-chapter-logo-mark { width: 60px; height: 60px; padding: 4px; }
 }
 @media (max-width: 700px) {
   .experience-chapters-intro { grid-template-columns: 1fr; gap: 24px; margin-bottom: 32px; }
@@ -91,17 +97,17 @@
   .experience-chapter::after { left: 12px; top: 30px; bottom: -26px; }
   .experience-chapter-card { grid-column: 2; grid-row: 2; padding: 17px 16px 0; border-radius: 12px; }
   .experience-chapter-header { align-items: flex-start; gap: 10px; }
-  .experience-chapter-company { font-size: 10px; gap: 7px; }
   .experience-chapter h3 { font-size: 22px; }
-  .experience-chapter-logo { width: 77px; height: 37px; border-radius: 7px; padding: 6px; }
-  .experience-chapter-logo-mark { width: 42px; height: 42px; padding: 3px; }
+  .experience-chapter-logo { width: 105px; height: 58px; border-radius: 7px; padding: 6px; }
+  .experience-chapter-logo-mark { width: 48px; height: 48px; padding: 3px; }
   .experience-chapter-context { font-size: 10px; }
   .experience-chapter-project { grid-template-columns: 92px minmax(0, 1fr); margin-bottom: 17px; }
   .experience-chapter-project-copy { gap: 4px; padding: 9px 10px; }
   .experience-chapter-project-copy > strong { font-size: 12px; }
   .experience-chapter-project-copy > span:not(.experience-chapter-project-label):not(.sr-only) { font-size: 10px; }
-  .experience-chapter-role-icon { width: 35px; height: 35px; border-radius: 9px; }
-  .experience-chapter-role-icon svg { width: 21px; height: 21px; }
+  .experience-chapter-links { gap: 7px; margin-top: 12px; }
+  .experience-chapter-links > a { min-height: 38px; font-size: 9px; padding: 7px 8px; }
+  .experience-chapter-address { font-size: 9px; }
   .experience-chapter-summary { font-size: 12px; line-height: 1.8; margin-top: 12px; }
   .experience-chapter-outcomes { gap: 8px; margin-top: 13px; }
   .experience-chapter-outcomes > div { padding: 8px; gap: 7px; }
@@ -119,10 +125,9 @@
   .experience-chapter-card { padding-left: 12px; padding-right: 12px; }
   .experience-chapter-details { margin-left: -12px; margin-right: -12px; }
   .experience-chapter h3 { font-size: 20px; }
-  .experience-chapter-logo { width: 65px; height: 34px; padding: 4px; }
-  .experience-chapter-logo-mark { width: 38px; height: 38px; padding: 3px; }
+  .experience-chapter-logo { width: 90px; height: 52px; padding: 5px; }
+  .experience-chapter-logo-mark { width: 44px; height: 44px; padding: 3px; }
   .experience-chapter-header { flex-wrap: nowrap; }
-  .experience-chapter-role-icon { display: none; }
   .experience-chapters-eyebrow { font-size: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { .experience-chapters *, .experience-chapter-card { transition: none !important; transform: none !important; } }
