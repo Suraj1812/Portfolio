@@ -28,6 +28,9 @@
 .experience-chapter-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
 .experience-chapter-role { min-width: 0; }
 .experience-chapter-company { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; color: var(--ink-soft); font-size: 11px; font-weight: 800; letter-spacing: .03em; }
+.experience-chapter-company > a { display: inline-flex; align-items: center; gap: 4px; text-underline-offset: 4px; }
+.experience-chapter-company > a:hover { text-decoration: underline; }
+.experience-chapter-context { margin-top: 8px; color: var(--ink-soft); font-size: 11px; line-height: 1.6; }
 .experience-chapter-current { display: inline-flex; align-items: center; gap: 5px; padding: 4px 6px; border: 1px solid #111; border-radius: 4px; background: var(--lime); color: #111; font-size: 7px; font-weight: 900; letter-spacing: .06em; }
 .experience-chapter-current > span { display: block; width: 5px; height: 5px; border-radius: 50%; background: #111; }
 .experience-chapter h3 { margin-top: 9px; font-size: 25px; line-height: 1.2; font-weight: 900; letter-spacing: -.035em; }
@@ -35,6 +38,7 @@
 .experience-chapter-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .experience-chapter-logo-dark { background: #111; }
 .experience-chapter-logo-light { background: #fff; }
+.experience-chapter-logo-mark { width: 58px; height: 58px; padding: 4px; }
 .experience-chapter-role-icon { display: grid; place-items: center; flex-shrink: 0; width: 48px; height: 48px; border: 2px solid #111; border-radius: 12px; background: var(--chapter-accent); color: #111; box-shadow: 3px 3px 0 #111; transform: rotate(5deg); }
 .experience-chapter-summary { margin-top: 15px; color: var(--ink-muted); font-size: 14px; line-height: 1.75; }
 .experience-chapter-outcomes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 17px; }
@@ -43,6 +47,14 @@
 .experience-chapter-outcomes span { font-size: 10px; font-weight: 700; color: var(--ink-soft); }
 .experience-chapter-tools { display: flex; flex-wrap: wrap; gap: 6px; margin: 17px 0 20px; }
 .experience-chapter-tools > span { border: 1px solid var(--ink); border-radius: 5px; padding: 5px 7px; background: var(--surface-1); color: var(--ink-muted); font-size: 9px; font-weight: 800; }
+.experience-chapter-project { display: grid; grid-template-columns: 160px minmax(0, 1fr); align-items: center; overflow: hidden; margin: 0 0 22px; border: 1.5px solid var(--ink); border-radius: 9px; background: var(--paper); transition: box-shadow .2s; }
+.experience-chapter-project:hover { box-shadow: 3px 3px 0 var(--ink); }
+.experience-chapter-project > img { display: block; width: 100%; height: auto; border-right: 1.5px solid var(--ink); }
+.experience-chapter-project-copy { display: grid; gap: 6px; padding: 12px 16px; }
+.experience-chapter-project-label { color: var(--ink-soft); font-size: 8px; font-weight: 900; letter-spacing: .1em; }
+.experience-chapter-project-copy > strong { display: flex; align-items: center; gap: 6px; color: var(--ink); font-size: 14px; line-height: 1.4; }
+.experience-chapter-project-copy > strong > svg { flex-shrink: 0; }
+.experience-chapter-project-copy > span:not(.experience-chapter-project-label):not(.sr-only) { color: var(--ink-muted); font-size: 11px; line-height: 1.6; }
 .experience-chapter-details { margin: 0 -24px; border-top: 1.5px solid var(--ink); background: var(--paper); }
 .experience-chapter-details > summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 47px; padding: 10px 24px; cursor: pointer; color: var(--ink); font-size: 11px; font-weight: 800; list-style: none; }
 .experience-chapter-details > summary::-webkit-details-marker { display: none; }
@@ -82,6 +94,12 @@
   .experience-chapter-company { font-size: 10px; gap: 7px; }
   .experience-chapter h3 { font-size: 22px; }
   .experience-chapter-logo { width: 77px; height: 37px; border-radius: 7px; padding: 6px; }
+  .experience-chapter-logo-mark { width: 42px; height: 42px; padding: 3px; }
+  .experience-chapter-context { font-size: 10px; }
+  .experience-chapter-project { grid-template-columns: 92px minmax(0, 1fr); margin-bottom: 17px; }
+  .experience-chapter-project-copy { gap: 4px; padding: 9px 10px; }
+  .experience-chapter-project-copy > strong { font-size: 12px; }
+  .experience-chapter-project-copy > span:not(.experience-chapter-project-label):not(.sr-only) { font-size: 10px; }
   .experience-chapter-role-icon { width: 35px; height: 35px; border-radius: 9px; }
   .experience-chapter-role-icon svg { width: 21px; height: 21px; }
   .experience-chapter-summary { font-size: 12px; line-height: 1.8; margin-top: 12px; }
@@ -102,6 +120,7 @@
   .experience-chapter-details { margin-left: -12px; margin-right: -12px; }
   .experience-chapter h3 { font-size: 20px; }
   .experience-chapter-logo { width: 65px; height: 34px; padding: 4px; }
+  .experience-chapter-logo-mark { width: 38px; height: 38px; padding: 3px; }
   .experience-chapter-header { flex-wrap: nowrap; }
   .experience-chapter-role-icon { display: none; }
   .experience-chapters-eyebrow { font-size: 8px; }

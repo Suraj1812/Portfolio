@@ -29,6 +29,12 @@ const structuredData = {
       name: "Suraj Singh",
       url: siteConfig.url,
       jobTitle: "AI Developer & Full-Stack Engineer",
+      worksFor: {
+        "@type": "Organization",
+        name: "WellM",
+        legalName: "Wellness Mandala Private Limited",
+        url: "https://wellm.co/",
+      },
       description: siteConfig.description,
       email: siteConfig.contact.email,
       sameAs: [siteConfig.links.github, siteConfig.links.linkedin],
@@ -121,6 +127,8 @@ export default function HomePage() {
                   I&apos;m Suraj Singh, a software engineer based in Faridabad,
                   India. My experience spans full-stack client delivery, React
                   interfaces, Go backend services, and AI-based automation.
+                  {" "}I currently work at WellM as an AI Full Stack Engineer,
+                  building mobile, web, and AI features for wellness products.
                 </p>
                 <p>
                   I work across the application: shaping the UI, connecting

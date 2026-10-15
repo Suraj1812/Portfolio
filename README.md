@@ -20,6 +20,7 @@ A personal portfolio for Suraj Singh, AI Developer & Full-Stack Engineer. Bright
 - Eight projects per page: five full catalogue pages, four columns on desktop, and two columns on mobile
 - Colorful client cards, a professional experience timeline, technical skill groups, and contact links
 - Automatic experience durations in years and months, including current roles; total experience counts overlapping roles once
+- Six professional roles, including Fashion Pattern Lab freelance website development (Aug–Oct 2026) and the current AI Full Stack Engineer role at WellM (Oct 2026–present)
 - Resume panel and `/resume` preview with the original PDF available to open or download
 - Responsive layout and accessible navigation
 - Open Graph image, Twitter image, sitemap, robots, and manifest

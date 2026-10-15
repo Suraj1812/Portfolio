@@ -4,6 +4,14 @@ Professional history, dates, education, and listed AI technologies come from the
 
 The portfolio describes AI development as an engineering focus. The resume's employment history begins in February 2023; it does not assert that every year of that history was spent exclusively on AI.
 
+## October 2026 employment update
+
+- **Fashion Pattern Lab:** the owner confirmed freelance website development from August through October 2026. The experience timeline and project card now reflect that work. The [official website](https://fashionpatternlab.com/) was checked on October 15, 2026 for course discovery, the pattern store, custom pattern services, student projects, and student login. The existing actual homepage screenshot is reused in the timeline, alongside the official logo already stored in `public/project-logos/fashion-pattern-lab.png`. Website content supports the product description; no unverified implementation stack or business results are added.
+- **WellM:** the owner's signed offer letter, dated October 7, 2026, confirms AI Full Stack Engineer in Product & Technology at Wellness Mandala Private Limited, full-time, Gurugram (Hybrid), joining October 12, 2026. The owner confirms this is the current role. Engineering responsibilities are summarized from Annexure B: mobile/web applications, on-device AI and approved-content assistants, code review, automated/device testing, releases, live-product support, and documentation. Responsibilities are presented as role scope, with no completed outcomes implied. The letter's generic marketing-role paragraph is not used for the engineering description.
+- **Branding:** [WellM's official site](https://wellm.co/) links its logo at `https://wellm.co/images/logo.png`. The original transparent 538 × 201 PNG is stored locally at `public/client-logos/wellm.png`. The Fashion Pattern Lab logo was reconfirmed from the official homepage's custom-logo image.
+
+The signed offer letter, signature, compensation, and other private employment terms are not copied into the public site. The original downloadable resume remains unchanged; the website timeline contains the later employment updates.
+
 ## Implementation evidence
 
 - **Grounded Notes:** [repository](https://github.com/Suraj1812/grounded-notes-qa-assistant). Markdown chunking and retrieval live in `src/server/retrieval`; Ollama generation and low-match refusal live in `src/server/services`. Retrieval uses TF-IDF and cosine scoring, rather than a neural embedding model or dedicated vector database. The card image comes from the repository's `docs/screenshots/assistant.png`.
@@ -12,7 +20,7 @@ The portfolio describes AI development as an engineering focus. The resume's emp
 - **Realtime Chat App:** [repository](https://github.com/Suraj1812/ChatApp). Its package manifest supports Node.js, Express, Socket.IO, and SQLite. The old Railway demo returned 404, so the site links to the source.
 - **Solar System Explorer:** [repository](https://github.com/Suraj1812/The-Solar-System). Its manifest supports React, Vite, Three.js, GSAP, and Framer Motion.
 - **Dattamsha Data Labs:** [repository](https://github.com/Suraj1812/Dattamsha-Data-Labs). Its manifest supports React, TypeScript, Vite, Framer Motion, and Express.
-- **Cricket Connect AI and Fashion Pattern Lab:** retained from the original portfolio. The cards describe the visible product website and interface; they do not claim a specific model implementation, technology stack, or commercial result.
+- **Cricket Connect AI and Fashion Pattern Lab:** retained from the original portfolio. The cards describe the visible product website and interface; they do not claim a specific model implementation, technology stack, or commercial result. Fashion Pattern Lab's freelance delivery period was subsequently confirmed by the owner in the October 2026 update above.
 - **Linux deployment tooling:** [Sync](https://github.com/Suraj1812/Sync) contains an Alpine-based Dockerfile, shell migration entrypoint, and Nginx API/WebSocket proxy configuration. Local Agent contains an Ollama shell startup script. These support Linux container/deployment experience; the site does not claim broad Linux server administration.
 
 The 2026 labels on newly audited repositories reflect their repository creation year, not independently verified project completion dates. Earlier project dates are retained from the original portfolio. Resume percentages remain in role highlights and are not presented as measurements performed by this portfolio.
@@ -59,7 +67,7 @@ The custom 3D icons are decorative artwork generated for the portfolio and provi
 
 ## Experience duration
 
-Role dates are stored as year/month values. Completed roles include their final calendar month; current roles show elapsed months through the current month boundary. The total merges employment intervals so simultaneous roles are counted once. The owner corrected NEXUS SP Solutions to December 2025 through July 2026. The resulting total is 42 months (3 years 6 months), including the internship, and remains fixed after the last completed role. The current month uses Asia/Kolkata time, and client-side displays refresh on page load, minute checks, and tab/window focus, so ongoing roles can update without rebuilding a static deployment.
+Role dates are stored as year/month values. Completed roles include their final calendar month; current roles show elapsed months through the current month boundary. The total merges employment intervals so simultaneous roles are counted once. The owner corrected NEXUS SP Solutions to December 2025 through July 2026, then added Fashion Pattern Lab (August–October 2026) and WellM (October 2026–present). As of October 2026 the total is 45 months (3 years 9 months), including the internship. WellM shows "Less than a month" in its joining month; October's freelance/current-role overlap is counted once. The current month uses Asia/Kolkata time, and client-side displays refresh on page load, minute checks, and tab/window focus, so ongoing roles can update without rebuilding a static deployment. The professional-role count is derived from the same experience data.
 
 ## Demo availability
 

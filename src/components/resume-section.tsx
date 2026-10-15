@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight, Download, FileText, GraduationCap } from "lucide-react";
 
 import { siteConfig } from "@/lib/site";
+import { experience } from "@/lib/portfolio-data";
 import { monthKey } from "@/lib/experience-duration";
 import { ExperienceDuration } from "@/components/experience-duration";
 import "./resume-showcase.css";
@@ -39,7 +40,7 @@ export function ResumeSection() {
             <div className="rshow-fact rshow-fact-roles">
               <dt>Professional roles</dt>
               <dd>
-                4<span aria-hidden="true">✳</span>
+                {experience.length}<span aria-hidden="true">✳</span>
               </dd>
             </div>
           </dl>

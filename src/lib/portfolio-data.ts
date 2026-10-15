@@ -1,3 +1,5 @@
+import type { ExperienceDate } from "@/lib/experience-duration";
+
 export type PortfolioProject = {
   id: string;
   title: string;
@@ -19,7 +21,7 @@ export type PortfolioProject = {
 };
 
 // Project implementation details come from the linked public repositories.
-// Employment, dates, and skills come from the resume and the owner's corrections.
+// Employment, dates, and skills come from the resume, offer letter, and owner's corrections.
 export const portfolioProjects: PortfolioProject[] = [
   {
     id: "grounded-notes",
@@ -169,12 +171,12 @@ export const portfolioProjects: PortfolioProject[] = [
     categoryLabel: "CLIENT WEB · LEARNING & COMMERCE",
     year: "2026",
     description:
-      "A specialist learning and commerce website connecting pattern-making courses, digital patterns, and custom services.",
+      "Built as a freelance Web Developer from August to October 2026: a pattern-making education website connecting live courses, digital patterns, and custom services.",
     stack: ["Course discovery", "Digital commerce", "Responsive UI"],
     features: [
       "Clear routes to courses, digital patterns, and services",
-      "Educational content for a specialist audience",
-      "Content structure connecting learning to practical products",
+      "One-on-one online course information for aspiring pattern makers",
+      "Student projects and student login alongside learning and shopping paths",
     ],
     liveUrl: "https://fashionpatternlab.com/",
     image: "/projects/fashion-pattern-lab.png",
@@ -882,7 +884,70 @@ export const portfolioProjects: PortfolioProject[] = [
   },
 ];
 
-export const experience = [
+export type ProfessionalExperience = {
+  company: string;
+  website?: string;
+  role: string;
+  type: string;
+  period: string;
+  start: ExperienceDate;
+  end?: ExperienceDate;
+  context?: string;
+  summary: string;
+  details: string[];
+  stack: string[];
+  project?: {
+    title: string;
+    description: string;
+    url: string;
+    image: string;
+    imageAlt: string;
+  };
+};
+
+export const experience: ProfessionalExperience[] = [
+  {
+    company: "WellM",
+    website: "https://wellm.co/",
+    role: "AI Full Stack Engineer",
+    type: "Full-time · Hybrid",
+    period: "Oct 2026 — Present",
+    start: { year: 2026, month: 10 },
+    context: "Product & Technology · Gurugram, India",
+    summary:
+      "Mobile and web application engineering for WellM's client and in-house wellness products, with a focus on on-device AI and assistants grounded in approved content.",
+    details: [
+      "Joined Wellness Mandala Private Limited (WellM) on 12 October 2026 as an AI Full Stack Engineer",
+      "Build and maintain mobile and web applications, on-device AI features, and assistants that answer from approved content",
+      "Review AI-assisted code, write automated tests, test on real devices, and follow the production release process",
+      "Support live products, check releases, and document engineering decisions, setup steps, and known issues",
+    ],
+    stack: ["Mobile & web apps", "On-device AI", "AI assistants", "Automated testing"],
+  },
+  {
+    company: "Fashion Pattern Lab",
+    website: "https://fashionpatternlab.com/",
+    role: "Web Developer",
+    type: "Freelance",
+    period: "Aug 2026 — Oct 2026",
+    start: { year: 2026, month: 8 },
+    end: { year: 2026, month: 10 },
+    summary:
+      "Built the Fashion Pattern Lab website, bringing pattern-making courses, a digital pattern store, and custom pattern services into one learning and commerce experience.",
+    details: [
+      "Freelance website development for Fashion Pattern Lab from August to October 2026",
+      "Course discovery for one-on-one online pattern-making lessons",
+      "Website sections for the pattern store, custom pattern services, student projects, and student login",
+    ],
+    stack: ["Website development", "Course discovery", "Digital commerce"],
+    project: {
+      title: "Fashion Pattern Lab",
+      description: "Live courses, digital patterns, and custom pattern services.",
+      url: "https://fashionpatternlab.com/",
+      image: "/projects/fashion-pattern-lab.png",
+      imageAlt: "Fashion Pattern Lab homepage with course navigation and garment pattern pieces",
+    },
+  },
   {
     company: "NEXUS SP Solutions",
     role: "Full-Stack Developer",

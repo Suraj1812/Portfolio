@@ -10,6 +10,10 @@ Retrieved from the clients' live websites on October 2, 2026. The downloaded ass
 | EkkoMD wordmark | https://www.ekkomd.com/ | https://d1ws9yd8idbf0.cloudfront.net/EKKOMD.webp |
 | EkkoMD brand mark | https://www.ekkomd.com/ | https://www.ekkomd.com/favIcon.svg |
 | Humigy       | https://humigy.com/          | https://humigy.com/assets/humigy-logo-DR8U1INe.svg              |
+| WellM | https://wellm.co/ | https://wellm.co/images/logo.png |
+| Fashion Pattern Lab | https://fashionpatternlab.com/ | https://fashionpatternlab.com/wp-content/uploads/fpl-brand/fashion-pattern-lab-logo.png?fplv=20260717-black-logo |
+
+WellM's logo was retrieved on October 15, 2026 and visually checked against the supplied offer-letter branding. The transparent 538 × 201 PNG is saved unchanged as `wellm.png`. Fashion Pattern Lab's official logo was reconfirmed on the same date; the timeline reuses `public/project-logos/fashion-pattern-lab.png` and the existing actual homepage screenshot in `public/projects/fashion-pattern-lab.png`.
 
 Evtaar's wordmark is referenced by its live JavaScript application bundle. EkkoMD's wordmark is referenced by its live footer component and hosted on its CloudFront asset domain. Their official favicons were also inspected during verification.
 

@@ -6,6 +6,8 @@ import { ExperienceAsOf, ExperienceDuration } from "@/components/experience-dura
 import "./experience-timeline.css";
 
 const employerLogos: Record<string, { src: string; className: string }> = {
+  WellM: { src: "/client-logos/wellm.png", className: "experience-chapter-logo-light" },
+  "Fashion Pattern Lab": { src: "/project-logos/fashion-pattern-lab.png", className: "experience-chapter-logo-light experience-chapter-logo-mark" },
   Evtaar: { src: "/client-logos/evtaar.webp", className: "experience-chapter-logo-dark" },
   "People Maketh": { src: "/client-logos/peoplemaketh.svg", className: "experience-chapter-logo-light" },
 };
@@ -55,16 +57,24 @@ export function ExperienceSection() {
                 <article className="experience-chapter-card" aria-labelledby={`experience-role-${index}`}>
                   <div className="experience-chapter-header">
                     <div className="experience-chapter-role">
-                      <div className="experience-chapter-company">{job.company}{current && <span className="experience-chapter-current"><span aria-hidden="true" /> CURRENT ROLE</span>}</div>
+                      <div className="experience-chapter-company">
+                        {job.website ? <a href={job.website} target="_blank" rel="noreferrer">{job.company}<ArrowUpRight size={12} aria-hidden="true" /><span className="sr-only"> website (opens in a new tab)</span></a> : job.company}
+                        {current && <span className="experience-chapter-current"><span aria-hidden="true" /> CURRENT ROLE</span>}
+                      </div>
                       <h3 id={`experience-role-${index}`}>{job.role}</h3>
+                      {job.context && <p className="experience-chapter-context">{job.context}</p>}
                     </div>
                     {logo ? <div className={`experience-chapter-logo ${logo.className}`}><Image src={logo.src} alt="" width={130} height={48} /></div> : <div className="experience-chapter-role-icon" aria-hidden="true"><Code2 size={25} strokeWidth={2} /></div>}
                   </div>
                   <p className="experience-chapter-summary">{job.summary}</p>
                   {outcomes && <div className="experience-chapter-outcomes" aria-label={`Outcomes at ${job.company}`}>{outcomes.map((outcome) => <div key={outcome.value}><strong>{outcome.value}</strong><span>{outcome.label}</span></div>)}</div>}
                   <div className="experience-chapter-tools" aria-label={`${job.company} technologies and responsibilities`}>{job.stack.map((tool) => <span key={tool}>{tool}</span>)}</div>
+                  {job.project && <a className="experience-chapter-project" href={job.project.url} target="_blank" rel="noreferrer">
+                    <Image src={job.project.image} alt={job.project.imageAlt} width={1440} height={1000} sizes="(max-width: 700px) 92px, 160px" />
+                    <span className="experience-chapter-project-copy"><span className="experience-chapter-project-label">WEBSITE I BUILT</span><strong>{job.project.title}<ArrowUpRight size={16} aria-hidden="true" /></strong><span>{job.project.description}</span><span className="sr-only">Opens in a new tab</span></span>
+                  </a>}
                   <details className="experience-chapter-details">
-                    <summary>Role highlights <ChevronDown size={17} aria-hidden="true" /></summary>
+                    <summary>{current ? "Role responsibilities" : "Role highlights"} <ChevronDown size={17} aria-hidden="true" /></summary>
                     <ul>{job.details.map((detail) => <li key={detail}><Check size={15} aria-hidden="true" /><span>{detail}</span></li>)}</ul>
                   </details>
                 </article>
