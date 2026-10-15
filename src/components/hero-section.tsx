@@ -13,7 +13,6 @@ import {
   Github,
   Linkedin,
   Mail,
-  MapPin,
 } from "lucide-react";
 import { HeroOrbit } from "@/components/hero-orbit";
 import { ExperienceDuration } from "@/components/experience-duration";
@@ -37,13 +36,13 @@ export function HeroSection({ initialMonth }: { initialMonth: string }) {
   // The hero starts at the document top, so window scroll gives it a stable
   // parallax range without measuring a target against a static scroll container.
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 1000], [0, -80]);
+  const y = useTransform(scrollY, [0, 1000], [0, -36]);
   const rotate = useTransform(scrollY, [0, 1000], [0, -7]);
   const shapeY = useTransform(scrollY, [0, 1000], [0, 150]);
   return (
     <section
       id="top"
-      className="neo-grid-bg relative overflow-hidden lg:min-h-[125vh]"
+      className="neo-grid-bg relative overflow-hidden"
     >
       <motion.div
         aria-hidden="true"
@@ -61,7 +60,7 @@ export function HeroSection({ initialMonth }: { initialMonth: string }) {
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
         className="absolute -right-9 top-32 h-48 w-48 rounded-[2.5rem] border-4 border-black bg-[var(--pink)]"
       />
-      <div className="relative flex min-h-screen items-center pb-16 pt-36 sm:pt-40 lg:sticky lg:top-0 lg:py-36">
+      <div className="relative flex min-h-screen items-center pb-16 pt-36 sm:pt-40 lg:pb-24 lg:pt-36">
         <div className="mx-auto grid w-full max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-10">
           <motion.div
             initial={false}
@@ -152,47 +151,10 @@ export function HeroSection({ initialMonth }: { initialMonth: string }) {
             initial={false}
             style={{
               y: motionEnabled ? y : 0,
-              rotate: motionEnabled ? rotate : 0,
             }}
             className="relative z-10 lg:pt-8"
           >
-            <div className="neo-panel-lg relative bg-[var(--blue)] p-4 text-black sm:p-5">
-              <div className="relative z-10 flex items-center justify-between rounded-xl border-4 border-black bg-white px-4 py-3 text-[10px] font-black uppercase tracking-[.12em]">
-                <div className="flex gap-2">
-                  <span className="h-3 w-3 rounded-full border-2 border-black bg-[var(--pink)]" />
-                  <span className="h-3 w-3 rounded-full border-2 border-black bg-[var(--yellow)]" />
-                  <span className="h-3 w-3 rounded-full border-2 border-black bg-[var(--lime)]" />
-                </div>
-                <span>The engineering playground</span>
-              </div>
-              <div className="mt-4 overflow-hidden rounded-[1.5rem] border-4 border-black bg-[var(--cream)]">
-                <HeroOrbit />
-              </div>
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                <div className="neo-panel-sm bg-[var(--pink)] p-4">
-                  <p className="text-xs font-black uppercase tracking-[.12em]">
-                    AI + Automation
-                  </p>
-                  <p className="mt-2 text-xs leading-6">
-                    LLMs, retrieval, local agents, and connected workflows.
-                  </p>
-                </div>
-                <div className="neo-panel-sm bg-[var(--lime)] p-4">
-                  <p className="text-xs font-black uppercase tracking-[.12em]">
-                    Full-stack thinking
-                  </p>
-                  <p className="mt-2 text-xs leading-6">
-                    React, Next.js, Node.js, Go, and database-backed systems.
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 flex items-center justify-between rounded-xl border-2 border-black bg-[var(--yellow)] px-4 py-3 text-[10px] font-black uppercase tracking-[.1em]">
-                <span className="inline-flex items-center gap-2">
-                  <MapPin size={13} /> Faridabad, India
-                </span>
-                <span>Move your cursor ↗</span>
-              </div>
-            </div>
+            <HeroOrbit />
           </motion.div>
           <div className="col-span-full mt-2 flex items-center gap-3 text-xs font-black uppercase tracking-[.12em]">
             <ArrowDown
