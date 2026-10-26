@@ -9,6 +9,7 @@ import {
   C,
   createToonKit,
   GUIDE_EVENT,
+  lightScene,
   type Builder,
 } from "@/components/hero-toy-avatar";
 import "./scroll-guide.css";
@@ -166,9 +167,12 @@ export function ScrollGuide() {
       puppy.scale.setScalar(1.05);
       scene.add(puppy);
 
-      const key = new THREE.DirectionalLight(0xffffff, 2.5);
-      key.position.set(-2, 3, 4);
-      scene.add(key, new THREE.AmbientLight(0xffffff, 1.15));
+      const lighting = await lightScene(THREE, renderer, scene, { environmentIntensity: 0.6 });
+      if (disposed) {
+        lighting.dispose();
+        return;
+      }
+      disposables.add(lighting);
 
       // ---------- Props in each hand ----------
       const handProps = new Map<number, ReturnType<typeof buildProps>>();
