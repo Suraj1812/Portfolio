@@ -2,12 +2,10 @@
 
 import { useEffect, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { MapPin } from "lucide-react";
 
 import { HeroAvatar } from "@/components/hero-avatar-3d";
 import { MagneticButton } from "@/components/magnetic-button";
 import { AnimatedButton } from "@/components/animated-button";
-import { experience } from "@/lib/portfolio-data";
 import "./hero-section.css";
 
 const subscribeToHydration = () => () => {};
@@ -86,8 +84,6 @@ export function HeroSection() {
   const shapeY = useTransform(scrollY, [0, 900], [0, 140]);
   const shapeRotate = useTransform(scrollY, [0, 900], [0, -25]);
 
-  const current = experience[0];
-
   return (
     <section id="top" className="hero neo-grid-bg" aria-labelledby="hero-title">
       {/* Decorative shapes */}
@@ -107,13 +103,6 @@ export function HeroSection() {
 
       <div className="hero-inner">
         <motion.div className="hero-copy" style={{ y: motionEnabled ? copyY : 0 }}>
-          <div className="hero-status hero-intro" style={{ "--d": "0ms" } as CSSProperties}>
-            <span className="hero-status-dot" aria-hidden="true" />
-            Building AI features @ {current?.company ?? "WellM"}
-            <span className="hero-status-sep" aria-hidden="true" />
-            <MapPin size={14} aria-hidden="true" /> Faridabad, IN
-          </div>
-
           <h1 id="hero-title" className="hero-name">
             <span className="sr-only">Suraj Singh</span>
             <SplitWord word="SURAJ" />

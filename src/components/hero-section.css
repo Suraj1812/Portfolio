@@ -30,43 +30,6 @@
   }
 }
 
-/* ---------- Status pill ---------- */
-.hero-status {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px 8px 12px;
-  border: 2px solid var(--ink);
-  border-radius: 999px;
-  background: var(--surface-1);
-  color: var(--ink);
-  box-shadow: 3px 3px 0 var(--ink);
-  font-size: 12px;
-  font-weight: 800;
-}
-.hero-status-dot {
-  width: 10px;
-  height: 10px;
-  border: 2px solid #111;
-  border-radius: 50%;
-  background: var(--lime);
-  animation: hero-live 1.8s ease-in-out infinite;
-}
-@keyframes hero-live {
-  50% {
-    box-shadow: 0 0 0 6px rgba(184, 255, 90, 0.35);
-  }
-}
-.hero-status-sep {
-  width: 4px;
-  height: 4px;
-  margin-inline: 4px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.5;
-}
-
 /* ---------- Name ---------- */
 .hero-name {
   margin-top: 26px;
@@ -517,9 +480,6 @@
   }
   .hero-inner {
     padding-inline: 18px;
-  }
-  .hero-status {
-    font-size: 11px;
   }
   .hero-name {
     font-size: clamp(3.4rem, 19vw, 5rem);
