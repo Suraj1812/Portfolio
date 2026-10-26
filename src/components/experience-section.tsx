@@ -2,7 +2,7 @@ import Image from "next/image";
 import { ArrowUpRight, BriefcaseBusiness, Check, ChevronDown, Clock3, Globe2, MapPin } from "lucide-react";
 import { experience } from "@/lib/portfolio-data";
 import { monthKey } from "@/lib/experience-duration";
-import { ExperienceAsOf, ExperienceDuration } from "@/components/experience-duration";
+import { ExperienceDuration } from "@/components/experience-duration";
 import "./experience-timeline.css";
 
 const employerLogos: Record<string, { src: string; className: string }> = {
@@ -28,18 +28,15 @@ export function ExperienceSection() {
   return (
     <section id="experience" className="experience-chapters px-4 py-24 sm:px-6 lg:px-8" aria-labelledby="experience-title">
       <div className="mx-auto max-w-6xl">
-        <div className="experience-chapters-intro">
+        <div className="experience-chapters-intro" data-aos="blur-up">
           <div>
             <span className="experience-chapters-eyebrow"><BriefcaseBusiness size={15} aria-hidden="true" /> 02 / PROFESSIONAL EXPERIENCE</span>
             <h2 id="experience-title">Built through <span>real work.</span></h2>
-            <p>Client delivery, product engineering, backend systems, and AI automation. A timeline of the teams and problems behind the skills.</p>
             <a className="experience-chapters-resume" href="/resume">Read the full resume <ArrowUpRight size={17} aria-hidden="true" /></a>
           </div>
           <div className="experience-chapters-total">
             <span className="experience-chapters-total-label"><Clock3 size={16} aria-hidden="true" /> TOTAL EXPERIENCE</span>
             <ExperienceDuration total initialMonth={initialMonth} className="experience-chapters-total-duration" />
-            <p>Professional experience, including internship</p>
-            <ExperienceAsOf initialMonth={initialMonth} />
           </div>
         </div>
 
@@ -49,7 +46,12 @@ export function ExperienceSection() {
             const outcomes = roleOutcomes[job.company];
             const current = !job.end;
             return (
-              <li className={`experience-chapter experience-chapter-${index % 4}`} key={job.company}>
+              <li
+                className={`experience-chapter experience-chapter-${index % 4}`}
+                key={job.company}
+                data-aos="fade-up"
+                data-aos-delay={(index % 2) * 80}
+              >
                 <div className="experience-chapter-date">
                   <span className="experience-chapter-period">{job.period}</span>
                   <span className="experience-chapter-tenure"><Clock3 size={13} aria-hidden="true" /><ExperienceDuration start={job.start} end={job.end} initialMonth={initialMonth} /></span>

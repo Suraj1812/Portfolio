@@ -122,7 +122,7 @@ export const featuredProjects: FeaturedProject[] = [
       "Separate navigation routes connect courses, the pattern store, custom services, and student work.",
     impact:
       "Learners can explore courses and practical pattern services through one focused storefront.",
-    accent: "bg-[var(--pink)]",
+    accent: "bg-[var(--mint)]",
     metrics: ["Fashion education", "Custom patterns", "Digital learning"],
     imageUrl: "/fashion-pattern-lab.jpg",
     imageAlt: "Fashion Pattern Lab women’s wear pattern-making course poster"
@@ -196,7 +196,7 @@ export const featuredProjects: FeaturedProject[] = [
       "Built around reusable content modules and focused spacing rules so a complex information surface stays easy to scan.",
     impact:
       "Demonstrates how I shape AI products into interfaces that feel practical, friendly, and premium.",
-    accent: "bg-[var(--pink)]",
+    accent: "bg-[var(--mint)]",
     metrics: ["AI UX", "Readable density", "Clear navigation"]
   },
   {

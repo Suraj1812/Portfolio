@@ -111,7 +111,7 @@ export default function HomePage() {
         <section id="about" className="about-section">
           <div className="portfolio-container">
             <div className="about-overview">
-              <div>
+              <div data-aos="blur-up">
                 <span className="eyebrow">
                   <span className="section-index">03 /</span> THE DEVELOPER
                   BEHIND THE WORK
@@ -122,7 +122,7 @@ export default function HomePage() {
                   to the system behind it<span className="accent-text">.</span>
                 </h2>
               </div>
-              <div className="about-narrative">
+              <div className="about-narrative" data-aos="fade-left" data-aos-delay="120">
                 <p>
                   I&apos;m Suraj Singh, a software engineer based in Faridabad,
                   India. My experience spans full-stack client delivery, React
@@ -150,12 +150,12 @@ export default function HomePage() {
         </section>
         <ResumeSection />
         <section id="contact" className="contact-section portfolio-container">
-          <div className="contact-topline">
+          <div className="contact-topline" data-aos="fade-up">
             <span className="eyebrow">
               <span className="section-index">05 /</span> LET&apos;S CONNECT
             </span>
           </div>
-          <div className="contact-main">
+          <div className="contact-main" data-aos="blur-up" data-aos-delay="80">
             <h2>
               Building something
               <br />
@@ -165,12 +165,8 @@ export default function HomePage() {
                 <ArrowUpRight strokeWidth={1.2} />
               </a>
             </h2>
-            <p>
-              AI development. Full-stack engineering.
-              <br />A role or a project worth building.
-            </p>
           </div>
-          <div className="contact-links">
+          <div className="contact-links" data-aos="fade-up" data-aos-delay="180">
             <a href={siteConfig.links.email}>
               <Mail size={18} />
               {siteConfig.contact.email}
@@ -184,7 +180,7 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-      <footer className="site-footer portfolio-container">
+      <footer className="site-footer portfolio-container" data-aos="fade">
         <span>© {new Date().getFullYear()} Suraj Singh</span>
         <span className="footer-note">AI Developer & Full-Stack Engineer</span>
         <div id="github" className="footer-socials">

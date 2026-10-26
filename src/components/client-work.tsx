@@ -51,21 +51,14 @@ export function ClientWork() {
       className="branded-clients portfolio-container"
       aria-labelledby="client-work-title"
     >
-      <div className="branded-clients-heading">
+      <div className="branded-clients-heading" data-aos="blur-up">
         <div>
-          <span className="branded-clients-eyebrow">
-            {clientProjects.length} CLIENT WEB EXPERIENCES
-          </span>
           <h2 id="client-work-title">
             Client work.
             <br />
             <span>Different businesses. The same care.</span>
           </h2>
         </div>
-        <p>
-          Company websites and product experiences across security, healthcare,
-          and business services.
-        </p>
       </div>
       <div className="branded-client-grid">
         {clientProjects.map((project, index) => {
@@ -73,7 +66,8 @@ export function ClientWork() {
           return (
             <ScrollReveal
               key={project.name}
-              delay={(index % 3) * 0.05}
+              delay={(index % 3) * 0.09}
+              animation="flip-up"
               className="branded-client-reveal"
             >
               <TiltCard className="branded-client-shell">
@@ -84,7 +78,7 @@ export function ClientWork() {
                   className="branded-client-card"
                   style={
                     {
-                      "--client-accent": `var(--${["cyan", "pink", "yellow", "lime", "orange", "blue"][index % 6]})`,
+                      "--client-accent": `var(--${["cyan", "mint", "yellow", "lime", "orange", "blue"][index % 6]})`,
                     } as CSSProperties
                   }
                   aria-label={`Visit ${project.name} website, opens in a new tab`}

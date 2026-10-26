@@ -65,10 +65,11 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       }
       if (!lenis) {
         lenis = new Lenis({
-          lerp: 0.14,
+          // Lower lerp = longer, silkier glide after each wheel/trackpad input.
+          lerp: 0.085,
           smoothWheel: true,
           syncTouch: false,
-          wheelMultiplier: 1,
+          wheelMultiplier: 0.95,
           autoRaf: false,
           anchors: false,
           allowNestedScroll: true,

@@ -48,7 +48,7 @@ export function MagneticButton({
         onMouseMove={handleMove}
         onMouseLeave={reset}
         className={cn(
-          "group inline-flex w-full items-center justify-center gap-3 rounded-[1.2rem] border-4 border-black bg-[var(--pink)] px-6 py-3 text-center text-sm font-black uppercase tracking-[0.16em] text-black shadow-[10px_10px_0_#111111] transition-all duration-200 sm:w-auto",
+          "group inline-flex w-full items-center justify-center gap-3 rounded-[1.2rem] border-4 border-black bg-[var(--orange)] px-6 py-3 text-center text-sm font-black uppercase tracking-[0.16em] text-black shadow-[10px_10px_0_#111111] transition-all duration-200 sm:w-auto",
           className
         )}
       >

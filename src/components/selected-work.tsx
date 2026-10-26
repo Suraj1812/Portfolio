@@ -32,7 +32,6 @@ import {
   Network,
   Orbit,
   Search,
-  Sparkles,
   X,
 } from "lucide-react";
 import { portfolioProjects, type PortfolioProject } from "@/lib/portfolio-data";
@@ -50,7 +49,7 @@ type ProjectWithArchive = PortfolioProject & {
   icon?: string;
   logo?: string;
 };
-const projectColors = ["lime", "pink", "cyan", "yellow", "blue", "orange"];
+const projectColors = ["lime", "mint", "cyan", "yellow", "blue", "orange"];
 const projectsPerPage = 8;
 const subscribeToHydration = () => () => {};
 const clientSnapshot = () => true;
@@ -610,22 +609,13 @@ export function SelectedWork() {
       aria-labelledby="work-title"
     >
       <div className="mx-auto max-w-6xl">
-        <div className="rich-project-heading-row">
+        <div className="rich-project-heading-row" data-aos="blur-up">
           <div className="rich-project-heading">
-            <span className="rich-project-eyebrow">
-              <Sparkles size={16} aria-hidden="true" />{" "}
-              {portfolioProjects.length} PROJECTS. REAL CODE. REAL CURIOSITY.
-            </span>
             <h2 id="work-title">
               Projects with substance.
               <br />
               <span>And personality.</span>
             </h2>
-            <p>
-              AI assistants, full-stack systems, client websites, and
-              interactive experiments. Different ideas. The same hands-on
-              approach to building.
-            </p>
           </div>
           <div className="rich-project-heading-stamp" aria-hidden="true">
             <Braces size={34} strokeWidth={2.5} />
@@ -638,7 +628,7 @@ export function SelectedWork() {
             </span>
           </div>
         </div>
-        <div className="rich-project-toolbar">
+        <div className="rich-project-toolbar" data-aos="fade-up" data-aos-delay="80">
           <div className="rich-project-search">
             <Search size={19} aria-hidden="true" />
             <label htmlFor="project-search" className="sr-only">
@@ -680,7 +670,7 @@ export function SelectedWork() {
             8 projects per page <ArrowDown size={16} aria-hidden="true" />
           </p>
         </div>
-        <div className="rich-project-filter-row">
+        <div className="rich-project-filter-row" data-aos="fade-up" data-aos-delay="140">
           <div
             className="rich-project-filters"
             role="group"
@@ -716,28 +706,29 @@ export function SelectedWork() {
           className="rich-project-grid"
           layout={motionEnabled}
         >
-          {visibleProjects.map((project) => (
+          {visibleProjects.map((project, index) => (
             <motion.div
               className="rich-project-card-frame"
               key={project.id}
               layout={motionEnabled}
-              initial={false}
-              animate={{ y: 0, opacity: 1 }}
-              whileInView={motionEnabled ? { y: [15, 0] } : undefined}
-              viewport={{ once: true, margin: "80px" }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
             >
-              <ProjectCard
-                project={project}
-                index={portfolioProjects.findIndex(
-                  (item) => item.id === project.id,
-                )}
-                onOpen={setSelected}
-              />
+              <div
+                className="h-full"
+                data-aos="zoom-in"
+                data-aos-delay={(index % 4) * 70}
+              >
+                <ProjectCard
+                  project={project}
+                  index={portfolioProjects.findIndex(
+                    (item) => item.id === project.id,
+                  )}
+                  onOpen={setSelected}
+                />
+              </div>
             </motion.div>
           ))}
         </motion.div>
-        <div className="rich-project-pagination-row">
+        <div className="rich-project-pagination-row" data-aos="fade">
           <p
             className="rich-project-range"
             aria-live="polite"
@@ -806,6 +797,7 @@ export function SelectedWork() {
         )}
         <a
           className="rich-project-github"
+          data-aos="fade-up"
           href="https://github.com/Suraj1812"
           target="_blank"
           rel="noreferrer"

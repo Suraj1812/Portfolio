@@ -33,13 +33,14 @@ export function MetricsTicker({ items }: MetricsTickerProps) {
     <div
       className="focus-ticker relative overflow-hidden border-y-4 border-black bg-black py-5"
       aria-label="Engineering focus areas"
+      data-aos="fade"
     >
       <div ref={trackRef} className="flex w-max items-center gap-4 pr-4">
         {[...items, ...items].map((item, index) => (
           <div
             key={`${item}-${index}`}
             aria-hidden={index >= items.length || undefined}
-            className={`focus-ticker-chip neo-chip ${index % 3 === 0 ? "bg-[var(--yellow)]" : index % 3 === 1 ? "bg-[var(--cyan)]" : "bg-[var(--pink)]"} px-5 py-2 text-xs font-black uppercase tracking-[.12em] text-black sm:text-sm`}
+            className={`focus-ticker-chip neo-chip ${index % 3 === 0 ? "bg-[var(--yellow)]" : index % 3 === 1 ? "bg-[var(--cyan)]" : "bg-[var(--mint)]"} px-5 py-2 text-xs font-black uppercase tracking-[.12em] text-black sm:text-sm`}
           >
             {item}
           </div>

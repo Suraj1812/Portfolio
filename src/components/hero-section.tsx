@@ -8,7 +8,6 @@ import {
   useTransform,
 } from "framer-motion";
 import {
-  ArrowDown,
   ArrowUpRight,
   Github,
   Linkedin,
@@ -58,7 +57,7 @@ export function HeroSection({ initialMonth }: { initialMonth: string }) {
         initial={false}
         animate={motionEnabled ? { rotate: [10, 25, 10] } : { rotate: 0 }}
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -right-9 top-32 h-48 w-48 rounded-[2.5rem] border-4 border-black bg-[var(--pink)]"
+        className="absolute -right-9 top-32 h-48 w-48 rounded-[2.5rem] border-4 border-black bg-[var(--blue)]"
       />
       <div className="relative flex min-h-screen items-center pb-16 pt-36 sm:pt-40 lg:pb-24 lg:pt-36">
         <div className="mx-auto grid w-full max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-10">
@@ -76,11 +75,7 @@ export function HeroSection({ initialMonth }: { initialMonth: string }) {
               }
               transition={{ duration: 0.7 }}
             >
-              <div className="neo-chip inline-flex items-center gap-2 bg-[var(--lime)] px-4 py-2 text-[10px] font-black uppercase tracking-[.12em] text-black sm:text-xs">
-                <span className="h-2 w-2 rounded-full border border-black bg-black" />{" "}
-                AI × Full-stack × 3D
-              </div>
-              <h1 className="mt-7 font-display text-[clamp(3.7rem,7.2vw,7rem)] font-black uppercase leading-[.86] tracking-[-.07em]">
+              <h1 className="font-display text-[clamp(3.7rem,7.2vw,7rem)] font-black uppercase leading-[.86] tracking-[-.07em]">
                 Suraj
                 <br />
                 Singh<span className="text-[var(--blue)]">.</span>
@@ -91,11 +86,6 @@ export function HeroSection({ initialMonth }: { initialMonth: string }) {
                   Full-Stack Engineer
                 </p>
               </div>
-              <p className="mt-8 max-w-xl text-base leading-8 text-[var(--ink-muted)] sm:text-lg">
-                I build AI-assisted products, automation workflows, and
-                full-stack applications — from expressive interfaces to the
-                APIs, databases, and services behind them.
-              </p>
               <div className="mt-8 flex flex-wrap items-center gap-5">
                 <MagneticButton href="#work">Explore projects</MagneticButton>
                 <AnimatedButton href="/resume" variant="secondary">
@@ -156,13 +146,6 @@ export function HeroSection({ initialMonth }: { initialMonth: string }) {
           >
             <HeroOrbit />
           </motion.div>
-          <div className="col-span-full mt-2 flex items-center gap-3 text-xs font-black uppercase tracking-[.12em]">
-            <ArrowDown
-              size={17}
-              className={motionEnabled ? "animate-bounce" : ""}
-            />{" "}
-            Scroll into the work
-          </div>
         </div>
       </div>
     </section>

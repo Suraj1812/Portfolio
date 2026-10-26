@@ -1,47 +1,29 @@
-"use client";
-
-import { useSyncExternalStore, type ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
 type ScrollRevealProps = {
   children: ReactNode;
   className?: string;
+  /** Delay in seconds. */
   delay?: number;
-  y?: number;
+  animation?: string;
 };
 
-const subscribeToHydration = () => () => {};
-const clientSnapshot = () => true;
-const serverSnapshot = () => false;
-
+/** Wrapper around the site-wide data-aos scroll reveal. */
 export function ScrollReveal({
   children,
   className,
   delay = 0,
-  y = 36,
+  animation = "fade-up",
 }: ScrollRevealProps) {
-  const hydrated = useSyncExternalStore(
-    subscribeToHydration,
-    clientSnapshot,
-    serverSnapshot,
-  );
-  const reduced = useReducedMotion();
-  const motionEnabled = hydrated && !reduced;
-
   return (
-    <motion.div
+    <div
       className={cn(className)}
-      initial={false}
-      animate={{ opacity: 1, y: 0 }}
-      whileInView={
-        motionEnabled ? { opacity: [0, 1], y: [y, 0] } : undefined
-      }
-      viewport={{ once: true, margin: "-120px" }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+      data-aos={animation}
+      data-aos-delay={delay ? Math.round(delay * 1000) : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

@@ -42,7 +42,7 @@ export default function ResumePage() {
         className="resume-page-content portfolio-container"
         aria-labelledby="resume-title"
       >
-        <div className="resume-page-heading">
+        <div className="resume-page-heading" data-aos="blur-up">
           <span className="eyebrow">RESUME / SURAJ SINGH</span>
           <h1 id="resume-title">
             Experience, on paper<span className="accent-text">.</span>
@@ -51,7 +51,7 @@ export default function ResumePage() {
             AI development, full-stack engineering, and the work behind them.
           </p>
         </div>
-        <div className="resume-document">
+        <div className="resume-document" data-aos="zoom-in" data-aos-delay="120">
           <Image
             src="/resume/resume-preview.png"
             alt="Suraj Singh's one-page resume with professional experience, technical skills, and education."
@@ -61,7 +61,7 @@ export default function ResumePage() {
             priority
           />
         </div>
-        <p className="resume-document-note">
+        <p className="resume-document-note" data-aos="fade" data-aos-delay="200">
           For selectable text and embedded links, open or download the PDF.
         </p>
       </section>

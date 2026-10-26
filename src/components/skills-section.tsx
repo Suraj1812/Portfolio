@@ -8,19 +8,24 @@ const artwork = [
   "/artwork/backend-database.png",
   "/artwork/automation-gears.png",
 ];
-const cardColors = ["--cyan", "--pink", "--blue", "--lime"];
+const cardColors = ["--cyan", "--mint", "--blue", "--lime"];
 
 export function SkillsSection() {
   return (
     <div id="stack" className="skills-section" aria-label="Technical skills">
-      <div className="skills-heading">
+      <div className="skills-heading" data-aos="blur-up">
         <h3>The tools behind the work.</h3>
-        <p>From model integrations to the interface, API, and database.</p>
       </div>
       <div className="skills-grid">
         {skillGroups.map((group, index) => {
           return (
-            <TiltCard className="group h-full" key={group.title}>
+            <div
+              key={group.title}
+              className="h-full"
+              data-aos="zoom-in"
+              data-aos-delay={index * 90}
+            >
+              <TiltCard className="group h-full">
               <div
                 className="skill-group h-full"
                 style={{ backgroundColor: `var(${cardColors[index]})` }}
@@ -43,7 +48,8 @@ export function SkillsSection() {
                   ))}
                 </div>
               </div>
-            </TiltCard>
+              </TiltCard>
+            </div>
           );
         })}
       </div>

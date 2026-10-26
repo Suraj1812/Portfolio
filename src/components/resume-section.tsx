@@ -17,7 +17,7 @@ export function ResumeSection() {
       aria-labelledby="resume-section-title"
     >
       <div className="rshow-layout">
-        <div className="rshow-intro">
+        <div className="rshow-intro" data-aos="fade-right">
           <span className="eyebrow">
             <span className="section-index">04 /</span> THE RESUME
           </span>
@@ -26,10 +26,6 @@ export function ResumeSection() {
             <br />
             ready to read<span>.</span>
           </h2>
-          <p className="rshow-description">
-            The experience, skills, and education behind the work. One page, all
-            together.
-          </p>
           <dl className="rshow-facts">
             <div className="rshow-fact rshow-fact-experience">
               <dt>Engineering experience</dt>
@@ -84,6 +80,8 @@ export function ResumeSection() {
         <Link
           href="/resume"
           className="rshow-viewer"
+          data-aos="fade-left"
+          data-aos-delay="120"
           aria-label="Open Suraj Singh's full-size resume preview"
         >
           <div className="rshow-viewer-toolbar">

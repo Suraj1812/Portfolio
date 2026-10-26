@@ -29,7 +29,11 @@ export function FloatingNavbar() {
     }
 
     const previous = scrollY.getPrevious() ?? 0;
-    setHidden(current > previous && current > 140);
+    const delta = current - previous;
+    // Ignore tiny smooth-scroll deltas so the bar doesn't flicker mid-glide.
+    if (Math.abs(delta) < 3) return;
+    const next = delta > 0 && current > 140;
+    setHidden((was) => (was === next ? was : next));
   });
 
   return (

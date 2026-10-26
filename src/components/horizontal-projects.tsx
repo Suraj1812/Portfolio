@@ -227,7 +227,7 @@ export function HorizontalProjects({ projects }: HorizontalProjectsProps) {
                   <motion.div
                     aria-hidden="true"
                     className={cn(
-                      "absolute -right-10 -top-12 h-36 w-36 rounded-[1.5rem] border-4 border-black bg-[var(--pink)]",
+                      "absolute -right-10 -top-12 h-36 w-36 rounded-[1.5rem] border-4 border-black bg-[var(--mint)]",
                       project.imageUrl && "opacity-60",
                     )}
                     animate={{ rotate: 360 }}

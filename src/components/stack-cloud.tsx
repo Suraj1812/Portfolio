@@ -15,7 +15,7 @@ type StackCloudProps = {
 
 const chipColors = [
   "bg-[var(--yellow)]",
-  "bg-[var(--pink)]",
+  "bg-[var(--mint)]",
   "bg-[var(--cyan)]",
   "bg-[var(--lime)]",
   "bg-[var(--orange)]",

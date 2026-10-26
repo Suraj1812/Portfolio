@@ -31,7 +31,6 @@ function subscribe(subscriber: () => void) {
     }
   };
 }
-
 const getSnapshot = () => monthKey(new Date());
 
 function useExperienceMonth(initialMonth: string) {
@@ -57,15 +56,6 @@ export function ExperienceDuration(props: DurationProps) {
       title={`Calculated as of ${formatAsOfMonth(asOfMonth)}`}
     >
       {formatDuration(months)}
-    </span>
-  );
-}
-
-export function ExperienceAsOf({ initialMonth }: { initialMonth: string }) {
-  const asOfMonth = useExperienceMonth(initialMonth);
-  return (
-    <span className="experience-as-of">
-      As of {formatAsOfMonth(asOfMonth)} · updates automatically
     </span>
   );
 }

@@ -38,21 +38,19 @@ export function CreativeLab({ items }: CreativeLabProps) {
   return (
     <section id="lab" className="px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <ScrollReveal>
+        <ScrollReveal animation="blur-up">
           <SectionHeading
-            eyebrow="Creative Lab"
             title="Small experiments. Big interaction ideas."
-            description="A collection of live interface studies in motion, layout, and playful web interactions."
           />
         </ScrollReveal>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
-          <ScrollReveal>
+          <ScrollReveal animation="fade-right">
             <a
               href={featured.link}
               target="_blank"
               rel="noreferrer"
-              className="neo-panel-lg group relative block min-h-[22rem] overflow-hidden bg-[var(--pink)] p-6 text-black sm:min-h-[28rem] sm:p-7"
+              className="neo-panel-lg group relative block min-h-[22rem] overflow-hidden bg-[var(--mint)] p-6 text-black sm:min-h-[28rem] sm:p-7"
             >
               <motion.div
                 aria-hidden="true"
@@ -92,7 +90,7 @@ export function CreativeLab({ items }: CreativeLabProps) {
 
           <div className="grid gap-5">
             {rest.map((item, index) => (
-              <ScrollReveal key={item.title} delay={index * 0.06}>
+              <ScrollReveal key={item.title} delay={0.1 + index * 0.09} animation="fade-left">
                 <a
                   href={item.link}
                   target="_blank"

@@ -40,7 +40,7 @@ export default function OpenGraphImage() {
           height: 120,
           border: "6px solid #111111",
           borderRadius: 28,
-          background: "#ff6ad5",
+          background: "#85e2b4",
         }}
       />
       <div
@@ -139,7 +139,7 @@ export default function OpenGraphImage() {
                 display: "flex",
                 borderRadius: 999,
                 border: "4px solid #111111",
-                background: item.startsWith("AI") ? "#ff6ad5" : "#ffffff",
+                background: item.startsWith("AI") ? "#85e2b4" : "#ffffff",
                 boxShadow: "8px 8px 0 #111111",
                 padding: "12px 20px",
                 fontSize: 24,
