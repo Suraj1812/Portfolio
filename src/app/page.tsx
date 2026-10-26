@@ -3,11 +3,9 @@ import { ContactSection, SiteFooter } from "@/components/contact-section";
 import { ExperienceSection } from "@/components/experience-section";
 import { FloatingNavbar } from "@/components/floating-navbar";
 import { HeroSection } from "@/components/hero-section";
-import { CreativeLab } from "@/components/creative-lab";
 import { MetricsTicker } from "@/components/metrics-ticker";
 import { ResumeSection } from "@/components/resume-section";
 import { SelectedWork } from "@/components/selected-work";
-import { uiExperiments } from "@/lib/data";
 import { monthKey } from "@/lib/experience-duration";
 import { portfolioProjects } from "@/lib/portfolio-data";
 import { siteConfig } from "@/lib/site";
@@ -97,7 +95,6 @@ export default function HomePage() {
           ]}
         />
         <SelectedWork />
-        <CreativeLab items={uiExperiments} />
         <ExperienceSection />
         <AboutSection />
         <ResumeSection />

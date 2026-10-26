@@ -1,44 +1,72 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
-import { FileText, Github, Menu, X } from "lucide-react";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import Image from "next/image";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ArrowUpRight, FileText, Github, Linkedin, Mail, Menu, X } from "lucide-react";
+import {
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+} from "framer-motion";
 
-const navItems = [
-  { label: "Projects", href: "#work" },
-  { label: "Experience", href: "#experience" },
-  { label: "Stack", href: "#stack" },
-  { label: "Contact", href: "#contact" },
-];
+import { ThemeToggle } from "@/components/theme-toggle";
 import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import "./floating-navbar.css";
+
+const navItems = [
+  { label: "Projects", href: "#work", color: "--yellow" },
+  { label: "Experience", href: "#experience", color: "--mint" },
+  { label: "About", href: "#about", color: "--orange" },
+  { label: "Stack", href: "#stack", color: "--cyan" },
+  { label: "Contact", href: "#contact", color: "--lime" },
+];
+
+/** Section whose top has passed 40% of the viewport, last match wins. */
+function findActiveSection() {
+  const line = window.innerHeight * 0.4;
+  let active = "";
+  for (const item of navItems) {
+    const section = document.querySelector(item.href);
+    if (section && section.getBoundingClientRect().top <= line) active = item.href;
+  }
+  return active;
+}
 
 export function FloatingNavbar() {
-  const { scrollY } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 26, mass: 0.4 });
+  const reduced = useReducedMotion();
   const [hidden, setHidden] = useState(false);
+  const [compact, setCompact] = useState(false);
+  const [active, setActive] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useMotionValueEvent(scrollY, "change", (current) => {
+    const nextCompact = current > 60;
+    setCompact((was) => (was === nextCompact ? was : nextCompact));
+    const nextActive = findActiveSection();
+    setActive((was) => (was === nextActive ? was : nextActive));
+
     if (menuOpen) {
       setHidden(false);
       return;
     }
-
     const previous = scrollY.getPrevious() ?? 0;
     const delta = current - previous;
     // Ignore tiny smooth-scroll deltas so the bar doesn't flicker mid-glide.
     if (Math.abs(delta) < 3) return;
-    const next = delta > 0 && current > 140;
+    const next = delta > 0 && current > 160;
     setHidden((was) => (was === next ? was : next));
   });
 
   return (
     <motion.header
-      className="fixed inset-x-0 top-0 z-40 mx-auto flex justify-center px-4 py-4"
+      className={cn("nav-shell", compact && "nav-shell-compact")}
       onFocusCapture={() => setHidden(false)}
       onKeyDown={(event) => {
         if (event.key === "Escape" && menuOpen) {
@@ -46,107 +74,117 @@ export function FloatingNavbar() {
           menuButtonRef.current?.focus();
         }
       }}
-      animate={{ y: hidden ? -120 : 0, opacity: hidden ? 0.85 : 1 }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      animate={{ y: hidden ? -130 : 0 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div
-        className={cn(
-          "neo-panel flex w-full max-w-6xl flex-col bg-[var(--yellow)] px-3 py-2 transition-all duration-300 sm:px-4",
-        )}
-      >
-        <div className="flex w-full items-center justify-between gap-2">
-          <Link
-            href="#top"
-            className="flex min-w-0 items-center gap-3 rounded-[1rem] px-2 py-2 sm:px-3"
-          >
-            <span className="flex h-[3.25rem] w-[3.25rem] shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-black bg-gradient-to-br from-white via-gray-100 to-gray-400 p-0.5">
-              <Image
-                src="/suraj-logo.png"
-                alt="Suraj Singh logo"
-                width={48}
-                height={48}
-                className="h-full w-full rounded-full object-cover"
-              />
+      <div className="nav-bar">
+        <div className="nav-row">
+          <Link href="#top" className="nav-brand" aria-label="Suraj Singh, back to top">
+            <span className="nav-avatar">
+              <Image src="/suraj-logo.png" alt="" width={48} height={48} />
+              <span className="nav-avatar-dot" aria-hidden="true" />
             </span>
-            <div className="hidden min-w-0 sm:block">
-              <p className="truncate font-display text-sm font-black uppercase tracking-[0.12em] text-black">
-                Suraj Singh
-              </p>
-              <p className="hidden text-xs font-semibold uppercase tracking-[0.12em] text-black/70 sm:block">
-                AI + Full-Stack Engineer
-              </p>
-            </div>
+            <span className="nav-brand-text">
+              <strong>Suraj Singh</strong>
+              <span>AI + Full-Stack Engineer</span>
+            </span>
           </Link>
 
-          <nav className="hidden items-center gap-1 lg:flex">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-[0.9rem] px-4 py-2 text-sm font-bold uppercase tracking-[0.12em] text-black transition-colors hover:bg-white"
-              >
-                {item.label}
-              </Link>
-            ))}
+          <nav className="nav-links" aria-label="Main">
+            {navItems.map((item) => {
+              const isActive = active === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn("nav-link", isActive && "is-active")}
+                  aria-current={isActive ? "location" : undefined}
+                  style={{ "--link-color": `var(${item.color})` } as CSSProperties}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-active-pill"
+                      className="nav-link-pill"
+                      transition={
+                        reduced ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 32 }
+                      }
+                    />
+                  )}
+                  <span className="nav-link-label">{item.label}</span>
+                </Link>
+              );
+            })}
           </nav>
 
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <a
-              href="/resume"
-              className="inline-flex items-center gap-2 rounded-[0.95rem] border-2 border-black bg-white px-3 py-2 text-sm font-black uppercase tracking-[0.12em] text-black"
-              aria-label="Preview Suraj Singh resume"
-            >
-              <FileText className="h-4 w-4" />
-              <span className="hidden sm:inline">Resume</span>
+          <div className="nav-actions">
+            <ThemeToggle className="nav-icon-btn" />
+            <a href="/resume" className="nav-btn nav-btn-resume" aria-label="Preview Suraj Singh resume">
+              <FileText size={16} aria-hidden="true" />
+              <span>Resume</span>
             </a>
-            <Link
+            <a
               href={siteConfig.links.github}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-[0.95rem] border-2 border-black bg-[var(--cyan)] px-3 py-2 text-sm font-black uppercase tracking-[0.12em] text-black transition-transform hover:-translate-y-0.5 sm:px-4"
-              aria-label="Open GitHub profile"
+              className="nav-btn nav-btn-github"
+              aria-label="Open GitHub profile (opens in a new tab)"
             >
-              <Github className="h-4 w-4" />
-              <span className="hidden sm:inline">GitHub</span>
-            </Link>
+              <Github size={16} aria-hidden="true" />
+              <span>GitHub</span>
+            </a>
             <button
               ref={menuButtonRef}
               type="button"
               onClick={() => setMenuOpen((current) => !current)}
-              className="inline-flex items-center justify-center rounded-[0.95rem] border-2 border-black bg-white p-2 text-black lg:hidden"
+              className="nav-icon-btn nav-menu-btn"
               aria-expanded={menuOpen}
               aria-controls="mobile-navigation"
-              aria-label={
-                menuOpen ? "Close navigation menu" : "Open navigation menu"
-              }
+              aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
             >
-              {menuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
 
         {menuOpen ? (
-          <nav
-            id="mobile-navigation"
-            className="mt-3 grid w-full grid-cols-2 gap-2 border-t-4 border-black pt-3 lg:hidden"
-          >
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-[0.95rem] border-2 border-black bg-white px-3 py-3 text-center text-xs font-black uppercase tracking-[0.12em] text-black"
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <nav id="mobile-navigation" className="nav-mobile" aria-label="Mobile">
+            <ol>
+              {navItems.map((item, index) => (
+                <li
+                  key={item.href}
+                  style={{ "--link-color": `var(${item.color})`, "--i": index } as CSSProperties}
+                >
+                  <Link
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={active === item.href ? "location" : undefined}
+                  >
+                    <span className="nav-mobile-index">{String(index + 1).padStart(2, "0")}</span>
+                    {item.label}
+                    <ArrowUpRight size={20} aria-hidden="true" />
+                  </Link>
+                </li>
+              ))}
+            </ol>
+            <div className="nav-mobile-socials">
+              <a href={siteConfig.links.github} target="_blank" rel="noreferrer" aria-label="GitHub (opens in a new tab)">
+                <Github size={18} />
+              </a>
+              <a href={siteConfig.links.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn (opens in a new tab)">
+                <Linkedin size={18} />
+              </a>
+              <a href={siteConfig.links.email} aria-label="Email Suraj">
+                <Mail size={18} />
+              </a>
+            </div>
           </nav>
         ) : null}
+
+        <motion.span
+          className="nav-progress"
+          style={{ scaleX: progress }}
+          aria-hidden="true"
+        />
       </div>
     </motion.header>
   );

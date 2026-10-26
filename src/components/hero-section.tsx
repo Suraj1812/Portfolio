@@ -1,152 +1,221 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
-import {
-  ArrowUpRight,
-  Github,
-  Linkedin,
-  Mail,
-} from "lucide-react";
+import { useEffect, useState, useSyncExternalStore, type CSSProperties } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { Github, Linkedin, Mail, MapPin } from "lucide-react";
+
 import { HeroOrbit } from "@/components/hero-orbit";
 import { ExperienceDuration } from "@/components/experience-duration";
 import { MagneticButton } from "@/components/magnetic-button";
 import { AnimatedButton } from "@/components/animated-button";
 import { siteConfig } from "@/lib/site";
-import { portfolioProjects } from "@/lib/portfolio-data";
+import { experience, portfolioProjects } from "@/lib/portfolio-data";
+import "./hero-section.css";
 
 const subscribeToHydration = () => () => {};
 const clientSnapshot = () => true;
 const serverSnapshot = () => false;
 
-export function HeroSection({ initialMonth }: { initialMonth: string }) {
-  const hydrated = useSyncExternalStore(
-    subscribeToHydration,
-    clientSnapshot,
-    serverSnapshot,
+const buildWords = [
+  { text: "AI products", color: "--cyan" },
+  { text: "full-stack apps", color: "--mint" },
+  { text: "LLM integrations", color: "--lime" },
+  { text: "automation workflows", color: "--orange" },
+  { text: "interactive web", color: "--yellow" },
+];
+
+const stickers = [
+  { label: "LLMs", color: "--lime", x: "6%", y: "30%", tilt: "-8deg", delay: "0s" },
+  { label: "Next.js", color: "#fff9ef", x: "76%", y: "22%", tilt: "7deg", delay: "-1.2s" },
+  { label: "RAG", color: "--cyan", x: "80%", y: "52%", tilt: "-5deg", delay: "-2.4s" },
+  { label: "Go", color: "--orange", x: "9%", y: "62%", tilt: "6deg", delay: "-0.6s" },
+  { label: "Three.js", color: "--mint", x: "72%", y: "78%", tilt: "-6deg", delay: "-1.8s" },
+];
+
+function colorValue(color: string) {
+  return color.startsWith("--") ? `var(${color})` : color;
+}
+
+/** Cycles through what Suraj builds; stays on the first word for reduced motion. */
+function RotatingWord({ enabled }: { enabled: boolean }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (!enabled) return;
+    const id = window.setInterval(() => {
+      setIndex((current) => (current + 1) % buildWords.length);
+    }, 2400);
+    return () => window.clearInterval(id);
+  }, [enabled]);
+
+  const word = buildWords[enabled ? index : 0];
+  return (
+    <span className="hero-rotator" aria-live="off">
+      <span
+        key={word.text}
+        className="hero-rotator-word"
+        style={{ "--word-color": `var(${word.color})` } as CSSProperties}
+      >
+        {word.text}
+      </span>
+    </span>
   );
+}
+
+function SplitWord({ word, offset = 0 }: { word: string; offset?: number }) {
+  return (
+    <span className="hero-name-line" aria-hidden="true">
+      {word.split("").map((letter, index) => (
+        <span
+          key={`${letter}-${index}`}
+          className="hero-name-letter"
+          style={{ "--i": index + offset } as CSSProperties}
+        >
+          {letter}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+export function HeroSection({ initialMonth }: { initialMonth: string }) {
+  const hydrated = useSyncExternalStore(subscribeToHydration, clientSnapshot, serverSnapshot);
   const reduced = useReducedMotion();
   const motionEnabled = hydrated && !reduced;
-  // The hero starts at the document top, so window scroll gives it a stable
-  // parallax range without measuring a target against a static scroll container.
+
+  // The hero starts at the document top, so window scroll gives a stable parallax range.
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 1000], [0, -36]);
-  const rotate = useTransform(scrollY, [0, 1000], [0, -7]);
-  const shapeY = useTransform(scrollY, [0, 1000], [0, 150]);
+  const copyY = useTransform(scrollY, [0, 900], [0, -40]);
+  const stageY = useTransform(scrollY, [0, 900], [0, 60]);
+  const shapeY = useTransform(scrollY, [0, 900], [0, 140]);
+  const shapeRotate = useTransform(scrollY, [0, 900], [0, -25]);
+
+  const current = experience[0];
+
   return (
-    <section
-      id="top"
-      className="neo-grid-bg relative overflow-hidden"
-    >
-      <motion.div
+    <section id="top" className="hero neo-grid-bg" aria-labelledby="hero-title">
+      {/* Decorative shapes */}
+      <motion.span
         aria-hidden="true"
-        initial={false}
-        style={{
-          y: motionEnabled ? shapeY : 0,
-          rotate: motionEnabled ? rotate : 0,
-        }}
-        className="absolute -left-14 top-48 h-40 w-40 rounded-[2rem] border-4 border-black bg-[var(--cyan)] opacity-60 sm:h-56 sm:w-56"
+        className="hero-shape hero-shape-star"
+        style={{ y: motionEnabled ? shapeY : 0, rotate: motionEnabled ? shapeRotate : 0 }}
       />
-      <motion.div
+      <motion.span
         aria-hidden="true"
-        initial={false}
-        animate={motionEnabled ? { rotate: [10, 25, 10] } : { rotate: 0 }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -right-9 top-32 h-48 w-48 rounded-[2.5rem] border-4 border-black bg-[var(--blue)]"
+        className="hero-shape hero-shape-pill"
+        style={{ y: motionEnabled ? shapeY : 0 }}
       />
-      <div className="relative flex min-h-screen items-center pb-16 pt-36 sm:pt-40 lg:pb-24 lg:pt-36">
-        <div className="mx-auto grid w-full max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-10">
-          <motion.div
-            initial={false}
-            style={{ y: motionEnabled ? y : 0 }}
-            className="relative z-10"
-          >
-            <motion.div
-              initial={false}
-              animate={
-                motionEnabled
-                  ? { opacity: [0, 1], y: [24, 0] }
-                  : { opacity: 1, y: 0 }
+      <svg className="hero-shape hero-squiggle" viewBox="0 0 160 40" aria-hidden="true">
+        <path d="M4 30 Q 20 4, 36 22 T 68 22 T 100 22 T 132 22 T 156 14" />
+      </svg>
+
+      <div className="hero-inner">
+        <motion.div className="hero-copy" style={{ y: motionEnabled ? copyY : 0 }}>
+          <div className="hero-status hero-intro" style={{ "--d": "0ms" } as CSSProperties}>
+            <span className="hero-status-dot" aria-hidden="true" />
+            Building AI features @ {current?.company ?? "WellM"}
+            <span className="hero-status-sep" aria-hidden="true" />
+            <MapPin size={14} aria-hidden="true" /> Faridabad, IN
+          </div>
+
+          <h1 id="hero-title" className="hero-name">
+            <span className="sr-only">Suraj Singh</span>
+            <SplitWord word="SURAJ" />
+            <span className="hero-name-row">
+              <SplitWord word="SINGH" offset={5} />
+              <span className="hero-name-dot" aria-hidden="true">
+                .
+              </span>
+            </span>
+          </h1>
+
+          <div className="hero-role hero-intro" style={{ "--d": "520ms" } as CSSProperties}>
+            AI Developer <span aria-hidden="true">×</span> Full-Stack Engineer
+          </div>
+
+          <p className="hero-lede hero-intro" style={{ "--d": "640ms" } as CSSProperties}>
+            I build <RotatingWord enabled={motionEnabled} />
+            <br />
+            from the interface down to the system behind it.
+          </p>
+
+          <div className="hero-actions hero-intro" style={{ "--d": "760ms" } as CSSProperties}>
+            <MagneticButton href="#work">Explore projects</MagneticButton>
+            <AnimatedButton href="/resume" variant="secondary">
+              My resume
+            </AnimatedButton>
+          </div>
+
+          <div className="hero-meta hero-intro" style={{ "--d": "880ms" } as CSSProperties}>
+            <dl className="hero-stats">
+              <div className="hero-stat hero-stat-exp">
+                <dt>Engineering experience</dt>
+                <dd>
+                  <ExperienceDuration total initialMonth={initialMonth} />
+                </dd>
+              </div>
+              <div className="hero-stat hero-stat-projects">
+                <dt>Projects built</dt>
+                <dd>{portfolioProjects.length}+</dd>
+              </div>
+            </dl>
+            <div className="hero-socials">
+              <a href={siteConfig.links.github} target="_blank" rel="noreferrer" aria-label="GitHub (opens in a new tab)">
+                <Github size={18} />
+              </a>
+              <a href={siteConfig.links.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn (opens in a new tab)">
+                <Linkedin size={18} />
+              </a>
+              <a href={siteConfig.links.email} aria-label="Email Suraj">
+                <Mail size={18} />
+              </a>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div className="hero-stage" style={{ y: motionEnabled ? stageY : 0 }}>
+          <div className="hero-stage-backdrop" aria-hidden="true">
+            <span className="hero-sun" />
+            <span className="hero-ring hero-ring-1" />
+            <span className="hero-ring hero-ring-2" />
+          </div>
+
+          <HeroOrbit />
+
+          <div className="hero-bubble" aria-hidden="true">
+            <span>
+              Hey, I&apos;m Suraj <span className="hero-wave">👋</span>
+            </span>
+            <small>move your cursor, I&apos;m watching</small>
+          </div>
+
+          <svg className="hero-arrow" viewBox="0 0 120 80" aria-hidden="true">
+            <path d="M6 70 C 30 70, 60 60, 78 30" />
+            <path d="M66 32 L 79 28 L 82 42" />
+          </svg>
+          <span className="hero-arrow-label" aria-hidden="true">
+            that&apos;s me!
+          </span>
+
+          {stickers.map((sticker) => (
+            <span
+              key={sticker.label}
+              className="hero-sticker"
+              aria-hidden="true"
+              style={
+                {
+                  "--x": sticker.x,
+                  "--y": sticker.y,
+                  "--tilt": sticker.tilt,
+                  "--delay": sticker.delay,
+                  "--sticker-color": colorValue(sticker.color),
+                } as CSSProperties
               }
-              transition={{ duration: 0.7 }}
             >
-              <h1 className="font-display text-[clamp(3.7rem,7.2vw,7rem)] font-black uppercase leading-[.86] tracking-[-.07em]">
-                Suraj
-                <br />
-                Singh<span className="text-[var(--blue)]">.</span>
-              </h1>
-              <div className="mt-7 inline-block -rotate-2 rounded-xl border-4 border-black bg-[var(--yellow)] px-4 py-3 text-black shadow-[7px_7px_0_#111] sm:px-5">
-                <p className="font-display text-xl font-black uppercase leading-tight tracking-[-.04em] sm:text-3xl">
-                  AI Developer ×<br />
-                  Full-Stack Engineer
-                </p>
-              </div>
-              <div className="mt-8 flex flex-wrap items-center gap-5">
-                <MagneticButton href="#work">Explore projects</MagneticButton>
-                <AnimatedButton href="/resume" variant="secondary">
-                  My resume
-                </AnimatedButton>
-              </div>
-              <div className="mt-9 grid grid-cols-2 gap-4">
-                <div className="neo-panel-sm bg-white p-4 text-black">
-                  <p className="font-display text-lg font-black leading-snug sm:text-xl">
-                    <ExperienceDuration total initialMonth={initialMonth} />
-                  </p>
-                  <p className="mt-2 text-[10px] font-bold uppercase tracking-[.1em] text-black/65">
-                    Engineering experience
-                  </p>
-                </div>
-                <div className="neo-panel-sm bg-[var(--cyan)] p-4 text-black">
-                  <p className="font-display text-3xl font-black">
-                    {portfolioProjects.length}
-                    <span className="text-xl"> projects</span>
-                  </p>
-                  <p className="mt-2 text-[10px] font-bold uppercase tracking-[.1em] text-black/65">
-                    AI · Backend · Web · 3D
-                  </p>
-                </div>
-              </div>
-              <div className="mt-7 flex flex-wrap items-center gap-5 text-sm font-bold">
-                <a
-                  href={siteConfig.links.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 hover:underline"
-                >
-                  <Github size={17} /> GitHub <ArrowUpRight size={14} />
-                </a>
-                <a
-                  href={siteConfig.links.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 hover:underline"
-                >
-                  <Linkedin size={17} /> LinkedIn
-                </a>
-                <a
-                  href={siteConfig.links.email}
-                  className="inline-flex items-center gap-2 hover:underline"
-                >
-                  <Mail size={17} /> Email
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-          <motion.div
-            initial={false}
-            style={{
-              y: motionEnabled ? y : 0,
-            }}
-            className="relative z-10 lg:pt-8"
-          >
-            <HeroOrbit />
-          </motion.div>
-        </div>
+              {sticker.label}
+            </span>
+          ))}
+        </motion.div>
       </div>
     </section>
   );

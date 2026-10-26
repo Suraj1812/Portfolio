@@ -25,7 +25,6 @@ export type FeaturedProject = {
 
 export const navItems: NavItem[] = [
   { label: "Projects", href: "#work" },
-  { label: "Lab", href: "#lab" },
   { label: "Stack", href: "#stack" },
   { label: "GitHub", href: "#github" },
   { label: "Contact", href: "#contact" }
@@ -315,29 +314,6 @@ export const clientProjects = [
     summary: "A modern marketing experience with attention to pacing, components, and conversion-focused sections.",
     stack: ["Marketing UI", "React", "Launch Support"]
   },
-];
-
-export const uiExperiments = [
-  {
-    title: "Solar storytelling",
-    description: "A bold experiment in layered storytelling, immersive pacing, and interactive scene-building.",
-    link: "https://the-solar-system-six.vercel.app/"
-  },
-  {
-    title: "Wildverse energy",
-    description: "A louder visual direction with expressive composition, vivid cards, and a more editorial rhythm.",
-    link: "https://wildverse-theta.vercel.app/"
-  },
-  {
-    title: "Brutal layouts",
-    description: "An experiment in hard contrast, oversized type, and a neobrutalist system that still feels usable.",
-    link: "https://brutal-design.vercel.app/"
-  },
-  {
-    title: "Fashion-forward UI",
-    description: "A styling exercise around product framing, premium rhythm, and a more editorial commerce presentation.",
-    link: "https://black-meds-premium-fashion-collecti.vercel.app/"
-  }
 ];
 
 export const skills = [
