@@ -565,3 +565,8 @@
     height: 46px;
   }
 }
+
+/* When the 3D island scene is showing, it brings its own sun and sky. */
+.hero-stage:has(.hero-world:not(.hero-orbit--fallback)) .hero-stage-backdrop {
+  display: none;
+}

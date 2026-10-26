@@ -5,8 +5,8 @@ import { FloatingNavbar } from "@/components/floating-navbar";
 import { HeroSection } from "@/components/hero-section";
 import { MetricsTicker } from "@/components/metrics-ticker";
 import { ResumeSection } from "@/components/resume-section";
+import { ScrollGuide } from "@/components/scroll-guide";
 import { SelectedWork } from "@/components/selected-work";
-import { monthKey } from "@/lib/experience-duration";
 import { portfolioProjects } from "@/lib/portfolio-data";
 import { siteConfig } from "@/lib/site";
 
@@ -67,7 +67,6 @@ const structuredData = {
 };
 
 export default function HomePage() {
-  const initialMonth = monthKey(new Date());
   return (
     <>
       <a href="#main-content" className="skip-link">
@@ -81,7 +80,7 @@ export default function HomePage() {
             __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
           }}
         />
-        <HeroSection initialMonth={initialMonth} />
+        <HeroSection />
         <MetricsTicker
           items={[
             "AI & AUTOMATION",
@@ -101,6 +100,7 @@ export default function HomePage() {
         <ContactSection />
       </main>
       <SiteFooter />
+      <ScrollGuide />
     </>
   );
 }

@@ -2,14 +2,12 @@
 
 import { useEffect, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { Github, Linkedin, Mail, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 
-import { HeroOrbit } from "@/components/hero-orbit";
-import { ExperienceDuration } from "@/components/experience-duration";
+import { HeroAvatar } from "@/components/hero-avatar-3d";
 import { MagneticButton } from "@/components/magnetic-button";
 import { AnimatedButton } from "@/components/animated-button";
-import { siteConfig } from "@/lib/site";
-import { experience, portfolioProjects } from "@/lib/portfolio-data";
+import { experience } from "@/lib/portfolio-data";
 import "./hero-section.css";
 
 const subscribeToHydration = () => () => {};
@@ -25,11 +23,9 @@ const buildWords = [
 ];
 
 const stickers = [
-  { label: "LLMs", color: "--lime", x: "6%", y: "30%", tilt: "-8deg", delay: "0s" },
-  { label: "Next.js", color: "#fff9ef", x: "76%", y: "22%", tilt: "7deg", delay: "-1.2s" },
-  { label: "RAG", color: "--cyan", x: "80%", y: "52%", tilt: "-5deg", delay: "-2.4s" },
-  { label: "Go", color: "--orange", x: "9%", y: "62%", tilt: "6deg", delay: "-0.6s" },
-  { label: "Three.js", color: "--mint", x: "72%", y: "78%", tilt: "-6deg", delay: "-1.8s" },
+  { label: "LLMs", color: "--lime", x: "8%", y: "34%", tilt: "-8deg", delay: "0s" },
+  { label: "Next.js", color: "#fff9ef", x: "4%", y: "52%", tilt: "7deg", delay: "-1.2s" },
+  { label: "RAG", color: "--cyan", x: "82%", y: "58%", tilt: "-5deg", delay: "-2.4s" },
 ];
 
 function colorValue(color: string) {
@@ -78,7 +74,7 @@ function SplitWord({ word, offset = 0 }: { word: string; offset?: number }) {
   );
 }
 
-export function HeroSection({ initialMonth }: { initialMonth: string }) {
+export function HeroSection() {
   const hydrated = useSyncExternalStore(subscribeToHydration, clientSnapshot, serverSnapshot);
   const reduced = useReducedMotion();
   const motionEnabled = hydrated && !reduced;
@@ -135,8 +131,6 @@ export function HeroSection({ initialMonth }: { initialMonth: string }) {
 
           <p className="hero-lede hero-intro" style={{ "--d": "640ms" } as CSSProperties}>
             I build <RotatingWord enabled={motionEnabled} />
-            <br />
-            from the interface down to the system behind it.
           </p>
 
           <div className="hero-actions hero-intro" style={{ "--d": "760ms" } as CSSProperties}>
@@ -144,32 +138,6 @@ export function HeroSection({ initialMonth }: { initialMonth: string }) {
             <AnimatedButton href="/resume" variant="secondary">
               My resume
             </AnimatedButton>
-          </div>
-
-          <div className="hero-meta hero-intro" style={{ "--d": "880ms" } as CSSProperties}>
-            <dl className="hero-stats">
-              <div className="hero-stat hero-stat-exp">
-                <dt>Engineering experience</dt>
-                <dd>
-                  <ExperienceDuration total initialMonth={initialMonth} />
-                </dd>
-              </div>
-              <div className="hero-stat hero-stat-projects">
-                <dt>Projects built</dt>
-                <dd>{portfolioProjects.length}+</dd>
-              </div>
-            </dl>
-            <div className="hero-socials">
-              <a href={siteConfig.links.github} target="_blank" rel="noreferrer" aria-label="GitHub (opens in a new tab)">
-                <Github size={18} />
-              </a>
-              <a href={siteConfig.links.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn (opens in a new tab)">
-                <Linkedin size={18} />
-              </a>
-              <a href={siteConfig.links.email} aria-label="Email Suraj">
-                <Mail size={18} />
-              </a>
-            </div>
           </div>
         </motion.div>
 
@@ -180,13 +148,12 @@ export function HeroSection({ initialMonth }: { initialMonth: string }) {
             <span className="hero-ring hero-ring-2" />
           </div>
 
-          <HeroOrbit />
+          <HeroAvatar />
 
           <div className="hero-bubble" aria-hidden="true">
             <span>
               Hey, I&apos;m Suraj <span className="hero-wave">👋</span>
             </span>
-            <small>move your cursor, I&apos;m watching</small>
           </div>
 
           <svg className="hero-arrow" viewBox="0 0 120 80" aria-hidden="true">

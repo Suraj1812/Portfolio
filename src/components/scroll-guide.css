@@ -1,0 +1,176 @@
+/* ===================== Scroll guide ===================== */
+.guide {
+  --guide-w: 170px;
+  --guide-h: 230px;
+  position: fixed;
+  z-index: 35;
+  top: 0;
+  left: 0;
+  width: var(--guide-w);
+  height: var(--guide-h);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  will-change: transform;
+}
+.guide.is-out {
+  opacity: 1;
+}
+.guide-host,
+.guide-canvas {
+  width: 100%;
+  height: 100%;
+}
+.guide-canvas {
+  display: block;
+}
+.guide-hit {
+  position: absolute;
+  top: 14%;
+  bottom: 4%;
+  left: 40%;
+  width: 20%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.guide:not(.is-out) .guide-hit {
+  pointer-events: none;
+}
+
+/* Speech bubble sits above his head, toward the middle of the screen. */
+.guide-bubble {
+  position: absolute;
+  bottom: calc(100% - 26px);
+  width: max-content;
+  max-width: 230px;
+  min-height: 1.5em;
+  padding: 10px 14px;
+  border: 3px solid #111;
+  border-radius: 16px;
+  background: #fff9ef;
+  color: #111;
+  box-shadow: 4px 4px 0 #111;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  opacity: 0;
+  transform: translateY(8px) scale(0.85);
+  transition:
+    opacity 0.25s ease,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.guide-bubble.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.guide-bubble[data-side="left"] {
+  border-bottom-right-radius: 4px;
+  transform-origin: bottom right;
+}
+.guide-bubble[data-side="right"] {
+  border-bottom-left-radius: 4px;
+  transform-origin: bottom left;
+}
+.guide-bubble:empty {
+  visibility: hidden;
+}
+
+/* Sparkles and dust live in their own full-screen layer. */
+.guide-fx-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 34;
+  overflow: hidden;
+  pointer-events: none;
+}
+.guide-fx {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.guide-fx-spark {
+  width: 10px;
+  height: 10px;
+  background: var(--yellow);
+  border: 2px solid #111;
+  clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
+  border-radius: 0;
+}
+.guide-fx-spark:nth-child(3n) {
+  background: var(--cyan);
+}
+.guide-fx-spark:nth-child(3n + 1) {
+  background: var(--orange);
+}
+.guide-fx-smoke {
+  width: 16px;
+  height: 16px;
+  background: rgba(200, 200, 200, 0.6);
+  border: 2px solid rgba(17, 17, 17, 0.25);
+}
+.guide-fx-confetti {
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+}
+.guide-fx-mail {
+  font-size: 22px;
+  line-height: 1;
+  border-radius: 0;
+  filter: drop-shadow(2px 2px 0 rgba(17, 17, 17, 0.6));
+}
+.guide-fx-dust {
+  width: 14px;
+  height: 14px;
+  background: rgba(17, 17, 17, 0.18);
+}
+:root[data-theme="dark"] .guide-fx-smoke {
+  width: 16px;
+  height: 16px;
+  background: rgba(200, 200, 200, 0.6);
+  border: 2px solid rgba(17, 17, 17, 0.25);
+}
+.guide-fx-confetti {
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+}
+.guide-fx-mail {
+  font-size: 22px;
+  line-height: 1;
+  border-radius: 0;
+  filter: drop-shadow(2px 2px 0 rgba(17, 17, 17, 0.6));
+}
+.guide-fx-dust {
+  background: rgba(245, 239, 223, 0.22);
+}
+
+/* Night mode: his flashlight lights up whatever he points at. */
+.guide-lit {
+  outline: 3px solid var(--yellow);
+  outline-offset: 6px;
+  filter: drop-shadow(0 0 22px rgba(255, 216, 79, 0.55));
+  transition:
+    outline-color 0.3s,
+    filter 0.3s;
+}
+
+@media (max-width: 759px) {
+  .guide-bubble {
+    max-width: 180px;
+    padding: 8px 11px;
+    border-width: 2px;
+    box-shadow: 3px 3px 0 #111;
+    font-size: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guide,
+  .guide-fx-layer {
+    display: none;
+  }
+}

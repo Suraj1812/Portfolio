@@ -821,3 +821,7 @@
     padding-right: 40px;
   }
 }
+
+.rshow-stamp {
+  overflow: hidden;
+}

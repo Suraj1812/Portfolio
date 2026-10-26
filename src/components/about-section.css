@@ -266,3 +266,8 @@
     height: 50px;
   }
 }
+
+/* Keep the spinning ring inside the circle so rotation never widens the page. */
+.about-badge {
+  overflow: hidden;
+}

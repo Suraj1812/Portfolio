@@ -49,3 +49,16 @@
   .hero-orbit__canvas,
   .hero-orbit__fallback { transition: none; }
 }
+
+/* 3D model: grab to spin, click to wave. */
+.hero-avatar3d .hero-avatar3d__canvas {
+  cursor: grab;
+  touch-action: pan-y;
+}
+.hero-avatar3d .hero-avatar3d__canvas:active {
+  cursor: grabbing;
+}
+/* The 3D island scene replaces the flat picture; don't flash it while loading. */
+.hero-world.hero-orbit--loading .hero-orbit__fallback {
+  opacity: 0;
+}
