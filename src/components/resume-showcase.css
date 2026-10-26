@@ -20,7 +20,21 @@
   line-height: 1.02;
   text-transform: uppercase;
 }
-.rshow-intro h2 > span {
+.rshow-title-pop {
+  display: inline-block;
+  padding: 0 12px 4px;
+  border: 3px solid #111;
+  border-radius: 14px;
+  background: var(--lime);
+  color: #111;
+  box-shadow: 5px 5px 0 var(--ink);
+  transform: rotate(-2deg);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rshow-intro:hover .rshow-title-pop {
+  transform: rotate(1deg);
+}
+.rshow-title-dot {
   color: var(--blue);
 }
 .rshow-facts {
@@ -39,7 +53,7 @@
   border: 3px solid #111;
   border-radius: 13px;
   color: #111;
-  box-shadow: 4px 4px 0 #111;
+  box-shadow: 4px 4px 0 var(--ink);
 }
 .rshow-fact-experience {
   background: var(--yellow);
@@ -85,7 +99,7 @@
   border-radius: 13px;
   background: #fff9ef;
   color: #111;
-  box-shadow: 4px 4px 0 #111;
+  box-shadow: 4px 4px 0 var(--ink);
 }
 .rshow-education > img {
   flex-shrink: 0;
@@ -134,7 +148,7 @@
   color: #111;
   font-size: 12px;
   font-weight: 900;
-  box-shadow: 4px 4px 0 #111;
+  box-shadow: 4px 4px 0 var(--ink);
   transition:
     transform 0.2s,
     box-shadow 0.2s;
@@ -150,7 +164,7 @@
 }
 .rshow-action:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 #111;
+  box-shadow: 6px 6px 0 var(--ink);
 }
 .rshow-action:active {
   transform: translate(2px, 2px);
@@ -166,6 +180,7 @@
   color: var(--ink-soft);
 }
 .rshow-viewer {
+  position: relative;
   display: block;
   min-width: 0;
   overflow: hidden;
@@ -173,14 +188,14 @@
   border-radius: 21px;
   background: var(--cyan);
   color: #111;
-  box-shadow: 9px 9px 0 #111;
+  box-shadow: 9px 9px 0 var(--ink);
   transition:
     transform 0.3s,
     box-shadow 0.3s;
 }
 .rshow-viewer:hover {
   transform: perspective(1000px) rotateY(-1.2deg) translateY(-3px);
-  box-shadow: 12px 12px 0 #111;
+  box-shadow: 12px 12px 0 var(--ink);
 }
 .rshow-viewer-toolbar {
   display: flex;
@@ -191,7 +206,7 @@
   border-bottom: 3px solid #111;
   background: #fff9ef;
 }
-.rshow-viewer-toolbar > span:first-child {
+.rshow-viewer-toolbar > span:nth-child(2) {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -209,6 +224,7 @@
   font-weight: 900;
 }
 .rshow-document-stage {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -285,6 +301,271 @@
   background: var(--yellow);
   box-shadow: 2px 2px 0 #111;
 }
+/* ---------- Playful viewer details ---------- */
+.rshow-window-dots {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.rshow-window-dots span {
+  width: 11px;
+  height: 11px;
+  border: 2px solid #111;
+  border-radius: 50%;
+  background: var(--orange);
+}
+.rshow-window-dots span:nth-child(2) {
+  background: var(--yellow);
+}
+.rshow-window-dots span:nth-child(3) {
+  background: var(--lime);
+}
+.rshow-viewer-toolbar > span:nth-child(2) {
+  flex: 1;
+}
+.rshow-stamp {
+  position: absolute;
+  z-index: 3;
+  top: 82px;
+  right: 18px;
+  display: grid;
+  place-items: center;
+  width: 104px;
+  height: 104px;
+  border: 3px solid #111;
+  border-radius: 50%;
+  background: var(--orange);
+  color: #111;
+  box-shadow: 4px 4px 0 #111;
+  transform: rotate(12deg);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rshow-stamp svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: rshow-spin 20s linear infinite;
+}
+.rshow-stamp text {
+  fill: #111;
+  font-size: 9.4px;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+}
+.rshow-stamp strong {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 2px dashed #111;
+  border-radius: 50%;
+  background: var(--yellow);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+}
+@keyframes rshow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.rshow-viewer:hover .rshow-stamp {
+  transform: rotate(-8deg) scale(1.08);
+}
+.rshow-paper-stack::before,
+.rshow-paper-stack::after {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rshow-viewer:hover .rshow-paper-stack::before {
+  transform: rotate(-7deg) translate(-12px, 4px);
+}
+.rshow-viewer:hover .rshow-paper-stack::after {
+  transform: rotate(6deg) translate(12px, 2px);
+}
+.rshow-document {
+  overflow: hidden;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rshow-viewer:hover .rshow-document {
+  transform: translateY(-6px) scale(1.02);
+}
+/* A highlighter bar sweeps down the page on hover. */
+.rshow-scan {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  top: -30%;
+  height: 26%;
+  background: linear-gradient(to bottom, transparent, rgba(99, 230, 255, 0.35) 70%, rgba(95, 124, 255, 0.55));
+  border-bottom: 2px solid var(--blue);
+  opacity: 0;
+  pointer-events: none;
+}
+.rshow-viewer:hover .rshow-scan {
+  animation: rshow-scan 1.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes rshow-scan {
+  0% {
+    top: -30%;
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    top: 105%;
+    opacity: 0;
+  }
+}
+.rshow-viewer-arrow {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rshow-viewer:hover .rshow-viewer-arrow {
+  transform: rotate(45deg);
+}
+.rshow-viewer:hover {
+  transform: rotate(-0.6deg) translate(-3px, -3px);
+}
+.rshow-action-preview:hover {
+  background: var(--mint);
+}
+.rshow-action-download:hover {
+  background: var(--yellow);
+}
+
+/* ---------- Left column polish ---------- */
+.rshow-title-pop .rshow-title-dot {
+  color: var(--blue);
+}
+.rshow-fact {
+  position: relative;
+  padding-top: 52px;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rshow-fact-experience {
+  transform: rotate(-1.5deg);
+}
+.rshow-fact-roles {
+  transform: rotate(1.5deg);
+}
+.rshow-fact:hover {
+  transform: rotate(0deg) translateY(-4px);
+}
+.rshow-fact-icon {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #111;
+  border-radius: 9px;
+  background: #fff9ef;
+  box-shadow: 2px 2px 0 #111;
+}
+.rshow-fact-roles dd {
+  font-size: 40px;
+}
+.rshow-education {
+  position: relative;
+  overflow: visible;
+  background:
+    linear-gradient(90deg, var(--blue) 0 10px, transparent 10px),
+    #fff9ef;
+  padding-left: 28px;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rshow-education:hover {
+  transform: translateY(-3px);
+}
+.rshow-education:hover > img {
+  transform: rotate(-8deg) scale(1.08);
+}
+.rshow-education > img {
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rshow-grade {
+  position: absolute;
+  top: -16px;
+  right: 18px;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 3px solid #111;
+  border-radius: 50%;
+  background: var(--lime);
+  color: #111;
+  box-shadow: 3px 3px 0 #111;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 0.9;
+  text-align: center;
+  transform: rotate(-10deg);
+}
+.rshow-grade small {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+}
+
+/* ---------- Floating labels around the paper ---------- */
+.rshow-float {
+  position: absolute;
+  z-index: 2;
+  padding: 6px 11px;
+  border: 2px solid #111;
+  border-radius: 999px;
+  background: #fff9ef;
+  color: #111;
+  box-shadow: 3px 3px 0 #111;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  animation: rshow-bob 4.5s ease-in-out infinite;
+}
+.rshow-float-1 {
+  top: 34%;
+  left: 18px;
+  background: var(--yellow);
+  --tilt: -8deg;
+}
+.rshow-float-2 {
+  bottom: 22%;
+  left: 26px;
+  background: var(--lime);
+  --tilt: 6deg;
+  animation-delay: -1.5s;
+}
+.rshow-float-3 {
+  bottom: 30%;
+  right: 22px;
+  background: #fff9ef;
+  --tilt: -4deg;
+  animation-delay: -3s;
+}
+@keyframes rshow-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--tilt, 0deg));
+  }
+  50% {
+    transform: translateY(-7px) rotate(var(--tilt, 0deg));
+  }
+}
+.rshow-viewer-footer {
+  transition: background-color 0.25s;
+}
+.rshow-viewer:hover .rshow-viewer-footer {
+  background: var(--lime);
+}
+
 @media (max-width: 1100px) {
   .rshow-layout {
     gap: 40px;
@@ -305,7 +586,7 @@
   .rshow-viewer-toolbar {
     padding-inline: 15px;
   }
-  .rshow-viewer-toolbar > span:first-child {
+  .rshow-viewer-toolbar > span:nth-child(2) {
     font-size: 9px;
   }
 }
@@ -349,6 +630,35 @@
   }
 }
 @media (max-width: 600px) {
+  .rshow-stamp {
+    top: 70px;
+    right: 8px;
+    width: 80px;
+    height: 80px;
+  }
+  .rshow-stamp strong {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+  .rshow-float {
+    font-size: 8px;
+    padding: 4px 8px;
+  }
+  .rshow-float-1,
+  .rshow-float-2 {
+    left: 8px;
+  }
+  .rshow-float-3 {
+    right: 8px;
+  }
+  .rshow-fact {
+    padding-top: 48px;
+  }
+  .rshow-title-pop {
+    border-width: 2px;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
   .rshow-section {
     padding-block: 48px 62px;
   }
@@ -417,18 +727,18 @@
   .rshow-viewer {
     border-width: 3px;
     border-radius: 17px;
-    box-shadow: 6px 6px 0 #111;
+    box-shadow: 6px 6px 0 var(--ink);
   }
   .rshow-viewer-toolbar {
     gap: 9px;
     padding: 13px 14px;
     border-bottom-width: 2px;
   }
-  .rshow-viewer-toolbar > span:first-child {
+  .rshow-viewer-toolbar > span:nth-child(2) {
     font-size: 9px;
     gap: 6px;
   }
-  .rshow-viewer-toolbar > span:first-child svg {
+  .rshow-viewer-toolbar > span:nth-child(2) svg {
     width: 14px;
   }
   .rshow-document-stage {
@@ -457,7 +767,7 @@
     flex-basis: 100%;
     font-size: 12px;
   }
-  .rshow-viewer-toolbar > span:first-child {
+  .rshow-viewer-toolbar > span:nth-child(2) {
     font-size: 8px;
   }
   .rshow-education {
@@ -486,5 +796,28 @@
   }
   .rshow-viewer:hover .rshow-paper-stack::after {
     transform: rotate(2deg);
+  }
+}
+
+/* Phone overrides that must come after the base phone rules above. */
+@media (max-width: 600px) {
+  .rshow-fact {
+    padding-top: 52px;
+  }
+  .rshow-fact-icon {
+    top: 12px;
+    left: 12px;
+    width: 28px;
+    height: 28px;
+  }
+  .rshow-grade {
+    top: -22px;
+    right: 10px;
+    width: 54px;
+    height: 54px;
+    font-size: 17px;
+  }
+  .rshow-education h3 {
+    padding-right: 40px;
   }
 }

@@ -1,12 +1,5 @@
-import {
-  ArrowDown,
-  ArrowUpRight,
-  Github,
-  Linkedin,
-  Mail,
-  Phone,
-} from "lucide-react";
-import { ClientWork } from "@/components/client-work";
+import { AboutSection } from "@/components/about-section";
+import { ContactSection, SiteFooter } from "@/components/contact-section";
 import { ExperienceSection } from "@/components/experience-section";
 import { FloatingNavbar } from "@/components/floating-navbar";
 import { HeroSection } from "@/components/hero-section";
@@ -14,7 +7,6 @@ import { CreativeLab } from "@/components/creative-lab";
 import { MetricsTicker } from "@/components/metrics-ticker";
 import { ResumeSection } from "@/components/resume-section";
 import { SelectedWork } from "@/components/selected-work";
-import { SkillsSection } from "@/components/skills-section";
 import { uiExperiments } from "@/lib/data";
 import { monthKey } from "@/lib/experience-duration";
 import { portfolioProjects } from "@/lib/portfolio-data";
@@ -105,106 +97,13 @@ export default function HomePage() {
           ]}
         />
         <SelectedWork />
-        <ClientWork />
         <CreativeLab items={uiExperiments} />
         <ExperienceSection />
-        <section id="about" className="about-section">
-          <div className="portfolio-container">
-            <div className="about-overview">
-              <div data-aos="blur-up">
-                <span className="eyebrow">
-                  <span className="section-index">03 /</span> THE DEVELOPER
-                  BEHIND THE WORK
-                </span>
-                <h2>
-                  From the interface
-                  <br />
-                  to the system behind it<span className="accent-text">.</span>
-                </h2>
-              </div>
-              <div className="about-narrative" data-aos="fade-left" data-aos-delay="120">
-                <p>
-                  I&apos;m Suraj Singh, a software engineer based in Faridabad,
-                  India. My experience spans full-stack client delivery, React
-                  interfaces, Go backend services, and AI-based automation.
-                  {" "}I currently work at WellM as an AI Full Stack Engineer,
-                  building mobile, web, and AI features for wellness products.
-                </p>
-                <p>
-                  I work across the application: shaping the UI, connecting
-                  services, designing database flows, and integrating language
-                  models where they support a useful product experience.
-                </p>
-                <a
-                  href={siteConfig.links.linkedin}
-                  className="text-link"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Connect on LinkedIn <ArrowUpRight size={17} />
-                </a>
-              </div>
-            </div>
-            <SkillsSection />
-          </div>
-        </section>
+        <AboutSection />
         <ResumeSection />
-        <section id="contact" className="contact-section portfolio-container">
-          <div className="contact-topline" data-aos="fade-up">
-            <span className="eyebrow">
-              <span className="section-index">05 /</span> LET&apos;S CONNECT
-            </span>
-          </div>
-          <div className="contact-main" data-aos="blur-up" data-aos-delay="80">
-            <h2>
-              Building something
-              <br />
-              with AI?{" "}
-              <a href={siteConfig.links.email}>
-                Let&apos;s talk<span className="accent-text">.</span>
-                <ArrowUpRight strokeWidth={1.2} />
-              </a>
-            </h2>
-          </div>
-          <div className="contact-links" data-aos="fade-up" data-aos-delay="180">
-            <a href={siteConfig.links.email}>
-              <Mail size={18} />
-              {siteConfig.contact.email}
-              <ArrowUpRight size={16} />
-            </a>
-            <a href={siteConfig.links.phone}>
-              <Phone size={17} />
-              {siteConfig.contact.phoneDisplay}
-              <ArrowUpRight size={16} />
-            </a>
-          </div>
-        </section>
+        <ContactSection />
       </main>
-      <footer className="site-footer portfolio-container" data-aos="fade">
-        <span>© {new Date().getFullYear()} Suraj Singh</span>
-        <span className="footer-note">AI Developer & Full-Stack Engineer</span>
-        <div id="github" className="footer-socials">
-          <a
-            href={siteConfig.links.github}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Suraj on GitHub"
-          >
-            <Github size={17} />
-          </a>
-          <a
-            href={siteConfig.links.linkedin}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Suraj on LinkedIn"
-          >
-            <Linkedin size={17} />
-          </a>
-          <a href="#top" aria-label="Back to top">
-            <ArrowDown className="back-to-top" size={17} />
-          </a>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

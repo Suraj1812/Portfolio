@@ -1,11 +1,7 @@
-"use client";
-
+import type { CSSProperties } from "react";
 import { ArrowUpRight, Play, Sparkles } from "lucide-react";
-import { useSyncExternalStore } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 
-import { ScrollReveal } from "@/components/scroll-reveal";
-import { SectionHeading } from "@/components/section-heading";
+import "./creative-lab.css";
 
 type CreativeLabItem = {
   title: string;
@@ -17,99 +13,126 @@ type CreativeLabProps = {
   items: CreativeLabItem[];
 };
 
-const subscribeToHydration = () => () => {};
-const clientSnapshot = () => true;
-const serverSnapshot = () => false;
+// Each side card gets its own accent and a small CSS-drawn motif.
+const sideStyles = [
+  { accent: "--orange", motif: "burst" },
+  { accent: "--cyan", motif: "blocks" },
+  { accent: "--lime", motif: "tag" },
+] as const;
+
+function Motif({ kind }: { kind: (typeof sideStyles)[number]["motif"] }) {
+  if (kind === "blocks") {
+    return (
+      <span className="lab-motif lab-motif-blocks" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </span>
+    );
+  }
+  if (kind === "tag") {
+    return (
+      <span className="lab-motif lab-motif-tag" aria-hidden="true">
+        <span>SS/26</span>
+      </span>
+    );
+  }
+  return <span className="lab-motif lab-motif-burst" aria-hidden="true" />;
+}
 
 export function CreativeLab({ items }: CreativeLabProps) {
-  const hydrated = useSyncExternalStore(
-    subscribeToHydration,
-    clientSnapshot,
-    serverSnapshot,
-  );
-  const reduced = useReducedMotion();
-  const motionEnabled = hydrated && !reduced;
   const [featured, ...rest] = items;
-
-  if (!featured) {
-    return null;
-  }
+  if (!featured) return null;
 
   return (
-    <section id="lab" className="px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <ScrollReveal animation="blur-up">
-          <SectionHeading
-            title="Small experiments. Big interaction ideas."
-          />
-        </ScrollReveal>
+    <section id="lab" className="lab-section portfolio-container" aria-labelledby="lab-title">
+      <div className="lab-heading" data-aos="blur-up">
+        <div>
+          <span className="lab-eyebrow">
+            <Sparkles size={14} aria-hidden="true" /> THE PLAYGROUND
+          </span>
+          <h2 id="lab-title">
+            Small experiments.
+            <br />
+            <span className="lab-highlight">Big interaction ideas.</span>
+          </h2>
+        </div>
+        <p className="lab-sticker">
+          <span className="lab-live-dot" aria-hidden="true" />
+          {items.length} live builds
+          <br />
+          made for curiosity
+        </p>
+      </div>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
-          <ScrollReveal animation="fade-right">
-            <a
-              href={featured.link}
-              target="_blank"
-              rel="noreferrer"
-              className="neo-panel-lg group relative block min-h-[22rem] overflow-hidden bg-[var(--mint)] p-6 text-black sm:min-h-[28rem] sm:p-7"
-            >
-              <motion.div
-                aria-hidden="true"
-                className="absolute right-6 top-6 h-24 w-24 rounded-[1.3rem] border-4 border-black bg-[var(--yellow)] sm:right-8 sm:top-8 sm:h-36 sm:w-36 sm:rounded-[1.5rem]"
-                initial={false}
-                animate={{ rotate: motionEnabled ? 360 : 0 }}
-                transition={
-                  motionEnabled
-                    ? { duration: 26, ease: "linear", repeat: Infinity }
-                    : { duration: 0 }
-                }
-              />
-              <div className="relative z-10 flex h-full flex-col justify-between">
-                <div>
-                  <div className="neo-chip inline-flex items-center gap-2 bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.22em] text-black">
-                    <Sparkles className="h-4 w-4 text-black" />
-                    <span>Featured experiment</span>
-                  </div>
-                  <h3 className="mt-6 max-w-xl font-display text-3xl font-black uppercase tracking-[-0.05em] sm:text-4xl">
-                    {featured.title}
-                  </h3>
-                  <p className="mt-5 max-w-lg text-base leading-8 text-black/75">
-                    {featured.description}
-                  </p>
-                </div>
-
-                <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="neo-chip inline-flex items-center gap-3 bg-black px-4 py-2 text-sm font-black uppercase tracking-[0.12em] text-white">
-                    <Play className="h-4 w-4 fill-current" />
-                    <span>Open live experiment</span>
-                  </div>
-                  <ArrowUpRight className="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />
-                </div>
-              </div>
-            </a>
-          </ScrollReveal>
-
-          <div className="grid gap-5">
-            {rest.map((item, index) => (
-              <ScrollReveal key={item.title} delay={0.1 + index * 0.09} animation="fade-left">
-                <a
-                  href={item.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="neo-panel-lg group relative flex min-h-[11rem] flex-col justify-between overflow-hidden bg-white p-6"
-                >
-                  <div className="relative z-10 flex items-center justify-between gap-4">
-                    <p className="font-display text-xl font-black uppercase tracking-[-0.05em] text-black sm:text-2xl">
-                      {item.title}
-                    </p>
-                    <ArrowUpRight className="h-5 w-5 text-black transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />
-                  </div>
-                  <p className="relative z-10 mt-4 text-sm leading-7 text-black/75">
-                    {item.description}
-                  </p>
-                </a>
-              </ScrollReveal>
-            ))}
+      <div className="lab-grid">
+        <a
+          href={featured.link}
+          target="_blank"
+          rel="noreferrer"
+          className="lab-featured"
+          data-aos="fade-right"
+        >
+          <div className="lab-featured-top">
+            <span className="lab-chip">
+              <Sparkles size={14} aria-hidden="true" /> Featured experiment
+            </span>
+            <span className="lab-featured-index">EXP / 01</span>
           </div>
+          <h3>{featured.title}</h3>
+          <p>{featured.description}</p>
+
+          <div className="lab-scene" aria-hidden="true">
+            <div className="lab-solar">
+              <span className="lab-orbit lab-orbit-1" />
+              <span className="lab-orbit lab-orbit-2" />
+              <span className="lab-orbit lab-orbit-3" />
+              <span className="lab-sun-rays" />
+              <span className="lab-sun" />
+            </div>
+          </div>
+
+          <span className="lab-cta">
+            <Play size={15} className="fill-current" aria-hidden="true" />
+            Open live experiment
+            <ArrowUpRight size={17} aria-hidden="true" />
+          </span>
+          <span className="sr-only">(opens in a new tab)</span>
+        </a>
+
+        <div className="lab-side">
+          {rest.map((item, index) => {
+            const style = sideStyles[index % sideStyles.length];
+            return (
+              <a
+                key={item.title}
+                href={item.link}
+                target="_blank"
+                rel="noreferrer"
+                className="lab-card"
+                style={{ "--lab-accent": `var(${style.accent})` } as CSSProperties}
+                data-aos="fade-left"
+                data-aos-delay={100 + index * 90}
+              >
+                <div className="lab-card-top">
+                  <span className="lab-card-index">
+                    EXP / {String(index + 2).padStart(2, "0")}
+                  </span>
+                  <span className="lab-card-arrow">
+                    <ArrowUpRight size={18} aria-hidden="true" />
+                  </span>
+                </div>
+                <div className="lab-card-body">
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                  </div>
+                  <Motif kind={style.motif} />
+                </div>
+                <span className="sr-only">(opens in a new tab)</span>
+              </a>
+            );
+          })}
         </div>
       </div>
     </section>

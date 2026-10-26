@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
+  type CSSProperties,
   type PointerEvent,
 } from "react";
 import {
@@ -50,6 +51,14 @@ type ProjectWithArchive = PortfolioProject & {
   logo?: string;
 };
 const projectColors = ["lime", "mint", "cyan", "yellow", "blue", "orange"];
+const filterColors: Record<(typeof filters)[number]["id"], string> = {
+  all: "--yellow",
+  ai: "--cyan",
+  fullstack: "--mint",
+  interface: "--lime",
+};
+const liveCount = portfolioProjects.filter((project) => project.liveUrl).length;
+const sourceCount = portfolioProjects.filter((project) => project.sourceUrl).length;
 const projectsPerPage = 8;
 const subscribeToHydration = () => () => {};
 const clientSnapshot = () => true;
@@ -593,6 +602,23 @@ export function SelectedWork() {
     pageStart + projectsPerPage,
   );
 
+  // Press "/" anywhere (outside a text field) to jump to the project search.
+  useEffect(() => {
+    function focusSearch(event: KeyboardEvent) {
+      if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target;
+      if (
+        target instanceof Element &&
+        target.closest("input, textarea, select, [contenteditable='true']")
+      )
+        return;
+      event.preventDefault();
+      searchField.current?.focus();
+    }
+    window.addEventListener("keydown", focusSearch);
+    return () => window.removeEventListener("keydown", focusSearch);
+  }, []);
+
   function changePage(nextPage: number) {
     setPage(Math.min(Math.max(nextPage, 1), totalPages));
     projectGrid.current?.scrollIntoView({
@@ -611,20 +637,39 @@ export function SelectedWork() {
       <div className="mx-auto max-w-6xl">
         <div className="rich-project-heading-row" data-aos="blur-up">
           <div className="rich-project-heading">
+            <span className="eyebrow">
+              <span className="section-index">01 /</span> SELECTED WORK
+            </span>
             <h2 id="work-title">
               Projects with substance.
               <br />
               <span>And personality.</span>
             </h2>
+            <ul className="rich-project-stats" aria-label="Project totals">
+              <li>
+                <strong>{portfolioProjects.length}</strong> projects
+              </li>
+              <li>
+                <strong>{liveCount}</strong> live sites
+              </li>
+              <li>
+                <strong>{sourceCount}</strong> with source code
+              </li>
+            </ul>
           </div>
           <div className="rich-project-heading-stamp" aria-hidden="true">
-            <Braces size={34} strokeWidth={2.5} />
-            <span>
-              CODE.
-              <br />
-              SYSTEMS.
-              <br />
-              EXPERIMENTS.
+            <svg viewBox="0 0 160 160" className="rich-project-stamp-ring">
+              <defs>
+                <path id="work-stamp-circle" d="M80,80 m-58,0 a58,58 0 1,1 116,0 a58,58 0 1,1 -116,0" />
+              </defs>
+              <text>
+                <textPath href="#work-stamp-circle">
+                  CODE ✳ SYSTEMS ✳ EXPERIMENTS ✳ CODE ✳
+                </textPath>
+              </text>
+            </svg>
+            <span className="rich-project-stamp-core">
+              <Braces size={30} strokeWidth={2.6} />
             </span>
           </div>
         </div>
@@ -647,7 +692,13 @@ export function SelectedWork() {
               placeholder="Search projects or technologies..."
               autoComplete="off"
               aria-controls="project-results"
+              aria-keyshortcuts="/"
             />
+            {!query && (
+              <kbd className="rich-project-kbd" aria-hidden="true">
+                /
+              </kbd>
+            )}
             {query && (
               <button
                 type="button"
@@ -685,12 +736,14 @@ export function SelectedWork() {
                 <button
                   key={filter.id}
                   type="button"
+                  style={{ "--filter-color": `var(${filterColors[filter.id]})` } as CSSProperties}
                   aria-pressed={category === filter.id}
                   onClick={() => {
                     setCategory(filter.id);
                     setPage(1);
                   }}
                 >
+                  <i className="rich-project-filter-dot" aria-hidden="true" />
                   {filter.label}
                   <span>{String(count).padStart(2, "0")}</span>
                 </button>
@@ -802,13 +855,28 @@ export function SelectedWork() {
           target="_blank"
           rel="noreferrer"
         >
-          <span>
-            <Github size={24} aria-hidden="true" /> More experiments. More
-            source code.
+          <span className="rich-project-github-main">
+            <span className="rich-project-github-icon" aria-hidden="true">
+              <Github size={30} />
+            </span>
+            <span className="rich-project-github-copy">
+              <strong>More experiments. More source code.</strong>
+              <span>Everything else I build in public lives on GitHub.</span>
+            </span>
+            <span className="rich-project-github-cta">
+              Explore my GitHub <ArrowUpRight size={20} aria-hidden="true" />
+            </span>
           </span>
-          <span>
-            Explore my GitHub <ArrowUpRight size={22} aria-hidden="true" />
+          <span className="rich-project-github-marquee" aria-hidden="true">
+            <span>
+              {[0, 1].map((copy) => (
+                <span key={copy}>
+                  REACT ✳ NEXT.JS ✳ TYPESCRIPT ✳ NODE.JS ✳ GO ✳ PYTHON ✳ LLMS ✳ RAG ✳ THREE.JS ✳ POSTGRESQL ✳{" "}
+                </span>
+              ))}
+            </span>
           </span>
+          <span className="sr-only">(opens in a new tab)</span>
         </a>
       </div>
       <ProjectDialog project={selected} onClose={() => setSelected(null)} />

@@ -37,6 +37,10 @@ export function ExperienceSection() {
           <div className="experience-chapters-total">
             <span className="experience-chapters-total-label"><Clock3 size={16} aria-hidden="true" /> TOTAL EXPERIENCE</span>
             <ExperienceDuration total initialMonth={initialMonth} className="experience-chapters-total-duration" />
+            <dl className="experience-chapters-total-stats">
+              <div><dt>Roles</dt><dd>{String(experience.length).padStart(2, "0")}</dd></div>
+              <div><dt>Now at</dt><dd>{experience[0]?.company}</dd></div>
+            </dl>
           </div>
         </div>
 
@@ -61,7 +65,10 @@ export function ExperienceSection() {
                 <article className="experience-chapter-card" aria-labelledby={`experience-role-${index}`}>
                   <div className="experience-chapter-header">
                     <div className="experience-chapter-role">
-                      {current && <span className="experience-chapter-current"><span aria-hidden="true" /> CURRENT ROLE</span>}
+                      <div className="experience-chapter-kicker">
+                        <span className="experience-chapter-company">@ {job.company}</span>
+                        {current && <span className="experience-chapter-current"><span aria-hidden="true" /> CURRENT ROLE</span>}
+                      </div>
                       <h3 id={`experience-role-${index}`}><span className="sr-only">{job.company}: </span>{job.role}</h3>
                       {job.context && <p className="experience-chapter-context">{job.context}</p>}
                     </div>

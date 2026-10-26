@@ -1,6 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Download, FileText, GraduationCap } from "lucide-react";
+import {
+  ArrowUpRight,
+  BriefcaseBusiness,
+  Clock3,
+  Download,
+  FileText,
+  GraduationCap,
+} from "lucide-react";
 
 import { siteConfig } from "@/lib/site";
 import { experience } from "@/lib/portfolio-data";
@@ -24,23 +31,33 @@ export function ResumeSection() {
           <h2 id="resume-section-title">
             Resume,
             <br />
-            ready to read<span>.</span>
+            <span className="rshow-title-pop">
+              ready to read<span className="rshow-title-dot">.</span>
+            </span>
           </h2>
           <dl className="rshow-facts">
             <div className="rshow-fact rshow-fact-experience">
+              <span className="rshow-fact-icon" aria-hidden="true">
+                <Clock3 size={17} />
+              </span>
               <dt>Engineering experience</dt>
               <dd>
                 <ExperienceDuration total initialMonth={initialMonth} />
               </dd>
             </div>
             <div className="rshow-fact rshow-fact-roles">
+              <span className="rshow-fact-icon" aria-hidden="true">
+                <BriefcaseBusiness size={17} />
+              </span>
               <dt>Professional roles</dt>
-              <dd>
-                {experience.length}<span aria-hidden="true">✳</span>
-              </dd>
+              <dd>{String(experience.length).padStart(2, "0")}</dd>
             </div>
           </dl>
           <div className="rshow-education">
+            <span className="rshow-grade" aria-hidden="true">
+              <small>CGPA</small>
+              8.8
+            </span>
             <Image
               src="/artwork/learning-book.png"
               alt=""
@@ -84,15 +101,37 @@ export function ResumeSection() {
           data-aos-delay="120"
           aria-label="Open Suraj Singh's full-size resume preview"
         >
+          <span className="rshow-stamp" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <defs>
+                <path id="rshow-stamp-circle" d="M60,60 m-42,0 a42,42 0 1,1 84,0 a42,42 0 1,1 -84,0" />
+              </defs>
+              <text>
+                <textPath href="#rshow-stamp-circle">
+                  ONE PAGE ✳ NO FLUFF ✳ ONE PAGE ✳ NO FLUFF ✳
+                </textPath>
+              </text>
+            </svg>
+            <strong>1</strong>
+          </span>
           <div className="rshow-viewer-toolbar">
+            <span className="rshow-window-dots" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
             <span>
               <FileText size={16} aria-hidden="true" /> Suraj-Singh-Resume.pdf
             </span>
             <span className="rshow-page-count">1 / 1</span>
           </div>
           <div className="rshow-document-stage">
+            <span className="rshow-float rshow-float-1" aria-hidden="true">AI ✳</span>
+            <span className="rshow-float rshow-float-2" aria-hidden="true">FULL-STACK</span>
+            <span className="rshow-float rshow-float-3" aria-hidden="true">3+ YRS</span>
             <div className="rshow-paper-stack">
               <div className="rshow-document">
+                <span className="rshow-scan" aria-hidden="true" />
                 <Image
                   src="/resume/resume-preview.png"
                   alt="Suraj Singh's original one-page resume."

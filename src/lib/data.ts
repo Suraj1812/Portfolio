@@ -25,7 +25,6 @@ export type FeaturedProject = {
 
 export const navItems: NavItem[] = [
   { label: "Projects", href: "#work" },
-  { label: "Clients", href: "#clients" },
   { label: "Lab", href: "#lab" },
   { label: "Stack", href: "#stack" },
   { label: "GitHub", href: "#github" },
