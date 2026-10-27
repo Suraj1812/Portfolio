@@ -84,24 +84,7 @@ export async function renderSocialImage() {
           flexDirection: "column",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div
-            style={{
-              width: 54,
-              height: 54,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 16,
-              border: `4px solid ${INK}`,
-              background: YELLOW,
-              boxShadow: `5px 5px 0 ${INK}`,
-              fontFamily: "Space Grotesk",
-              fontSize: 22,
-            }}
-          >
-            SS
-          </div>
+        <div style={{ display: "flex", alignItems: "center", height: 54 }}>
           <div style={{ display: "flex", fontSize: 21, fontWeight: 800, letterSpacing: 4 }}>PORTFOLIO</div>
         </div>
 
