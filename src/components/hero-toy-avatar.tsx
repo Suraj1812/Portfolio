@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type * as ThreeTypes from "three";
 
+import { createMover, createRobotPoser, loadRobot, type RobotRig } from "@/components/robot-model";
 import "./hero-orbit.css";
 
 /**
@@ -47,12 +48,7 @@ export const C = {
   dogNose: 0x241811,
 };
 
-/**
- * Robot that stands on the island. Fan-made "Chappie" model: rig by Beneth
- * Borromeo (CC BY 4.0), animations from Adobe Mixamo; character © Sony
- * Pictures / MRC. Draco-compressed, so the decoder is served from /draco/.
- */
-const ROBOT_URL = "/models/robot/robot.glb";
+/** Robot moves (see robot-model.ts for the model and its credits). */
 const CLICK_MOVES = ["Waving", "Salute", "Standing Clap", "Hip Hop Dancing", "Pointing Forward"];
 const IDLE_MOVES = ["Talking", "Arm Stretching", "Talking (2)", "Talking (1)"];
 
@@ -1380,14 +1376,9 @@ export function ToyAvatar() {
 
       // ---------- Robot ----------
       type Robot = {
-        mixer: ThreeTypes.AnimationMixer;
-        actions: Map<string, ThreeTypes.AnimationAction>;
-        idle: ThreeTypes.AnimationAction;
-        current: ThreeTypes.AnimationAction | null;
-        inner: ThreeTypes.Group;
-        hips?: ThreeTypes.Object3D;
-        look: Array<{ bone: ThreeTypes.Object3D; weight: number }>;
-        anchor: ThreeTypes.Vector3 | null;
+        rig: RobotRig;
+        mover: ReturnType<typeof createMover>;
+        poser: ReturnType<typeof createRobotPoser>;
         age: number;
       };
       let robot: Robot | null = null;
@@ -1396,128 +1387,30 @@ export function ToyAvatar() {
       let nextIdleMove = 9;
       let lookWeight = 1;
 
-      async function loadRobot() {
-        const [{ GLTFLoader }, { DRACOLoader }] = await Promise.all([
-          import("three/examples/jsm/loaders/GLTFLoader.js"),
-          import("three/examples/jsm/loaders/DRACOLoader.js"),
-        ]);
-        const draco = new DRACOLoader().setDecoderPath("/draco/");
-        const gltf = await new GLTFLoader().setDRACOLoader(draco).loadAsync(ROBOT_URL);
-        draco.dispose();
-        if (disposed) return;
-
-        const model = gltf.scene;
-        model.traverse((node) => {
-          const mesh = node as ThreeTypes.Mesh;
-          if (!mesh.isMesh) return;
-          mesh.castShadow = true;
-          mesh.receiveShadow = true;
-          mesh.frustumCulled = false;
-          disposables.add(mesh.geometry);
-          const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-          materials.forEach((material) => {
-            disposables.add(material);
-            Object.values(material).forEach((value) => {
-              if (value && (value as ThreeTypes.Texture).isTexture) disposables.add(value as ThreeTypes.Texture);
-            });
-          });
+      loadRobot(THREE, (item) => disposables.add(item))
+        .then((rig) => {
+          if (disposed) return;
+          character.add(rig.root);
+          robot = { rig, mover: createMover(THREE, rig), poser: createRobotPoser(THREE, rig, character), age: 0 };
+          sync();
+        })
+        .catch(() => {
+          // The stage still works without the robot.
         });
-        // Same height as the old figure, feet on the grass, centred.
-        model.updateMatrixWorld(true);
-        const box = new THREE.Box3().setFromObject(model, true);
-        const height = box.max.y - box.min.y;
-        model.scale.multiplyScalar(1.85 / Math.max(height, 0.001));
-        model.updateMatrixWorld(true);
-        box.setFromObject(model, true);
-        const center = box.getCenter(new THREE.Vector3());
-        model.position.x -= center.x;
-        model.position.z -= center.z;
-        model.position.y -= box.min.y;
-        const inner = new THREE.Group();
-        inner.add(model);
-        character.add(inner);
 
-        const find = (name: string) => model.getObjectByName(name) ?? model.getObjectByName(name.replace(":", ""));
-        const mixer = new THREE.AnimationMixer(model);
-        const actions = new Map(gltf.animations.map((clip) => [clip.name, mixer.clipAction(clip)]));
-        const idle = actions.get("Idle") ?? [...actions.values()][0];
-        idle.play();
-        mixer.addEventListener("finished", (event) => {
-          if (!robot || event.action !== robot.current) return;
-          robot.idle.reset().play();
-          robot.idle.crossFadeFrom(robot.current, 0.45, false);
-          robot.current = null;
-          idleFor = 0;
-        });
-        robot = {
-          mixer,
-          actions,
-          idle,
-          current: null,
-          inner,
-          hips: find("mixamorig:Hips"),
-          look: [
-            { bone: find("mixamorig:Head"), weight: 0.6 },
-            { bone: find("mixamorig:Neck"), weight: 0.25 },
-            { bone: find("mixamorig:Spine2"), weight: 0.15 },
-          ].filter((entry): entry is { bone: ThreeTypes.Object3D; weight: number } => Boolean(entry.bone)),
-          anchor: null,
-          age: 0,
-        };
-        sync();
-      }
-
-      /** Plays a one-shot move, cross-fading from whatever is playing, then returns to idle. */
       function playMove(name: string) {
-        if (!robot) return;
-        const next = robot.actions.get(name);
-        if (!next || next === robot.current) return;
-        const from = robot.current ?? robot.idle;
-        next.reset();
-        next.setLoop(THREE.LoopOnce, 1);
-        next.clampWhenFinished = true;
-        next.play();
-        next.crossFadeFrom(from, 0.35, false);
-        robot.current = next;
-        idleFor = 0;
+        if (robot?.mover.play(name)) idleFor = 0;
       }
-
-      // Rotates a bone in world space, independent of the rig's own axes.
-      const parentWorld = new THREE.Quaternion();
-      const parentInverse = new THREE.Quaternion();
-      const turn = new THREE.Quaternion();
-      const turnEuler = new THREE.Euler(0, 0, 0, "YXZ");
-      function addWorldRotation(bone: ThreeTypes.Object3D, yaw: number, pitch: number) {
-        bone.parent?.getWorldQuaternion(parentWorld);
-        parentInverse.copy(parentWorld).invert();
-        turnEuler.set(pitch, yaw, 0);
-        turn.setFromEuler(turnEuler);
-        bone.quaternion.premultiply(parentWorld).premultiply(turn).premultiply(parentInverse);
-      }
-      const hipsAt = new THREE.Vector3();
 
       function updateRobot(delta: number) {
         if (!robot) return;
         robot.age += delta;
-        robot.mixer.update(delta);
-        // Keep the hips over the same spot so dances and gestures don't wander off the island.
-        if (robot.hips) {
-          character.updateMatrixWorld(true);
-          robot.hips.getWorldPosition(hipsAt);
-          character.worldToLocal(hipsAt);
-          if (!robot.anchor) robot.anchor = hipsAt.clone();
-          else {
-            robot.inner.position.x -= hipsAt.x - robot.anchor.x;
-            robot.inner.position.z -= hipsAt.z - robot.anchor.z;
-          }
-        }
+        robot.rig.mixer.update(delta);
         // Head follows the cursor, mostly while idling.
-        lookWeight += ((robot.current ? 0.25 : 1) - lookWeight) * (1 - Math.exp(-delta * 4));
-        robot.look.forEach(({ bone, weight }) => {
-          addWorldRotation(bone, gaze.x * 0.85 * weight * lookWeight, -gaze.y * 0.45 * weight * lookWeight);
-        });
+        lookWeight += ((robot.mover.busy ? 0.25 : 1) - lookWeight) * (1 - Math.exp(-delta * 4));
+        robot.poser.apply(gaze.x * 0.85 * lookWeight, -gaze.y * 0.45 * lookWeight);
         // Every so often while idle, do a small gesture on his own.
-        if (!robot.current) {
+        if (!robot.mover.busy) {
           idleFor += delta;
           if (idleFor > nextIdleMove) {
             playMove(IDLE_MOVES[Math.floor(Math.random() * IDLE_MOVES.length)]);
@@ -1525,10 +1418,6 @@ export function ToyAvatar() {
           }
         }
       }
-
-      loadRobot().catch(() => {
-        // The island still works without the robot.
-      });
 
       // ---------- Camera ----------
       const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 60);

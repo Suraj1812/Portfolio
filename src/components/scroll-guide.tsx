@@ -3,45 +3,35 @@
 import { useEffect, useRef } from "react";
 import type * as ThreeTypes from "three";
 
-import {
-  buildCharacter,
-  buildPuppy,
-  C,
-  createToonKit,
-  GUIDE_EVENT,
-  lightScene,
-  type Builder,
-} from "@/components/hero-toy-avatar";
+import { createToonKit, GUIDE_EVENT, lightScene } from "@/components/hero-toy-avatar";
+import { createMover, createRobotPoser, loadRobot, type RobotRig } from "@/components/robot-model";
 import "./scroll-guide.css";
 
 /**
- * Scroll guide: a small 3D Suraj (with his puppy) that leaves the hero island
- * and follows the reader.
+ * Scroll guide: the robot from the hero leaves its hover-pad and follows the
+ * reader.
  *
- * - Scrolling down, he jumps with a spin into each section, pulls out a prop,
- *   points at something there and explains it in a speech bubble.
- * - Scrolling up, he flies backward on a little jetpack with sparkles and smoke,
- *   and finally lands home on the island.
- * - He reacts: looks at hovered cards, thumbs-up on filter picks, confetti when
- *   the email is copied, holds his head on very fast scrolls, and sits down to
- *   check his phone when the reader pauses.
- * - In dark mode he wears a hoodie and points with a flashlight that lights up
- *   the element he's pointing at.
+ * - Scrolling down, it jumps with a spin into each section, turns toward
+ *   something there, points at it and explains it in a speech bubble.
+ * - Scrolling up, it flies backward on a little jetpack with sparkles and
+ *   smoke, and finally lands home on the pad.
+ * - It reacts: looks at hovered cards, waves when clicked, salutes filter
+ *   picks, claps with confetti when the email is copied, wobbles on very fast
+ *   scrolls, and kneels to wait when the reader pauses.
+ * - In dark mode the element it points at gets a spotlight.
  */
-type PropName = "magnifier" | "briefcase" | "mug" | "wrench" | "paper" | "envelope" | "phone";
-type Stop = { id: string; text: string; target: string; prop: PropName };
+type Stop = { id: string; text: string; target: string };
 const STOPS: Stop[] = [
-  { id: "work", text: "These are my projects. Try the search, or just press /", target: "#project-search", prop: "magnifier" },
-  { id: "experience", text: "Where I've worked. Each card is a real role.", target: ".experience-chapter-card", prop: "briefcase" },
-  { id: "about", text: "That's me in a nutshell. Coffee helps!", target: ".about-narrative", prop: "mug" },
-  { id: "stack", text: "My toolbox. Dark chips are my everyday go-tos.", target: ".skills-grid", prop: "wrench" },
-  { id: "resume", text: "One page, no fluff. Hover the paper!", target: ".rshow-viewer", prop: "paper" },
-  { id: "contact", text: "Building something with AI? Say hello!", target: ".contact-talk", prop: "envelope" },
+  { id: "work", text: "These are my projects. Try the search, or just press /", target: "#project-search" },
+  { id: "experience", text: "Where I've worked. Each card is a real role.", target: ".experience-chapter-card" },
+  { id: "about", text: "That's me in a nutshell. Powered by coffee and code!", target: ".about-narrative" },
+  { id: "stack", text: "My toolbox. Dark chips are my everyday go-tos.", target: ".skills-grid" },
+  { id: "resume", text: "One page, no fluff. Hover the paper!", target: ".rshow-viewer" },
+  { id: "contact", text: "Building something with AI? Say hello!", target: ".contact-talk" },
 ];
-const CLICK_LINES = ["Hi there! 👋", "Keep scrolling, there's more!", "Built with three.js ✨", "Need a hand? I'm right here."];
+const CLICK_LINES = ["Hi there! 👋", "Keep scrolling, there's more!", "Built with three.js ✨", "Beep boop. Need a hand?"];
 const HOVER_TARGETS =
   ".rich-project-card, .experience-chapter-card, .skill-card, .contact-channel, .rshow-viewer, .about-narrative, .rich-project-filters button, .rp-card";
-const HOODIE = 0x5b6475;
 
 type Point = { x: number; y: number };
 type Travel = { from: Point; to: number; t: number; duration: number; mode: "jump" | "fly" };
@@ -51,70 +41,6 @@ const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t 
 const smooth = (t: number) => t * t * (3 - 2 * t);
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const envelope = (t: number, edge = 0.2) => smooth(t < edge ? t / edge : t > 1 - edge ? Math.max(0, (1 - t) / edge) : 1);
-
-// ======================= Props =======================
-function buildProps({ THREE, part, toon, flat }: Builder) {
-  const dark = toon(0x2b2b2b);
-  const wood = toon(0x7a4b2e);
-  const leather = toon(0x8b5a2b);
-  const gold = toon(0xffc94a);
-  const silver = toon(0xb8c0cc);
-  const white = toon(0xffffff);
-  const paperLine = flat(0x9aa3b2);
-
-  const props: Record<PropName, ThreeTypes.Group> = {
-    magnifier: new THREE.Group(),
-    briefcase: new THREE.Group(),
-    mug: new THREE.Group(),
-    wrench: new THREE.Group(),
-    paper: new THREE.Group(),
-    envelope: new THREE.Group(),
-    phone: new THREE.Group(),
-  };
-
-  props.magnifier.add(part(new THREE.TorusGeometry(0.06, 0.013, 10, 28), dark, { position: [0, 0.07, 0] }));
-  props.magnifier.add(part(new THREE.CircleGeometry(0.058, 28), flat(0xbdf3ff, 0.55, true), { outline: false, position: [0, 0.07, 0] }));
-  props.magnifier.add(part(new THREE.CapsuleGeometry(0.013, 0.08, 6, 10), wood, { position: [0, -0.03, 0] }));
-
-  props.briefcase.add(part(new THREE.BoxGeometry(0.2, 0.14, 0.06), leather, { position: [0, -0.06, 0] }));
-  props.briefcase.add(part(new THREE.TorusGeometry(0.032, 0.009, 8, 16, Math.PI), dark, { position: [0, 0.012, 0] }));
-  for (const x of [-0.055, 0.055]) {
-    props.briefcase.add(part(new THREE.BoxGeometry(0.022, 0.016, 0.012), gold, { outline: false, position: [x, -0.005, 0.032] }));
-  }
-
-  props.mug.add(part(new THREE.CylinderGeometry(0.045, 0.04, 0.095, 20), white, { position: [0, 0.03, 0] }));
-  props.mug.add(part(new THREE.CylinderGeometry(0.046, 0.046, 0.022, 20), toon(0x63e6ff), { outline: false, position: [0, 0.03, 0] }));
-  props.mug.add(part(new THREE.CircleGeometry(0.04, 20), flat(0x5a3420), { outline: false, position: [0, 0.075, 0], rotation: [-Math.PI / 2, 0, 0] }));
-  props.mug.add(part(new THREE.TorusGeometry(0.026, 0.008, 8, 16), white, { position: [0.05, 0.03, 0] }));
-
-  props.wrench.add(part(new THREE.BoxGeometry(0.026, 0.17, 0.012), silver, { position: [0, 0.0, 0] }));
-  props.wrench.add(part(new THREE.TorusGeometry(0.034, 0.013, 8, 18, Math.PI * 1.5), silver, { position: [0, 0.11, 0], rotation: [0, 0, Math.PI * 0.75] }));
-
-  props.paper.add(part(new THREE.BoxGeometry(0.15, 0.2, 0.004), white, { position: [0, 0.04, 0] }));
-  props.paper.add(part(new THREE.BoxGeometry(0.1, 0.018, 0.002), flat(0x5f7cff), { outline: false, position: [-0.012, 0.115, 0.003] }));
-  for (let i = 0; i < 5; i += 1) {
-    props.paper.add(part(new THREE.BoxGeometry(0.11 - (i % 2) * 0.03, 0.007, 0.002), paperLine, { outline: false, position: [-0.008, 0.08 - i * 0.025, 0.003] }));
-  }
-
-  props.envelope.add(part(new THREE.BoxGeometry(0.17, 0.11, 0.012), white, { position: [0, 0.02, 0] }));
-  const flap = new THREE.Shape([new THREE.Vector2(-0.085, 0.075), new THREE.Vector2(0.085, 0.075), new THREE.Vector2(0, 0.01)]);
-  props.envelope.add(part(new THREE.ShapeGeometry(flap), toon(0xe9e4da), { outline: false, position: [0, 0, 0.008] }));
-  props.envelope.add(part(new THREE.CircleGeometry(0.014, 16), flat(0xff6b6b), { outline: false, position: [0, 0.012, 0.01] }));
-
-  props.phone.add(part(new THREE.BoxGeometry(0.065, 0.12, 0.012), dark, { position: [0, 0.02, 0] }));
-  props.phone.add(part(new THREE.PlaneGeometry(0.052, 0.098), flat(0x63e6ff), { outline: false, position: [0, 0.02, 0.0065] }));
-
-  // Flashlight held along the pointing arm, with a soft glowing beam.
-  const flashlight = new THREE.Group();
-  flashlight.add(part(new THREE.CylinderGeometry(0.018, 0.018, 0.12, 14), dark, { position: [0, -0.05, 0] }));
-  flashlight.add(part(new THREE.CylinderGeometry(0.028, 0.02, 0.035, 16), silver, { position: [0, -0.125, 0] }));
-  flashlight.add(part(new THREE.CircleGeometry(0.025, 16), flat(0xfff3a0), { outline: false, position: [0, -0.144, 0], rotation: [Math.PI / 2, 0, 0] }));
-  const beamMaterial = new THREE.MeshBasicMaterial({ color: 0xfff1a0, transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide });
-  const beam = part(new THREE.ConeGeometry(0.28, 1.1, 28, 1, true), beamMaterial, { outline: false, position: [0, -0.145 - 0.55, 0] });
-  flashlight.add(beam);
-
-  return { props, flashlight, beamMaterial };
-}
 
 // ======================= Component =======================
 export function ScrollGuide() {
@@ -154,18 +80,14 @@ export function ScrollGuide() {
       const { builder, disposables } = createToonKit(THREE);
       disposables.add(renderer);
       const { part, toon, flat } = builder;
-      const { character, torso, head, eyes, brows, arms, legs, mouth } = buildCharacter(builder);
 
       const scene = new THREE.Scene();
       const pivot = new THREE.Group(); // pivot at the hips for natural spins and tilts
       pivot.position.y = 0.95;
-      character.position.y = -0.95;
-      pivot.add(character);
+      const body = new THREE.Group();
+      body.position.y = -0.95;
+      pivot.add(body);
       scene.add(pivot);
-
-      const { puppy, body: puppyBody, head: puppyHead, tail, tongue } = buildPuppy(builder);
-      puppy.scale.setScalar(1.05);
-      scene.add(puppy);
 
       const lighting = await lightScene(THREE, renderer, scene, { environmentIntensity: 0.6 });
       if (disposed) {
@@ -174,77 +96,52 @@ export function ScrollGuide() {
       }
       disposables.add(lighting);
 
-      // ---------- Props in each hand ----------
-      const handProps = new Map<number, ReturnType<typeof buildProps>>();
-      arms.forEach(({ hand, side }) => {
-        const set = buildProps(builder);
-        disposables.add(set.beamMaterial);
-        const grip = new THREE.Group();
-        grip.position.set(0, -0.1, 0.01);
-        grip.rotation.x = Math.PI / 2; // upright and facing the viewer in the holding pose
-        grip.scale.setScalar(1.35);
-        hand.add(grip);
-        Object.values(set.props).forEach((prop) => {
-          prop.visible = false;
-          grip.add(prop);
+      // ---------- Robot (loads in the background) ----------
+      let robot: { rig: RobotRig; mover: ReturnType<typeof createMover>; poser: ReturnType<typeof createRobotPoser> } | null = null;
+      loadRobot(THREE, (item) => disposables.add(item))
+        .then((rig) => {
+          if (disposed) return;
+          body.add(rig.root);
+          robot = { rig, mover: createMover(THREE, rig), poser: createRobotPoser(THREE, rig, body) };
+        })
+        .catch(() => {
+          // Without the model the guide simply stays hidden.
         });
-        set.flashlight.visible = false;
-        hand.add(set.flashlight);
-        handProps.set(side, set);
-      });
 
-      // ---------- Jetpack ----------
+      // ---------- Jetpack on its back ----------
       const jetpack = new THREE.Group();
-      jetpack.position.set(0, 0.36, -0.2);
-      torso.add(jetpack);
+      jetpack.position.set(0, 0.42, -0.2);
+      pivot.add(jetpack);
       const flames: ThreeTypes.Object3D[] = [];
       for (const x of [-0.065, 0.065]) {
-        jetpack.add(part(new THREE.CylinderGeometry(0.05, 0.05, 0.22, 16), toon(0xff8b3d), { position: [x, 0, 0] }));
-        jetpack.add(part(new THREE.SphereGeometry(0.05, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), toon(0xb8c0cc), { position: [x, 0.11, 0] }));
-        jetpack.add(part(new THREE.CylinderGeometry(0.03, 0.045, 0.04, 14), toon(0x3a3a3a), { position: [x, -0.13, 0] }));
+        jetpack.add(part(new THREE.CylinderGeometry(0.05, 0.05, 0.22, 16), toon(0x3b4456), { position: [x, 0, 0] }));
+        jetpack.add(part(new THREE.SphereGeometry(0.05, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), toon(0x9aa6bd), { position: [x, 0.11, 0] }));
+        jetpack.add(part(new THREE.CylinderGeometry(0.03, 0.045, 0.04, 14), toon(0x1f2533), { position: [x, -0.13, 0] }));
         const flame = new THREE.Group();
         flame.position.set(x, -0.15, 0);
-        flame.add(part(new THREE.ConeGeometry(0.05, 0.3, 12), flat(0xff8b3d), { outline: false, position: [0, -0.15, 0], rotation: [Math.PI, 0, 0] }));
-        flame.add(part(new THREE.ConeGeometry(0.028, 0.18, 10), flat(0xffe45e), { outline: false, position: [0, -0.1, 0.005], rotation: [Math.PI, 0, 0] }));
+        flame.add(part(new THREE.ConeGeometry(0.05, 0.3, 12), flat(0x5ee7ff), { position: [0, -0.15, 0], rotation: [Math.PI, 0, 0] }));
+        flame.add(part(new THREE.ConeGeometry(0.028, 0.18, 10), flat(0xffffff), { position: [0, -0.1, 0.005], rotation: [Math.PI, 0, 0] }));
         jetpack.add(flame);
         flames.push(flame);
       }
+      jetpack.add(part(new THREE.BoxGeometry(0.2, 0.16, 0.05), toon(0x1f2533), { position: [0, 0.01, 0.05] }));
       jetpack.scale.setScalar(0.001);
 
-      // ---------- Night outfit: hoodie with hood, drawstrings and pocket ----------
-      const suitMaterial = toon(C.suit) as ThreeTypes.MeshToonMaterial;
-      const lapelMaterial = toon(C.lapel);
-      const pocketMaterial = toon(0x63e6ff);
-      const hoodie = new THREE.Group();
-      const hoodieMaterial = toon(0x4a5263);
-      hoodie.add(part(new THREE.SphereGeometry(0.17, 28, 16, 0, Math.PI * 2, 0, Math.PI / 2), hoodieMaterial, { position: [0, 0.57, -0.11], rotation: [-0.9, 0, 0], scale: [1.35, 0.75, 1] }));
-      for (const x of [-0.04, 0.04]) {
-        hoodie.add(part(new THREE.CapsuleGeometry(0.006, 0.12, 4, 8), flat(0xffffff), { outline: false, position: [x, 0.47, 0.17] }));
-      }
-      hoodie.add(part(new THREE.BoxGeometry(0.22, 0.1, 0.02), hoodieMaterial, { position: [0, 0.12, 0.142] }));
-      torso.add(hoodie);
       let night = false;
-      function applyOutfit() {
+      const applyTheme = () => {
         night = document.documentElement.dataset.theme === "dark";
-        suitMaterial.color.setHex(night ? HOODIE : C.suit);
-        lapelMaterial.visible = !night;
-        pocketMaterial.visible = !night;
-        hoodie.visible = night;
-      }
-      applyOutfit();
-      const themeObserver = new MutationObserver(applyOutfit);
+      };
+      applyTheme();
+      const themeObserver = new MutationObserver(applyTheme);
       themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
       // ---------- Camera and sizing ----------
       const VIEW_HEIGHT = 2.6;
       const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 30);
-      let size = { w: 250, h: 230 };
-      let withPuppy = true;
+      let size = { w: 220, h: 230 };
       const isSmall = () => window.innerWidth < 760;
       function layout() {
-        withPuppy = !isSmall();
-        size = isSmall() ? { w: 116, h: 158 } : { w: 220, h: 230 };
-        puppy.visible = withPuppy;
+        size = isSmall() ? { w: 116, h: 158 } : { w: 170, h: 230 };
         wrap!.style.setProperty("--guide-w", `${size.w}px`);
         wrap!.style.setProperty("--guide-h", `${size.h}px`);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -256,7 +153,6 @@ export function ScrollGuide() {
         camera.updateProjectionMatrix();
       }
       layout();
-      const toScreenX = (sceneX: number) => size.w / 2 + (sceneX / (VIEW_HEIGHT * camera.aspect)) * size.w;
 
       // ---------- Positions ----------
       function anchor(index: number): Point {
@@ -268,7 +164,7 @@ export function ScrollGuide() {
           y: window.innerHeight - size.h - (isSmall() ? 8 : 12),
         };
       }
-      /** Where the island character stands in the hero, in viewport pixels. */
+      /** Where the robot stands on the hero's hover-pad, in viewport pixels. */
       function home(): Point {
         const stage = document.querySelector(".hero-stage");
         if (!stage) return { x: window.innerWidth / 2 - size.w / 2, y: -size.h };
@@ -387,10 +283,8 @@ export function ScrollGuide() {
       let hoverElement: Element | null = null;
       let hoverAt = -100;
       let litElement: Element | null = null;
-      let propShow = 0;
-      let charX = 0;
-      let puppyLag = 0;
-      let previousX = pos.x;
+      let talkUntil = 0;
+      let faceYaw = 0;
 
       function setVisible(next: boolean) {
         if (visible === next) return;
@@ -408,7 +302,11 @@ export function ScrollGuide() {
         }
         const forward = to > (travel ? travel.to : active);
         travel = { from, to, t: 0, duration: forward ? 0.95 : 1.3, mode: forward ? "jump" : "fly" };
+        // Stand up from a held kneel and stop talking before setting off.
         sitting = false;
+        talkUntil = 0;
+        robot?.mover.release(0.2);
+        robot?.mover.setBase("Idle", 0.2);
         hush();
       }
       function arrive(index: number) {
@@ -428,10 +326,19 @@ export function ScrollGuide() {
           }
         }
         say(STOPS[index].text);
+        // Turn toward the target, point at it, then keep talking for a bit.
+        robot?.mover.release(0.25);
+        robot?.mover.play("Pointing Forward");
+        robot?.mover.setBase("Talking");
+        talkUntil = elapsed + 5.5;
       }
+      const GESTURE_MOVES: Record<Gesture["kind"], string> = { wave: "Waving", thumbs: "Salute", cheer: "Standing Clap" };
       function startGesture(kind: Gesture["kind"], duration: number) {
         gesture = { kind, t: 0, duration };
         lastActivity = elapsed;
+        if (sitting) sitting = false;
+        robot?.mover.release(0.2);
+        robot?.mover.play(GESTURE_MOVES[kind]);
       }
 
       // ---------- Reactions ----------
@@ -445,7 +352,7 @@ export function ScrollGuide() {
         if (!visible || !(event.target instanceof Element)) return;
         if (event.target.closest(".rich-project-filters button")) {
           startGesture("thumbs", 1.6);
-          say("Nice pick! 👍", 2600);
+          say("Nice pick! 🫡", 2600);
         } else if (event.target.closest(".contact-copy")) {
           startGesture("cheer", 1.8);
           confetti();
@@ -483,7 +390,6 @@ export function ScrollGuide() {
       }
 
       // ---------- Pose ----------
-      const pointAt = new THREE.Vector2();
       function rectLook(element: Element, fromX: number, fromY: number) {
         const rect = element.getBoundingClientRect();
         const tx = clamp(rect.left + rect.width / 2, 0, window.innerWidth);
@@ -494,37 +400,20 @@ export function ScrollGuide() {
       function pose(delta: number) {
         elapsed += delta;
         const follow = 1 - Math.exp(-delta * 10);
-        const breathe = Math.sin(elapsed * 1.7);
-        torso.scale.set(1 + breathe * 0.006, 1 + breathe * 0.01, 1);
-
-        // Where he and the puppy stand inside the canvas: puppy on the inner side.
-        const onRight = pos.x + size.w / 2 > window.innerWidth / 2;
-        const targetCharX = withPuppy ? (onRight ? 0.3 : -0.3) : 0;
-        charX += (targetCharX - charX) * (1 - Math.exp(-delta * 5));
-        pivot.position.x = charX;
-        charScreenX = toScreenX(charX);
-        hit!.style.left = `${charScreenX - size.w * 0.11}px`;
-        hit!.style.width = `${size.w * 0.22}px`;
-
-        // Blink.
-        const cycle = (elapsed + 0.4) % 3.9;
-        const blink = Math.exp(-Math.pow((cycle - 3.5) / 0.06, 2));
-        eyes.forEach(({ group }) => group.scale.set(1, Math.max(0.08, 1 - blink), 1));
+        charScreenX = size.w / 2;
+        hit!.style.left = `${charScreenX - size.w * 0.16}px`;
+        hit!.style.width = `${size.w * 0.32}px`;
 
         // ----- Travel arcs -----
         let spin = 0;
         let tiltZ = 0;
         let tiltX = 0;
-        let armsUp = 0;
-        let armsOut = 0;
         let tuck = 0;
         let jetOn = 0;
         let lookX = 0;
         let lookY = 0;
-        let travelT = 0;
         if (travel) {
           travel.t = Math.min(1, travel.t + delta / travel.duration);
-          travelT = travel.t;
           const to = anchor(travel.to);
           const t = travel.t;
           if (travel.mode === "jump") {
@@ -533,7 +422,6 @@ export function ScrollGuide() {
             pos.x = travel.from.x + (to.x - travel.from.x) * e;
             pos.y = travel.from.y + (to.y - travel.from.y) * e - Math.sin(Math.PI * t) * height;
             spin = easeInOut(clamp((t - 0.1) / 0.8, 0, 1)) * Math.PI * 2;
-            armsUp = Math.sin(Math.PI * clamp(t * 1.2, 0, 1));
             tuck = Math.sin(Math.PI * t);
             tiltZ = -Math.sign(to.x - travel.from.x) * Math.sin(Math.PI * t) * 0.2;
           } else {
@@ -552,8 +440,6 @@ export function ScrollGuide() {
             tiltX = -flight * 0.25;
             // Turn three-quarters so the jetpack and its flames are on show.
             spin = -dir * flight * 2.2;
-            armsOut = flight * 0.85;
-            tuck = -flight * 0.5;
             jetOn = clamp(flight * 3, 0, 1);
             sparkClock += delta;
             if (sparkClock > 0.05) {
@@ -571,19 +457,26 @@ export function ScrollGuide() {
           pos.x += (to.x - pos.x) * (1 - Math.exp(-delta * 8));
           pos.y += (to.y - pos.y) * (1 - Math.exp(-delta * 8));
         }
-        const vx = (pos.x - previousX) / Math.max(delta, 1e-3);
-        previousX = pos.x;
 
-        // ----- Sitting when the reader pauses -----
+        // ----- Kneeling to wait when the reader pauses -----
         const shouldSit = visible && active >= 0 && !travel && elapsed - lastActivity > 12;
         if (shouldSit && !sitting) {
           sitting = true;
-          say("Take your time, I'll wait here 📱");
+          say("Take your time, I'll wait here ⏳");
+          robot?.mover.setBase("Idle");
+          robot?.mover.play("Kneeling Pointing", { hold: true, fade: 0.5 });
         } else if (!shouldSit && sitting) {
           sitting = false;
           hush();
+          robot?.mover.release();
         }
         sit += ((sitting ? 1 : 0) - sit) * (1 - Math.exp(-delta * 5));
+
+        // Stop talking after a while.
+        if (talkUntil && elapsed > talkUntil) {
+          talkUntil = 0;
+          robot?.mover.setBase("Idle");
+        }
 
         // ----- Gestures and wind -----
         let g = 0;
@@ -595,150 +488,56 @@ export function ScrollGuide() {
         if (windy > 0) windy = Math.max(0, windy - delta);
         const wind = smooth(clamp(windy / 0.3, 0, 1));
 
-        // ----- Pointing at the section target -----
-        let pointArm = 0;
-        let pointAngle = 0;
-        const shoulderX = pos.x + charScreenX;
-        const shoulderY = pos.y + size.h * 0.37;
+        // ----- Facing the section target -----
+        let pointSide = 0;
+        const chestX = pos.x + charScreenX;
+        const chestY = pos.y + size.h * 0.37;
         const target = active >= 0 && !travel ? document.querySelector(STOPS[active].target) : null;
         if (target && sit < 0.5) {
-          const { dx, dy } = rectLook(target, shoulderX, shoulderY);
-          pointAt.set(dx, dy);
-          pointArm = dx >= 0 ? 1 : -1;
-          pointAngle = Math.atan2(dx, dy);
-          pointAngle = pointArm === 1 ? clamp(pointAngle, 0.4, 2.9) : clamp(pointAngle, -2.9, -0.4);
+          const { dx, dy } = rectLook(target, chestX, chestY);
+          pointSide = dx >= 0 ? 1 : -1;
           lookX = clamp(dx / (window.innerWidth * 0.4), -1, 1);
           lookY = clamp(-dy / (window.innerHeight * 0.5), -1, 1);
         }
-        // Hovered cards win his attention for a moment.
+        // Hovered cards win its attention for a moment.
         if (hoverElement && elapsed - hoverAt < 2.5 && !travel) {
-          const { dx, dy } = rectLook(hoverElement, shoulderX, shoulderY - 30);
+          const { dx, dy } = rectLook(hoverElement, chestX, chestY - 30);
           lookX = clamp(dx / (window.innerWidth * 0.4), -1, 1);
           lookY = clamp(-dy / (window.innerHeight * 0.5), -1, 1);
         }
         if (sit > 0.5) {
           lookX = 0;
-          lookY = -0.7;
+          lookY = -0.3;
         }
+        // Body turns toward what it points at; gestures face the reader.
+        const wantYaw = gesture ? 0 : pointSide * 0.75;
+        faceYaw += (wantYaw - faceYaw) * (1 - Math.exp(-delta * 4));
 
-        // ----- Props -----
-        const holdSide = pointArm !== 0 ? -pointArm : 1;
-        const propName: PropName | null = sitting ? "phone" : active >= 0 && !travel ? STOPS[active].prop : null;
-        const wantProp = propName && (!gesture || gesture.kind === "thumbs") && wind < 0.5 ? 1 : 0;
-        propShow += (wantProp - propShow) * (1 - Math.exp(-delta * 9));
-        handProps.forEach((set, side) => {
-          (Object.keys(set.props) as PropName[]).forEach((name) => {
-            const prop = set.props[name];
-            prop.visible = name === propName && side === holdSide && propShow > 0.02;
-            prop.scale.setScalar(Math.max(0.001, propShow));
-          });
-          const torchOn = night && side === pointArm && !travel && sit < 0.5 && !gesture;
-          set.flashlight.visible = torchOn;
-          set.beamMaterial.opacity = 0.18 + Math.sin(elapsed * 9) * 0.03;
-        });
-        // Night: spotlight the element he points at.
-        const lit = night && pointArm !== 0 && !gesture ? target : null;
+        // Night: spotlight the element it points at.
+        const lit = night && pointSide !== 0 && !gesture ? target : null;
         if (lit !== litElement) {
           litElement?.classList.remove("guide-lit");
           lit?.classList.add("guide-lit");
           litElement = lit;
         }
         // Contact: little envelopes fly toward the button.
-        if (active >= 0 && STOPS[active].prop === "envelope" && !travel && sit < 0.5 && target) {
+        if (active >= 0 && STOPS[active].id === "contact" && !travel && sit < 0.5 && target) {
           mailClock += delta;
           if (mailClock > 0.9) {
             mailClock = 0;
-            const hx = pos.x + charScreenX + (holdSide === 1 ? 30 : -30);
+            const hx = pos.x + charScreenX + pointSide * 30;
             const hy = pos.y + size.h * 0.45;
             const { dx, dy } = rectLook(target, hx, hy);
             particle("mail", hx, hy, { dx: dx * 0.85, dy: dy * 0.85, duration: 1300 });
           }
         }
 
-        // ----- Arms -----
-        arms.forEach(({ shoulder, elbow, hand, side }) => {
-          let z = side * 0.1;
-          let x = Math.sin(elapsed * 1.7 + side) * 0.03;
-          let ez = side * 0.06;
-          let ex = -0.08;
-          let handY = 0;
-          let handZ = 0;
-          if (side === pointArm) {
-            z = pointAngle + Math.sin(elapsed * 3) * 0.05;
-            x = -0.15;
-            ez = 0;
-            ex = 0;
-          }
-          if (side === holdSide && propShow > 0.05) {
-            const lift = propName === "paper" ? 0.35 : 0;
-            z = side * 0.22;
-            x = -0.55 - lift;
-            ez = 0;
-            ex = -1.35 + lift * 0.4;
-          }
-          if (sit > 0.01 && side !== holdSide) {
-            z = side * 0.35;
-            x = -0.55;
-            ex = -0.5;
-          }
-          if (gesture?.kind === "wave" && side === -1) {
-            z = -0.1 - g * 2.45;
-            x = 0;
-            ez = -g * (0.45 + Math.sin(elapsed * 13) * 0.4);
-            ex = 0;
-            handY = g * -0.9;
-          }
-          if (gesture?.kind === "thumbs" && side === -holdSide) {
-            z = side * (0.1 + g * 0.5);
-            x = -g * 0.7;
-            ex = -g * 1.75;
-            handY = -side * g * 1.3;
-            handZ = side * g * 0.5;
-          }
-          if (gesture?.kind === "cheer") {
-            z = side * (0.1 + g * 2.6);
-            ez = side * g * 0.25;
-            ex = 0;
-          }
-          if (wind > 0) {
-            z = z + (side * 2.6 - z) * wind;
-            ez = ez + (side * 1.75 - ez) * wind;
-            ex = ex * (1 - wind) - 0.3 * wind;
-            x = x * (1 - wind);
-          }
-          z += side * armsUp * 2.4 + side * armsOut * 1.3;
-          shoulder.rotation.z += (z - shoulder.rotation.z) * follow;
-          shoulder.rotation.x += (x - shoulder.rotation.x) * follow;
-          elbow.rotation.z += (ez - elbow.rotation.z) * follow;
-          elbow.rotation.x += (ex - elbow.rotation.x) * follow;
-          hand.rotation.y += (handY - hand.rotation.y) * follow;
-          hand.rotation.z += (handZ - hand.rotation.z) * follow;
-        });
-
-        // ----- Legs: tuck on jumps, trail in flight, fold when sitting -----
-        legs.forEach((hip, index) => {
-          const side = index === 0 ? -1 : 1;
-          hip.rotation.x = -tuck * 0.55 - sit * 1.45;
-          hip.rotation.z = side * (0.02 + Math.abs(tuck) * 0.12 + sit * 0.12);
-        });
-
-        // ----- Head, eyes, expression -----
-        // In flight he glances back over his shoulder at the reader.
-        const glance = travel?.mode === "fly" ? clamp(-spin * 0.45, -0.9, 0.9) : 0;
-        head.rotation.y += (lookX * 0.55 + glance - head.rotation.y) * follow;
-        head.rotation.x += (-lookY * 0.3 - head.rotation.x) * follow;
-        head.rotation.z = Math.sin(elapsed * 0.8) * 0.03 * (1 - sit);
-        eyes.forEach(({ iris }) => {
-          iris.position.x = lookX * 0.011;
-          iris.position.y = lookY * 0.009;
-        });
-        const excited = Math.max(gesture ? g : 0, armsUp, armsOut, wind);
-        brows.forEach((brow) => {
-          brow.position.y = brow.userData.baseY + excited * 0.013;
-        });
-        mouth.smile.visible = excited < 0.35;
-        mouth.open.scale.set(1, Math.max(0.001, excited), 1);
-        torso.rotation.y = lookX * 0.15;
+        // ----- Robot animation and head look -----
+        if (robot) {
+          robot.rig.mixer.update(delta);
+          const glance = travel?.mode === "fly" ? clamp(-spin * 0.3, -0.7, 0.7) : 0;
+          robot.poser.apply((lookX - faceYaw * 0.6) * 0.8 + glance, -lookY * 0.4);
+        }
 
         // ----- Jetpack -----
         const jetScale = jetpack.scale.x + (jetOn - jetpack.scale.x) * (1 - Math.exp(-delta * 12));
@@ -748,32 +547,16 @@ export function ScrollGuide() {
           flame.scale.set(1, 0.7 + Math.abs(Math.sin(elapsed * 30 + index * 2)) * 0.6, 1);
         });
 
-        // ----- Body: spin, tilt, landing squash, hover bob, sitting -----
+        // ----- Body: spin, tilt, landing squash, hover bob, wind wobble -----
         if (landing > 0) landing = Math.max(0, landing - delta);
-        const squash = Math.sin((landing / 0.35) * Math.PI) * 0.12;
-        const cheerHop = gesture?.kind === "cheer" ? Math.abs(Math.sin(gesture.t * 7)) * 0.12 * g : 0;
-        pivot.rotation.set(tiltX, spin, tiltZ);
+        const squash = Math.sin((landing / 0.35) * Math.PI) * 0.12 + tuck * 0.06;
+        const cheerHop = gesture?.kind === "cheer" ? Math.abs(Math.sin(gesture.t * 7)) * 0.1 * g : 0;
+        const wobble = wind * Math.sin(elapsed * 18) * 0.12;
+        pivot.rotation.x += (tiltX - wind * 0.25 - pivot.rotation.x) * follow;
+        pivot.rotation.y = spin + faceYaw;
+        pivot.rotation.z = tiltZ + wobble;
         pivot.scale.set(1 + squash * 0.6, 1 - squash, 1 + squash * 0.6);
-        pivot.position.y = 0.95 - sit * 0.42 + cheerHop + (travel ? 0 : Math.sin(elapsed * 2) * 0.015 * (1 - sit));
-
-        // ----- Puppy: runs and hops alongside, sits when they land -----
-        if (withPuppy) {
-          const lagTarget = clamp(-vx * 0.0006, -0.35, 0.35);
-          puppyLag += (lagTarget - puppyLag) * (1 - Math.exp(-delta * 6));
-          puppy.position.x = -charX * 1.45 + puppyLag;
-          puppy.rotation.y = 0.45 * Math.sign(charX || 1) + (travel ? -Math.sign(vx) * 0.6 : 0);
-          let hop = 0;
-          if (travel?.mode === "jump") hop = Math.sin(Math.PI * clamp((travelT - 0.12) / 0.88, 0, 1)) * 0.22;
-          if (travel?.mode === "fly") hop = Math.sin(Math.PI * travelT) * 0.35 + Math.sin(elapsed * 10) * 0.02;
-          const running = travel ? Math.abs(Math.sin(elapsed * 16)) * 0.05 : 0;
-          puppy.position.y = hop + running + (gesture?.kind === "cheer" ? cheerHop : 0);
-          puppyBody.rotation.x = travel ? -0.25 + Math.sin(elapsed * 16) * 0.12 : 0;
-          puppyHead.rotation.y = lookX * 0.6 - 0.45 * Math.sign(charX || 1) * 0.5;
-          puppyHead.rotation.x = -lookY * 0.25;
-          puppyHead.rotation.z = Math.sin(elapsed * 0.9) * 0.1;
-          tail.rotation.z = Math.sin(elapsed * (travel || gesture ? 24 : 11)) * 0.7;
-          tongue.scale.y = 0.5 + Math.max(0, Math.sin(elapsed * 6)) * 0.25;
-        }
+        pivot.position.y = 0.95 + cheerHop + (travel ? 0 : Math.sin(elapsed * 2) * 0.012 * (1 - sit));
 
         wrap!.style.transform = `translate3d(${pos.x.toFixed(1)}px, ${pos.y.toFixed(1)}px, 0)`;
       }
@@ -828,7 +611,7 @@ export function ScrollGuide() {
                 if (visible || travel) pose(1 / 30);
               }
               renderer.render(scene, camera);
-              return { active, travel: travel?.mode ?? null, t: travel?.t, x: Math.round(pos.x), y: Math.round(pos.y), sitting, night, jet: jetpack.scale.x };
+              return { active, travel: travel?.mode ?? null, t: travel?.t, x: Math.round(pos.x), y: Math.round(pos.y), sitting, night, jet: jetpack.scale.x, move: robot?.mover.currentName ?? null, loaded: Boolean(robot) };
             },
             gesture(kind: Gesture["kind"]) {
               startGesture(kind, 1.6);
@@ -877,7 +660,7 @@ export function ScrollGuide() {
       <div ref={wrapRef} className="guide" aria-hidden="true">
         <div ref={bubbleRef} className="guide-bubble" />
         <div ref={hostRef} className="guide-host" />
-        {/* Only his body is clickable, so the canvas never blocks the page. */}
+        {/* Only the robot's body is clickable, so the canvas never blocks the page. */}
         <button ref={hitRef} type="button" className="guide-hit" tabIndex={-1} aria-hidden="true" />
       </div>
     </>

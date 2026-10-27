@@ -5,7 +5,7 @@ const eslintConfig = [
   ...nextCoreWebVitals,
   ...nextTypeScript,
   {
-    ignores: [".next/**", "out/**", "dist/**", "node_modules/**", "next-env.d.ts"]
+    ignores: [".next/**", "out/**", "dist/**", "node_modules/**", "next-env.d.ts", "public/draco/**"]
   }
 ];
 
