@@ -7,9 +7,9 @@ import type * as ThreeTypes from "three";
 import "./hero-orbit.css";
 
 /**
- * A complete 3D hero scene built in code: Suraj standing on a floating grass
- * island with trees, flowers, a puppy, butterflies, drifting clouds and a
- * glowing sun. Rendered with physically based materials, procedural textures,
+ * A complete 3D hero scene: a robot standing on a floating sci-fi hover-pad
+ * with holographic panels, drones and flying saucers, under a ringed planet
+ * by day and a moon and stars by night. Rendered with physically based materials, procedural textures,
  * an environment map and real cast shadows so it reads as a miniature diorama
  * rather than a flat cartoon.
  *
@@ -46,6 +46,15 @@ export const C = {
   dogWhite: 0xfff6ea,
   dogNose: 0x241811,
 };
+
+/**
+ * Robot that stands on the island. Fan-made "Chappie" model: rig by Beneth
+ * Borromeo (CC BY 4.0), animations from Adobe Mixamo; character © Sony
+ * Pictures / MRC. Draco-compressed, so the decoder is served from /draco/.
+ */
+const ROBOT_URL = "/models/robot/robot.glb";
+const CLICK_MOVES = ["Waving", "Salute", "Standing Clap", "Hip Hop Dancing", "Pointing Forward"];
+const IDLE_MOVES = ["Talking", "Arm Stretching", "Talking (2)", "Talking (1)"];
 
 /** Fired by the scroll guide: `{ away: true }` when it leaves the island. */
 export const GUIDE_EVENT = "suraj-guide";
@@ -110,8 +119,6 @@ function seeded(seed: number) {
 const fract = (v: number) => v - Math.floor(v);
 const smooth = (t: number) => t * t * (3 - 2 * t);
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
-const smoothstep = (edge0: number, edge1: number, x: number) =>
-  smooth(Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0))));
 const hash = (x: number, y: number, z: number) =>
   fract(Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453123);
 
@@ -747,450 +754,350 @@ export function buildPuppy({ THREE, part, pbr }: Builder) {
   return { puppy, body, head, tail, tongue, ears };
 }
 
-// ======================= Island geometry =======================
-/**
- * Builds a closed surface from polar coordinates: `rings` steps of `s` in
- * [0, 1] by `segments` steps of angle. The seam column is duplicated for UVs
- * and its normals averaged so no line shows; degenerate rings (a point) share
- * one averaged normal too.
- */
-function polarSurface(
-  THREE: typeof ThreeTypes,
-  rings: number,
-  segments: number,
-  at: (s: number, angle: number) => [number, number, number],
-  uvAt: (s: number, angle: number, p: [number, number, number]) => [number, number],
-  outward: (p: [number, number, number]) => [number, number, number],
-) {
-  const cols = segments + 1;
-  const positions: number[] = [];
-  const uvs: number[] = [];
-  const indices: number[] = [];
-  for (let i = 0; i <= rings; i += 1) {
-    const s = i / rings;
-    for (let j = 0; j < cols; j += 1) {
-      const angle = (j / segments) * Math.PI * 2;
-      const p = at(s, angle);
-      positions.push(...p);
-      uvs.push(...uvAt(s, angle, p));
-    }
-  }
-  for (let i = 0; i < rings; i += 1) {
-    for (let j = 0; j < segments; j += 1) {
-      const a = i * cols + j;
-      const b = a + 1;
-      const c = a + cols;
-      const d = c + 1;
-      indices.push(a, c, b, b, c, d);
-    }
-  }
-  const geometry = new THREE.BufferGeometry();
-  geometry.setIndex(indices);
-  geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-  geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
-  geometry.computeVertexNormals();
-
-  // Flip the winding if the normals ended up pointing the wrong way.
-  const probe = Math.floor(rings / 2) * cols + Math.floor(segments / 4);
-  const normal = geometry.attributes.normal as ThreeTypes.BufferAttribute;
-  const p: [number, number, number] = [positions[probe * 3], positions[probe * 3 + 1], positions[probe * 3 + 2]];
-  const o = outward(p);
-  if (normal.getX(probe) * o[0] + normal.getY(probe) * o[1] + normal.getZ(probe) * o[2] < 0) {
-    for (let t = 0; t < indices.length; t += 3) {
-      const swap = indices[t + 1];
-      indices[t + 1] = indices[t + 2];
-      indices[t + 2] = swap;
-    }
-    geometry.setIndex(indices);
-    geometry.computeVertexNormals();
-  }
-
-  // Smooth the seam and any collapsed rings.
-  const n = new THREE.Vector3();
-  const sum = new THREE.Vector3();
-  for (let i = 0; i <= rings; i += 1) {
-    const first = i * cols;
-    const last = first + segments;
-    const degenerate =
-      Math.abs(positions[first * 3] - positions[(first + Math.floor(segments / 2)) * 3]) < 1e-6 &&
-      Math.abs(positions[first * 3 + 2] - positions[(first + Math.floor(segments / 2)) * 3 + 2]) < 1e-6;
-    if (degenerate) {
-      sum.set(0, 0, 0);
-      for (let j = first; j <= last; j += 1) sum.add(n.fromBufferAttribute(normal, j));
-      sum.normalize();
-      for (let j = first; j <= last; j += 1) normal.setXYZ(j, sum.x, sum.y, sum.z);
-    } else {
-      sum.fromBufferAttribute(normal, first).add(n.fromBufferAttribute(normal, last)).normalize();
-      normal.setXYZ(first, sum.x, sum.y, sum.z);
-      normal.setXYZ(last, sum.x, sum.y, sum.z);
-    }
-  }
-  normal.needsUpdate = true;
-  return geometry;
-}
-
 // ======================= World =======================
+/**
+ * Futuristic stage: a floating hover-pad with glowing panel seams, a pulsing
+ * rim and thrusters, holographic UI panels, orbiting drones, a scanner ring,
+ * a flying saucer, and a ringed planet by day / moon and stars by night.
+ */
 function buildWorld(builder: Builder) {
   const { THREE, part, pbr } = builder;
   const random = seeded(42);
   const world = new THREE.Group();
-  const swayers: Array<{ object: ThreeTypes.Object3D; phase: number }> = [];
-  const R = 1.32;
-  const FEET: [number, number] = [-0.05, 0.05];
-  const PAWS: [number, number] = [0.62, 0.3];
+  const R = 1.25;
+  const CYAN_GLOW = 0x5ee7ff;
 
-  // ---------- Ground: gentle dome with bumps, flat where anyone stands ----------
-  function groundAt(x: number, z: number) {
-    const t = Math.hypot(x, z) / R;
-    const clear =
-      smoothstep(0.28, 0.6, Math.hypot(x - FEET[0], z - FEET[1])) *
-      smoothstep(0.24, 0.5, Math.hypot(x - PAWS[0], z - PAWS[1]));
-    return (
-      -0.05 * t * t +
-      (fbm(x * 1.6 + 3, z * 1.6 + 7, 0.5, 3) - 0.5) * 0.08 * clear +
-      (fbm(x * 5 + 1, z * 5 + 2, 2, 2) - 0.5) * 0.012
-    );
-  }
-  const grassMaterial = pbr(C.grass, { roughness: 0.95, texture: "grass", bumpScale: 0.02, sheen: 0.3, sheenColor: 0xc8ff9a });
-  const ground = part(
-    polarSurface(
-      THREE, 26, 112,
-      (s, a) => {
-        const r = s * R;
-        const x = Math.cos(a) * r;
-        const z = Math.sin(a) * r;
-        return [x, groundAt(x, z), z];
-      },
-      (_s, _a, p) => [(p[0] / R) * 3.2 + 3.2, (p[2] / R) * 3.2 + 3.2],
-      () => [0, 1, 0],
-    ),
-    grassMaterial,
-    { shadow: false },
-  );
-  world.add(ground);
-
-  // Overhanging turf around the rim.
-  const lip = new THREE.TorusGeometry(R - 0.02, 0.055, 14, 112);
-  roughen(lip, 0.03, 3, 5);
-  const turfEdge = pbr(0x5fa843, { roughness: 0.98, texture: "grass", bumpScale: 0.03 });
-  world.add(part(lip, turfEdge, { position: [0, -0.06, 0], rotation: [Math.PI / 2, 0, 0], scale: [1, 1, 0.7] }));
-
-  // ---------- Underside: soil band fading into weathered rock, tapering to a point ----------
-  const soil = new THREE.Color(0x5c3a22);
-  const earth = new THREE.Color(C.dirt);
-  const stone = new THREE.Color(0x6e5440);
-  const underGeometry = polarSurface(
-    THREE, 40, 112,
-    (s, a) => {
-      const k = Math.pow(Math.cos((s * Math.PI) / 2), 0.72);
-      const bump = fbm(Math.cos(a) * 2.2 + 9, Math.sin(a) * 2.2 + 9, s * 3.6, 3) - 0.5;
-      const r = (R + 0.005) * k * (1 + bump * 0.24 * Math.min(1, s * 3 + 0.1));
-      const y = -0.05 - 1.28 * Math.pow(Math.sin((s * Math.PI) / 2), 1.15) + bump * 0.06 * s;
-      return [Math.cos(a) * r, y, Math.sin(a) * r];
-    },
-    (s, a) => [(a / (Math.PI * 2)) * 6, s * 3],
-    (p) => [p[0], -0.4, p[2]],
-  );
-  {
-    const positions = underGeometry.attributes.position as ThreeTypes.BufferAttribute;
-    const colors = new Float32Array(positions.count * 3);
-    const color = new THREE.Color();
-    for (let i = 0; i < positions.count; i += 1) {
-      const depth = -positions.getY(i);
-      const grit = fbm(positions.getX(i) * 4, depth * 4, positions.getZ(i) * 4, 2);
-      color.copy(soil).lerp(earth, smoothstep(0.08, 0.26, depth)).lerp(stone, smoothstep(0.45, 1.1, depth) * 0.8);
-      color.multiplyScalar(0.9 + grit * 0.25);
-      colors.set([color.r, color.g, color.b], i * 3);
-    }
-    underGeometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-  }
-  world.add(part(underGeometry, pbr(0xffffff, { roughness: 0.95, texture: "soil", bumpScale: 0.035, vertexColors: true })));
-
-  // Boulders lodged in the soil and a few roots trailing underneath.
-  const rockMaterial = pbr(C.rock, { roughness: 0.9, texture: "rock", bumpScale: 0.03, flatShading: true });
-  const darkRock = pbr(0x7d7066, { roughness: 0.92, texture: "rock", bumpScale: 0.03, flatShading: true });
-  for (let i = 0; i < 8; i += 1) {
-    const angle = (i / 8) * Math.PI * 2 + 0.4 + random() * 0.4;
-    const depth = 0.3 + random() * 0.45;
-    const radius = (R - 0.02) * Math.pow(Math.cos((depth / 1.3) * (Math.PI / 2)), 0.72) * 0.93;
-    world.add(part(roughen(new THREE.IcosahedronGeometry(0.07 + random() * 0.07, 2), 0.25, 3, i * 7), darkRock, {
-      position: [Math.cos(angle) * radius, -depth, Math.sin(angle) * radius],
-      rotation: [random() * 3, random() * 3, random() * 3],
-    }));
-  }
-  const rootMaterial = pbr(0x5a3b24, { roughness: 0.9, texture: "bark", bumpScale: 0.01 });
-  for (let i = 0; i < 4; i += 1) {
-    const angle = i * 1.7 + 0.9;
-    const x = Math.cos(angle) * 0.75;
-    const z = Math.sin(angle) * 0.75;
-    const root = new THREE.TubeGeometry(
-      new THREE.CatmullRomCurve3([
-        new THREE.Vector3(x, -0.62, z),
-        new THREE.Vector3(x * 0.92 + 0.08, -0.84, z * 0.92),
-        new THREE.Vector3(x * 0.78 - 0.05, -1.02 - i * 0.04, z * 0.78 + 0.06),
-        new THREE.Vector3(x * 0.6, -1.14 - i * 0.05, z * 0.62),
-      ]),
-      14, 0.014, 7, false,
-    );
-    world.add(part(root, rootMaterial, { shadow: false }));
-  }
-
-  // ---------- Trees behind Suraj ----------
-  const barkMaterial = pbr(C.bark, { roughness: 0.95, texture: "bark", bumpScale: 0.03 });
-  const leafShades = [0x478f38, C.leaf, 0x5fae47, C.leafLight].map((color) =>
-    pbr(color, { roughness: 0.92, texture: "leaf", bumpScale: 0.02, sheen: 0.25, sheenColor: 0xc8ffb0 }),
-  );
-  const trees: Array<[number, number, number]> = [[-0.85, -0.55, 1.15], [0.95, -0.5, 0.95], [-0.45, -0.95, 0.8]];
-  trees.forEach(([x, z, size], index) => {
-    const tree = new THREE.Group();
-    tree.position.set(x, groundAt(x, z) - 0.01, z);
-    tree.scale.setScalar(size);
-    tree.rotation.y = index * 2.1;
-    // Trunk with a flared base, slight lean, and surface roots.
-    const trunkProfile = [
-      [0, 0], [0.13, 0], [0.09, 0.05], [0.066, 0.18], [0.058, 0.4], [0.05, 0.62], [0.04, 0.8], [0, 0.82],
-    ].map(([r, y]) => new THREE.Vector2(r, y));
-    const trunk = new THREE.LatheGeometry(trunkProfile, 28);
-    roughen(trunk, 0.006, 9, index);
-    tree.add(part(trunk, barkMaterial, { rotation: [0.04, 0, 0.05] }));
-    for (let i = 0; i < 4; i += 1) {
-      const angle = i * 1.6 + index;
-      tree.add(part(new THREE.CapsuleGeometry(0.022, 0.12, 6, 10), barkMaterial, {
-        position: [Math.cos(angle) * 0.1, 0.012, Math.sin(angle) * 0.1],
-        rotation: [Math.PI / 2 * Math.sin(angle), 0, Math.PI / 2 * Math.cos(angle)],
-        scale: [1, 1, 0.7],
-      }));
-    }
-    // Two branches reaching into the canopy.
-    for (const side of [-1, 1]) {
-      tree.add(part(new THREE.CylinderGeometry(0.018, 0.034, 0.34, 10), barkMaterial, {
-        position: [side * 0.1, 0.78, side * 0.03],
-        rotation: [side * 0.2, 0, side * -0.55],
-      }));
-    }
-    // Lumpy layered canopy.
-    const crown = new THREE.Group();
-    crown.position.y = 0.92;
-    const lumps: Array<[number, number, number, number]> = [
-      [0, 0.04, 0, 0.36], [0.2, 0.2, 0.08, 0.26], [-0.22, 0.14, 0.06, 0.25], [0.04, 0.32, -0.04, 0.24],
-      [0.1, -0.02, 0.22, 0.22], [-0.14, 0.02, -0.2, 0.22], [0.22, -0.06, -0.14, 0.2], [-0.06, 0.12, 0.26, 0.2],
-    ];
-    lumps.forEach(([lx, ly, lz, radius], i) => {
-      const lump = roughen(new THREE.IcosahedronGeometry(radius, 3), 0.13 * radius, 5, index * 11 + i * 3);
-      crown.add(part(lump, leafShades[(i + index) % leafShades.length], { position: [lx, ly, lz], scale: [1, 0.9, 1] }));
-    });
-    tree.add(crown);
-    world.add(tree);
-    swayers.push({ object: crown, phase: index * 1.7 });
-  });
-
-  // ---------- Rocks and pebbles ----------
-  const rocks: Array<[number, number, number, number]> = [
-    [-0.95, 0.55, 0.13, 1.3], [-0.78, 0.74, 0.08, 1.1], [1.05, 0.2, 0.11, 1.25], [0.2, 0.95, 0.05, 1], [-0.3, 1.05, 0.045, 1],
-  ];
-  rocks.forEach(([x, z, radius, stretch], i) => {
-    const rock = roughen(new THREE.IcosahedronGeometry(radius, 3), 0.28, 2.6, i * 5 + 1);
-    world.add(part(rock, i % 3 === 2 ? darkRock : rockMaterial, {
-      position: [x, groundAt(x, z) + radius * 0.3, z],
-      rotation: [random() * 0.6, random() * 6, random() * 0.6],
-      scale: [stretch, 0.62, 1],
-    }));
-  });
-
-  // ---------- Grass: thousands of instanced blades that bend in the wind ----------
-  const bladeGeometry = new THREE.PlaneGeometry(0.03, 0.17, 1, 5);
-  bladeGeometry.translate(0, 0.085, 0);
-  {
-    const position = bladeGeometry.attributes.position as ThreeTypes.BufferAttribute;
-    const shade = new Float32Array(position.count * 3);
-    for (let i = 0; i < position.count; i += 1) {
-      const v = position.getY(i) / 0.17;
-      position.setX(i, position.getX(i) * (1 - v * 0.88));
-      position.setZ(i, v * v * 0.05);
-      const tone = mix(0.5, 1.05, v);
-      shade.set([tone, tone, tone], i * 3);
-    }
-    bladeGeometry.setAttribute("color", new THREE.Float32BufferAttribute(shade, 3));
-    bladeGeometry.computeVertexNormals();
-  }
-  const wind = { value: 0 };
-  const bladeMaterial = pbr(0xffffff, { roughness: 0.85, doubleSide: true, vertexColors: true, sheen: 0.4, sheenColor: 0xd0ff9a });
-  bladeMaterial.onBeforeCompile = (shader) => {
-    shader.uniforms.uTime = wind;
-    shader.vertexShader = shader.vertexShader
-      .replace("#include <common>", "#include <common>\nuniform float uTime;")
-      .replace(
-        "#include <begin_vertex>",
-        `#include <begin_vertex>
-        {
-          vec3 root = (instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-          float bend = uv.y * uv.y;
-          float gust = sin(uTime * 1.7 + root.x * 2.6 + root.z * 1.9) + 0.5 * sin(uTime * 3.1 + root.z * 4.0);
-          transformed.x += gust * 0.03 * bend;
-          transformed.z += cos(uTime * 1.2 + root.x * 1.7) * 0.018 * bend;
-        }`,
-      );
-  };
-  bladeMaterial.customProgramCacheKey = () => "island-grass-wind";
-  const BLADES = 1500;
-  const grass = new THREE.InstancedMesh(bladeGeometry, bladeMaterial, BLADES);
-  grass.receiveShadow = true;
-  {
-    const matrix = new THREE.Matrix4();
-    const position = new THREE.Vector3();
-    const quaternion = new THREE.Quaternion();
-    const euler = new THREE.Euler();
-    const scale = new THREE.Vector3();
-    const dark = new THREE.Color(C.grassDark);
-    const light = new THREE.Color(C.grassLight);
-    const color = new THREE.Color();
-    let placed = 0;
-    while (placed < BLADES) {
-      const angle = random() * Math.PI * 2;
-      const onRim = placed % 6 === 0;
-      const radius = onRim ? R - 0.06 + random() * 0.07 : Math.sqrt(random()) * (R - 0.04);
-      const x = Math.cos(angle) * radius;
-      const z = Math.sin(angle) * radius;
-      if (Math.hypot(x - FEET[0], z - FEET[1]) < 0.2 || Math.hypot(x - PAWS[0], z - PAWS[1]) < 0.2) continue;
-      position.set(x, (onRim ? groundAt(x * 0.97, z * 0.97) - 0.02 : groundAt(x, z)) - 0.004, z);
-      // Blades on the rim lean outward over the edge.
-      const lean = onRim ? 0.55 : 0.25;
-      euler.set(Math.sin(angle) * lean * (onRim ? 1 : random() * 2 - 1), random() * Math.PI * 2, -Math.cos(angle) * lean * (onRim ? 1 : random() * 2 - 1));
-      quaternion.setFromEuler(euler);
-      const height = 0.6 + random() * 0.9;
-      scale.set(0.8 + random() * 0.5, height, 1);
-      matrix.compose(position, quaternion, scale);
-      grass.setMatrixAt(placed, matrix);
-      color.copy(dark).lerp(light, Math.pow(random(), 1.4)).offsetHSL((random() - 0.5) * 0.03, 0, (random() - 0.5) * 0.05);
-      grass.setColorAt(placed, color);
-      placed += 1;
-    }
-    grass.instanceMatrix.needsUpdate = true;
-    if (grass.instanceColor) grass.instanceColor.needsUpdate = true;
-  }
-  world.add(grass);
-
-  // ---------- Flowers: stems, leaves and petals ----------
-  const spot = () => {
-    for (;;) {
-      const angle = random() * Math.PI * 2;
-      const radius = 0.3 + random() * 0.9;
-      const x = Math.cos(angle) * radius;
-      const z = Math.sin(angle) * radius;
-      if (Math.hypot(x - FEET[0], z - FEET[1]) > 0.34 && Math.hypot(x - PAWS[0], z - PAWS[1]) > 0.32) return [x, z] as const;
-    }
-  };
-  const petalColors = [0xfff6f0, 0xff7fa8, 0xffd23f, 0xb48cff, 0xff9d5c];
-  const stemMaterial = pbr(0x4e9a3a, { roughness: 0.8 });
-  const leafMaterial = pbr(0x5aa844, { roughness: 0.85, doubleSide: true });
-  const stamenMaterial = pbr(0xffb020, { roughness: 0.6, emissive: 0xffb020, emissiveIntensity: 0.15 });
-  const petalGeometry = new THREE.SphereGeometry(0.02, 14, 10);
-  const leafGeometry = new THREE.ShapeGeometry(
-    new THREE.Shape().moveTo(0, 0).quadraticCurveTo(0.03, 0.03, 0, 0.075).quadraticCurveTo(-0.03, 0.03, 0, 0),
-  );
-  for (let i = 0; i < 16; i += 1) {
-    const [x, z] = spot();
-    const flower = new THREE.Group();
-    flower.position.set(x, groundAt(x, z), z);
-    flower.rotation.set((random() - 0.5) * 0.3, random() * Math.PI * 2, (random() - 0.5) * 0.3);
-    const height = 0.12 + random() * 0.06;
-    flower.add(part(new THREE.CylinderGeometry(0.005, 0.0075, height, 8), stemMaterial, { position: [0, height / 2, 0] }));
-    flower.add(part(leafGeometry, leafMaterial, { shadow: false, position: [0.004, height * 0.4, 0], rotation: [-1.1, 0.4, 0.5] }));
-    const bloom = new THREE.Group();
-    bloom.position.y = height;
-    bloom.rotation.x = -0.35;
-    const petal = pbr(petalColors[i % petalColors.length], { roughness: 0.55, sheen: 0.5, sheenColor: 0xffffff });
-    const petalCount = 5 + (i % 2);
-    for (let p = 0; p < petalCount; p += 1) {
-      const angle = (p / petalCount) * Math.PI * 2;
-      flowerPetal(bloom, petal, angle);
-    }
-    bloom.add(part(new THREE.SphereGeometry(0.014, 12, 10), stamenMaterial, { shadow: false, position: [0, 0.006, 0], scale: [1, 0.6, 1] }));
-    flower.add(bloom);
-    world.add(flower);
-    swayers.push({ object: flower, phase: random() * 6 });
-  }
-  function flowerPetal(bloom: ThreeTypes.Group, material: ThreeTypes.Material, angle: number) {
-    const holder = new THREE.Group();
-    holder.rotation.y = angle;
-    holder.add(part(petalGeometry, material, { shadow: false, position: [0, 0.004, 0.024], rotation: [0.45, 0, 0], scale: [0.9, 0.3, 1.5] }));
-    bloom.add(holder);
-  }
-
-  // ---------- Sun: bright disc with a soft corona, behind and above ----------
-  const sun = new THREE.Group();
-  sun.position.set(1.15, 2.25, -1.6);
-  const sunDisc = new THREE.Mesh(
-    new THREE.SphereGeometry(0.3, 48, 32),
-    new THREE.MeshBasicMaterial({ color: 0xfff0a0, toneMapped: false }),
-  );
-  sun.add(sunDisc);
-  const glowTexture = (stops: Array<[number, string]>, size = 256) => {
+  const canvasTexture = (width: number, height: number, draw: (context: CanvasRenderingContext2D) => void) => {
     const canvas = document.createElement("canvas");
-    canvas.width = canvas.height = size;
-    const context = canvas.getContext("2d")!;
-    const gradient = context.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-    stops.forEach(([offset, color]) => gradient.addColorStop(offset, color));
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, size, size);
+    canvas.width = width;
+    canvas.height = height;
+    draw(canvas.getContext("2d")!);
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = 4;
     return texture;
   };
-  const coronaTexture = (size = 512) => {
-    const canvas = document.createElement("canvas");
-    canvas.width = canvas.height = size;
-    const context = canvas.getContext("2d")!;
-    context.translate(size / 2, size / 2);
-    const streaks = 36;
-    for (let i = 0; i < streaks; i += 1) {
-      const length = size * (0.26 + random() * 0.2);
-      const width = 6 + random() * 14;
-      const gradient = context.createLinearGradient(0, 0, 0, -length);
-      gradient.addColorStop(0, "rgba(255, 214, 120, 0.55)");
-      gradient.addColorStop(0.5, "rgba(255, 170, 70, 0.18)");
-      gradient.addColorStop(1, "rgba(255, 150, 60, 0)");
+  const glowTexture = (stops: Array<[number, string]>, size = 256) =>
+    canvasTexture(size, size, (context) => {
+      const gradient = context.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+      stops.forEach(([offset, color]) => gradient.addColorStop(offset, color));
       context.fillStyle = gradient;
+      context.fillRect(0, 0, size, size);
+    });
+  const glowMaterial = (texture: ThreeTypes.Texture, opacity: number, additive = false) =>
+    new THREE.MeshBasicMaterial({
+      map: texture,
+      transparent: true,
+      opacity,
+      depthWrite: false,
+      toneMapped: false,
+      side: THREE.DoubleSide,
+      blending: additive ? THREE.AdditiveBlending : THREE.NormalBlending,
+    });
+  const neon = (color: number, opacity = 1) =>
+    new THREE.MeshBasicMaterial({ color, transparent: opacity < 1, opacity, toneMapped: false, depthWrite: opacity >= 1 });
+
+  // ---------- Hover-pad deck ----------
+  const deckSize = 1024;
+  const drawDeck = (context: CanvasRenderingContext2D, glowOnly: boolean) => {
+    const c = deckSize / 2;
+    if (!glowOnly) {
+      const base = context.createRadialGradient(c, c, 0, c, c, c);
+      base.addColorStop(0, "#3a4356");
+      base.addColorStop(1, "#232a38");
+      context.fillStyle = base;
+    } else context.fillStyle = "#000";
+    context.fillRect(0, 0, deckSize, deckSize);
+    context.translate(c, c);
+    const seam = glowOnly ? "rgba(0,0,0,0)" : "#151a24";
+    // Concentric panel seams and radial plate joints.
+    context.lineWidth = 6;
+    context.strokeStyle = seam;
+    [0.36, 0.64, 0.9].forEach((r) => {
       context.beginPath();
-      context.moveTo(-width / 2, 0);
-      context.lineTo(width / 2, 0);
-      context.lineTo(0, -length);
-      context.closePath();
-      context.fill();
-      context.rotate((Math.PI * 2) / streaks + (random() - 0.5) * 0.08);
+      context.arc(0, 0, r * c, 0, Math.PI * 2);
+      context.stroke();
+    });
+    for (let i = 0; i < 16; i += 1) {
+      const a = (i / 16) * Math.PI * 2;
+      context.beginPath();
+      context.moveTo(Math.cos(a) * 0.36 * c, Math.sin(a) * 0.36 * c);
+      context.lineTo(Math.cos(a) * 0.98 * c, Math.sin(a) * 0.98 * c);
+      context.stroke();
     }
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    return texture;
+    if (!glowOnly) {
+      // Rivets and lighter plate highlights.
+      context.fillStyle = "#56607a";
+      for (let i = 0; i < 48; i += 1) {
+        const a = (i / 48) * Math.PI * 2;
+        context.beginPath();
+        context.arc(Math.cos(a) * 0.94 * c, Math.sin(a) * 0.94 * c, 5, 0, Math.PI * 2);
+        context.fill();
+      }
+    }
+    // Glowing lines: the landing circle, dashed guide ring and chevrons.
+    context.strokeStyle = glowOnly ? "#5ee7ff" : "#7beaff";
+    context.lineWidth = 9;
+    context.beginPath();
+    context.arc(0, 0, 0.28 * c, 0, Math.PI * 2);
+    context.stroke();
+    context.lineWidth = 5;
+    context.setLineDash([22, 18]);
+    context.beginPath();
+    context.arc(0, 0, 0.5 * c, 0, Math.PI * 2);
+    context.stroke();
+    context.setLineDash([]);
+    for (let i = 0; i < 4; i += 1) {
+      context.save();
+      context.rotate((i / 4) * Math.PI * 2 + Math.PI / 4);
+      context.lineWidth = 7;
+      context.beginPath();
+      context.moveTo(-26, -0.78 * c);
+      context.lineTo(0, -0.72 * c);
+      context.lineTo(26, -0.78 * c);
+      context.stroke();
+      context.restore();
+    }
   };
-  const glowMaterial = (texture: ThreeTypes.Texture, opacity: number) =>
-    new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity, depthWrite: false, toneMapped: false });
-  const halo = new THREE.Mesh(
-    new THREE.PlaneGeometry(1, 1),
-    glowMaterial(glowTexture([[0, "rgba(255,250,210,1)"], [0.3, "rgba(255,226,120,0.7)"], [0.55, "rgba(255,170,70,0.16)"], [0.78, "rgba(255,150,60,0)"], [1, "rgba(255,150,60,0)"]]), 0.95),
+  const deckMap = canvasTexture(deckSize, deckSize, (context) => drawDeck(context, false));
+  const deckGlow = canvasTexture(deckSize, deckSize, (context) => drawDeck(context, true));
+  const deckMaterial = new THREE.MeshPhysicalMaterial({
+    map: deckMap,
+    emissiveMap: deckGlow,
+    emissive: new THREE.Color(0xffffff),
+    emissiveIntensity: 1.4,
+    metalness: 0.75,
+    roughness: 0.38,
+    clearcoat: 0.4,
+    clearcoatRoughness: 0.3,
+  });
+  const deck = part(new THREE.CircleGeometry(R, 96), deckMaterial, { shadow: false, rotation: [-Math.PI / 2, 0, 0], position: [0, 0.001, 0] });
+  world.add(deck);
+
+  const steel = pbr(0x3b4456, { roughness: 0.35, metalness: 0.85, clearcoat: 0.5 });
+  const darkSteel = pbr(0x1f2533, { roughness: 0.45, metalness: 0.8 });
+  const brightSteel = pbr(0x9aa6bd, { roughness: 0.25, metalness: 0.95, clearcoat: 0.6 });
+  world.add(part(new THREE.CylinderGeometry(R, R, 0.08, 96), steel, { position: [0, -0.04, 0] }));
+  world.add(part(new THREE.TorusGeometry(R, 0.045, 16, 128), brightSteel, { rotation: [Math.PI / 2, 0, 0], position: [0, -0.01, 0] }));
+  const rimGlow = neon(CYAN_GLOW);
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(R + 0.035, 0.014, 10, 160), rimGlow);
+  rim.rotation.x = Math.PI / 2;
+  rim.position.y = -0.055;
+  world.add(rim);
+
+  // Underside: stepped hull tapering to the thruster.
+  world.add(part(new THREE.CylinderGeometry(R - 0.02, 0.62, 0.3, 96), darkSteel, { position: [0, -0.23, 0] }));
+  world.add(part(new THREE.TorusGeometry(0.64, 0.03, 12, 96), brightSteel, { rotation: [Math.PI / 2, 0, 0], position: [0, -0.385, 0] }));
+  world.add(part(new THREE.CylinderGeometry(0.6, 0.32, 0.28, 64), steel, { position: [0, -0.53, 0] }));
+  world.add(part(new THREE.CylinderGeometry(0.3, 0.24, 0.1, 48), darkSteel, { position: [0, -0.72, 0] }));
+  // Hull vents with blinking status lights.
+  const blinkers: Array<{ mesh: ThreeTypes.Mesh; phase: number }> = [];
+  for (let i = 0; i < 12; i += 1) {
+    const a = (i / 12) * Math.PI * 2;
+    const vent = new THREE.Group();
+    vent.position.set(Math.cos(a) * 0.98, -0.2, Math.sin(a) * 0.98);
+    vent.rotation.y = -a + Math.PI / 2;
+    vent.rotation.x = 0.0;
+    vent.add(part(new THREE.BoxGeometry(0.16, 0.06, 0.03), brightSteel, { shadow: false }));
+    const light = new THREE.Mesh(new THREE.SphereGeometry(0.014, 10, 8), neon(i % 3 === 0 ? 0xff8a3d : CYAN_GLOW));
+    light.position.set(0.1, 0, 0.02);
+    vent.add(light);
+    world.add(vent);
+    blinkers.push({ mesh: light, phase: i * 0.9 });
+  }
+  // Thruster: glowing ring, hot core and a soft beam below.
+  const thrusterRing = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.025, 12, 48), neon(CYAN_GLOW));
+  thrusterRing.rotation.x = Math.PI / 2;
+  thrusterRing.position.y = -0.775;
+  world.add(thrusterRing);
+  const core = new THREE.Mesh(new THREE.CircleGeometry(0.19, 48), neon(0xd8fbff));
+  core.rotation.x = Math.PI / 2;
+  core.position.y = -0.772;
+  world.add(core);
+  const beamTexture = canvasTexture(64, 256, (context) => {
+    const gradient = context.createLinearGradient(0, 0, 0, 256);
+    gradient.addColorStop(0, "rgba(140,240,255,0.9)");
+    gradient.addColorStop(1, "rgba(140,240,255,0)");
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, 64, 256);
+  });
+  const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.42, 0.9, 40, 1, true), glowMaterial(beamTexture, 0.55, true));
+  beam.position.y = -1.22;
+  world.add(beam);
+
+  // Antenna pylons around the rim with blinking tips.
+  for (let i = 0; i < 6; i += 1) {
+    const a = (i / 6) * Math.PI * 2 + Math.PI / 6;
+    if (Math.sin(a) > 0.5) continue; // keep the front edge clear
+    const x = Math.cos(a) * (R - 0.08);
+    const z = Math.sin(a) * (R - 0.08);
+    world.add(part(new THREE.CylinderGeometry(0.035, 0.05, 0.08, 16), brightSteel, { position: [x, 0.04, z] }));
+    world.add(part(new THREE.CylinderGeometry(0.008, 0.012, 0.38, 8), steel, { position: [x, 0.27, z] }));
+    const tip = new THREE.Mesh(new THREE.SphereGeometry(0.022, 12, 8), neon(i % 2 ? 0xff5a5a : CYAN_GLOW));
+    tip.position.set(x, 0.47, z);
+    world.add(tip);
+    blinkers.push({ mesh: tip, phase: i * 1.7 });
+  }
+
+  // Cyan bounce light from the deck so the robot picks up the glow.
+  const deckLight = new THREE.PointLight(CYAN_GLOW, 1.4, 3.2, 1.6);
+  deckLight.position.set(0, 0.25, 0.55);
+  world.add(deckLight);
+
+  // ---------- Holo rings around the robot ----------
+  const holo = (opacity: number) =>
+    new THREE.MeshBasicMaterial({ color: CYAN_GLOW, transparent: true, opacity, depthWrite: false, toneMapped: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide });
+  const floorRing = new THREE.Mesh(new THREE.RingGeometry(0.42, 0.46, 96), holo(0.7));
+  floorRing.rotation.x = -Math.PI / 2;
+  floorRing.position.y = 0.01;
+  world.add(floorRing);
+  const scanRing = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.006, 6, 96), holo(0.8));
+  scanRing.rotation.x = Math.PI / 2;
+  world.add(scanRing);
+  const orbitRing = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.004, 6, 128), holo(0.45));
+  orbitRing.position.y = 1.0;
+  world.add(orbitRing);
+
+  // ---------- Holographic UI panels ----------
+  const panelTexture = (kind: number) =>
+    canvasTexture(512, 320, (context) => {
+      context.fillStyle = "rgba(30,160,200,0.14)";
+      context.fillRect(0, 0, 512, 320);
+      context.strokeStyle = "rgba(120,240,255,0.95)";
+      context.lineWidth = 6;
+      context.strokeRect(6, 6, 500, 308);
+      context.fillStyle = "rgba(120,240,255,0.95)";
+      context.fillRect(6, 6, 500, 38);
+      context.fillStyle = "#06222c";
+      context.font = "bold 22px monospace";
+      context.fillText(["SYS // ONLINE", "AI.CORE v2.6", "RADAR // SCAN"][kind], 22, 33);
+      context.fillStyle = "rgba(160,245,255,0.95)";
+      context.strokeStyle = "rgba(160,245,255,0.95)";
+      if (kind === 0) {
+        for (let i = 0; i < 9; i += 1) {
+          const h = 40 + ((i * 37) % 170);
+          context.fillRect(34 + i * 50, 290 - h, 30, h);
+        }
+      } else if (kind === 1) {
+        context.font = "20px monospace";
+        ["> load model('llm')", "> embed(docs) ... ok", "> rag.query(user)", "> agent.run()", "> deploy --prod", "  status: 200 OK"].forEach((line, i) => {
+          context.fillText(line, 24, 84 + i * 36);
+        });
+      } else {
+        context.lineWidth = 3;
+        [40, 80, 120].forEach((r) => {
+          context.beginPath();
+          context.arc(256, 180, r, 0, Math.PI * 2);
+          context.stroke();
+        });
+        context.beginPath();
+        context.moveTo(256, 180);
+        context.lineTo(256 + 118, 120);
+        context.stroke();
+        [[300, 140], [210, 230], [330, 220]].forEach(([x, y]) => {
+          context.beginPath();
+          context.arc(x, y, 7, 0, Math.PI * 2);
+          context.fill();
+        });
+      }
+    });
+  const panels: Array<{ mesh: ThreeTypes.Mesh; baseY: number; phase: number }> = [];
+  ([
+    [-0.95, 1.55, -0.35, 0.45],
+    [0.98, 1.3, -0.45, -0.5],
+    [-0.75, 0.75, 0.25, 0.7],
+  ] as const).forEach(([x, y, z, turnY], kind) => {
+    const material = glowMaterial(panelTexture(kind), 0.92, true);
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(0.52, 0.325), material);
+    mesh.position.set(x, y, z);
+    mesh.rotation.set(0, turnY, 0);
+    world.add(mesh);
+    panels.push({ mesh, baseY: y, phase: kind * 2.1 });
+  });
+
+  // ---------- Drones orbiting the pad ----------
+  const drones: Array<{ group: ThreeTypes.Group; rotors: ThreeTypes.Object3D[]; eye: ThreeTypes.Mesh; phase: number; radius: number; height: number }> = [];
+  [[0, 1.15, 1.55], [Math.PI, 1.35, 0.95]].forEach(([phase, radius, height]) => {
+    const group = new THREE.Group();
+    group.add(part(new THREE.SphereGeometry(0.06, 24, 16), brightSteel, { scale: [1, 0.55, 1] }));
+    group.add(part(new THREE.SphereGeometry(0.035, 20, 12), darkSteel, { position: [0, -0.02, 0], scale: [1, 0.6, 1] }));
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.014, 12, 8), neon(CYAN_GLOW));
+    eye.position.set(0, -0.005, 0.055);
+    group.add(eye);
+    const rotors: ThreeTypes.Object3D[] = [];
+    for (let i = 0; i < 4; i += 1) {
+      const a = (i / 4) * Math.PI * 2 + Math.PI / 4;
+      group.add(part(new THREE.BoxGeometry(0.11, 0.008, 0.012), steel, { shadow: false, position: [Math.cos(a) * 0.06, 0.008, Math.sin(a) * 0.06], rotation: [0, -a, 0] }));
+      const rotor = new THREE.Mesh(new THREE.CircleGeometry(0.04, 20), new THREE.MeshBasicMaterial({ color: 0xcfe9ff, transparent: true, opacity: 0.35, side: THREE.DoubleSide, depthWrite: false }));
+      rotor.rotation.x = -Math.PI / 2;
+      rotor.position.set(Math.cos(a) * 0.115, 0.016, Math.sin(a) * 0.115);
+      group.add(rotor);
+      rotors.push(rotor);
+    }
+    world.add(group);
+    drones.push({ group, rotors, eye, phase, radius, height });
+  });
+
+  // ---------- Day: a ringed planet; night: moon and stars ----------
+  const sun = new THREE.Group();
+  sun.position.set(1.15, 2.3, -1.6);
+  const planetTexture = canvasTexture(512, 256, (context) => {
+    const bands = ["#ffb26b", "#ffd29a", "#f59a5c", "#ffe0b8", "#f7a86e", "#ffc585", "#ec8f55", "#ffd8a8"];
+    let y = 0;
+    while (y < 256) {
+      const h = 10 + random() * 26;
+      context.fillStyle = bands[Math.floor(random() * bands.length)];
+      context.fillRect(0, y, 512, h);
+      y += h;
+    }
+    context.globalAlpha = 0.25;
+    for (let i = 0; i < 40; i += 1) {
+      context.fillStyle = random() > 0.5 ? "#fff1dc" : "#c9703f";
+      context.fillRect(random() * 512, random() * 256, 40 + random() * 120, 2 + random() * 4);
+    }
+  });
+  const planet = new THREE.Mesh(
+    new THREE.SphereGeometry(0.3, 64, 48),
+    new THREE.MeshStandardMaterial({ map: planetTexture, roughness: 0.9, emissive: 0xff9a50, emissiveIntensity: 0.18 }),
   );
-  halo.scale.setScalar(1.9);
-  halo.position.z = -0.02;
-  const rays = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), glowMaterial(coronaTexture(), 0.8));
-  rays.scale.setScalar(2.4);
-  rays.position.z = -0.04;
-  sun.add(halo, rays);
+  planet.rotation.z = 0.35;
+  sun.add(planet);
+  const ringTexture = canvasTexture(512, 16, (context) => {
+    for (let x = 0; x < 512; x += 1) {
+      const t = x / 512;
+      const alpha = 0.15 + 0.6 * Math.abs(Math.sin(t * 19)) * (1 - Math.abs(t - 0.5) * 1.2);
+      context.fillStyle = `rgba(255, 222, 180, ${alpha.toFixed(3)})`;
+      context.fillRect(x, 0, 1, 16);
+    }
+  });
+  const ringGeometry = new THREE.RingGeometry(0.4, 0.62, 128, 1);
+  {
+    // Map the strip texture radially across the ring.
+    const position = ringGeometry.attributes.position as ThreeTypes.BufferAttribute;
+    const uv = ringGeometry.attributes.uv as ThreeTypes.BufferAttribute;
+    for (let i = 0; i < position.count; i += 1) {
+      const r = Math.hypot(position.getX(i), position.getY(i));
+      uv.setXY(i, (r - 0.4) / 0.22, 0.5);
+    }
+  }
+  const rays = new THREE.Mesh(ringGeometry, new THREE.MeshBasicMaterial({ map: ringTexture, transparent: true, side: THREE.DoubleSide, depthWrite: false, toneMapped: false }));
+  rays.rotation.set(1.2, 0.2, 0.35);
+  sun.add(rays);
+  const planetGlow = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 1),
+    glowMaterial(glowTexture([[0, "rgba(255,200,140,0.5)"], [0.4, "rgba(255,170,110,0.16)"], [0.75, "rgba(255,160,100,0)"], [1, "rgba(255,160,100,0)"]]), 1),
+  );
+  planetGlow.scale.setScalar(1.7);
+  planetGlow.position.z = -0.35;
+  sun.add(planetGlow);
   world.add(sun);
 
-  // ---------- Moon and stars: shown instead of the sun in dark mode ----------
   const moon = new THREE.Group();
   moon.position.copy(sun.position);
-  const moonSurface = new THREE.MeshStandardMaterial({
-    color: 0xe9edf6,
-    roughness: 0.95,
-    emissive: 0xc9d4ff,
-    emissiveIntensity: 0.32,
-  });
+  const moonSurface = new THREE.MeshStandardMaterial({ color: 0xe9edf6, roughness: 0.95, emissive: 0xc9d4ff, emissiveIntensity: 0.32 });
   moon.add(new THREE.Mesh(roughen(new THREE.SphereGeometry(0.26, 64, 48), 0.004, 6, 17), moonSurface));
-  // Shallow craters on the side facing the viewer.
   const craterMaterial = new THREE.MeshStandardMaterial({ color: 0xa3abbe, roughness: 1, emissive: 0x7c88ac, emissiveIntensity: 0.25 });
-  const craters: Array<[number, number, number]> = [[-0.09, 0.08, 0.05], [0.07, -0.06, 0.04], [0.1, 0.1, 0.028], [-0.04, -0.12, 0.03], [-0.13, -0.02, 0.022]];
-  craters.forEach(([cx, cy, r]) => {
+  ([[-0.09, 0.08, 0.05], [0.07, -0.06, 0.04], [0.1, 0.1, 0.028], [-0.04, -0.12, 0.03], [-0.13, -0.02, 0.022]] as const).forEach(([cx, cy, r]) => {
     const cz = Math.sqrt(Math.max(0, 0.26 * 0.26 - cx * cx - cy * cy));
     const crater = new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), craterMaterial);
     crater.position.set(cx, cy, cz - r * 0.55);
@@ -1229,11 +1136,7 @@ function buildWorld(builder: Builder) {
   stars.visible = false;
   world.add(stars);
 
-  // A few bigger four-point sparkles that twinkle.
-  const sparkleCanvas = document.createElement("canvas");
-  sparkleCanvas.width = sparkleCanvas.height = 128;
-  {
-    const context = sparkleCanvas.getContext("2d")!;
+  const sparkleTexture = canvasTexture(128, 128, (context) => {
     const glow = context.createRadialGradient(64, 64, 0, 64, 64, 30);
     glow.addColorStop(0, "rgba(255,255,240,1)");
     glow.addColorStop(1, "rgba(255,245,200,0)");
@@ -1248,9 +1151,7 @@ function buildWorld(builder: Builder) {
     }
     context.closePath();
     context.fill();
-  }
-  const sparkleTexture = new THREE.CanvasTexture(sparkleCanvas);
-  sparkleTexture.colorSpace = THREE.SRGBColorSpace;
+  });
   const sparkles: Array<{ mesh: ThreeTypes.Mesh; material: ThreeTypes.MeshBasicMaterial; phase: number; size: number }> = [];
   ([[-1.35, 2.85, 0.32], [-0.35, 3.15, 0.24], [0.45, 2.75, 0.2], [1.6, 3.05, 0.26], [-1.6, 1.9, 0.2], [1.75, 1.75, 0.18]] as const).forEach(([x, y, size], i) => {
     const material = new THREE.MeshBasicMaterial({ map: sparkleTexture, transparent: true, opacity: 0, depthWrite: false, toneMapped: false });
@@ -1262,106 +1163,95 @@ function buildWorld(builder: Builder) {
     sparkles.push({ mesh, material, phase: i * 1.3, size });
   });
 
-  // ---------- Airplane: crosses the sky by day, trailing a contrail ----------
-  const airplane = new THREE.Group();
-  const planeBody = new THREE.Group();
-  airplane.add(planeBody);
-  const hull = pbr(0xf7f8fb, { roughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.2 });
-  const stripe = pbr(0x3b6fe0, { roughness: 0.4 });
-  const glass = pbr(0x1c2a44, { roughness: 0.15 });
-  // Fuselage along +x with a rounded nose and a tapered tail.
-  planeBody.add(part(new THREE.CapsuleGeometry(0.034, 0.26, 8, 20), hull, { shadow: false, rotation: [0, 0, Math.PI / 2] }));
-  planeBody.add(part(new THREE.ConeGeometry(0.034, 0.1, 20), hull, { shadow: false, position: [-0.175, 0.012, 0], rotation: [0, 0, Math.PI / 2 + 0.25], scale: [1, 1, 0.9] }));
-  planeBody.add(part(new THREE.BoxGeometry(0.28, 0.009, 0.071), stripe, { shadow: false, position: [0, -0.004, 0] }));
-  planeBody.add(part(new THREE.BoxGeometry(0.03, 0.012, 0.06), glass, { shadow: false, position: [0.152, 0.015, 0], rotation: [0, 0, -0.5] }));
-  for (let i = 0; i < 7; i += 1) {
-    planeBody.add(part(new THREE.SphereGeometry(0.005, 8, 6), glass, { shadow: false, position: [0.1 - i * 0.03, 0.013, 0.033] }));
-  }
-  // Swept wings with engines, tail fin and stabilisers.
-  const planeWing = new THREE.ShapeGeometry(new THREE.Shape().moveTo(0.03, 0).lineTo(-0.03, 0).lineTo(-0.08, 0.2).lineTo(-0.05, 0.2).closePath());
-  for (const side of [-1, 1]) {
-    planeBody.add(part(planeWing, hull, { shadow: false, position: [0.02, -0.012, 0], rotation: [side * Math.PI / 2, 0, 0], scale: [1, side, 1] }));
-    planeBody.add(part(new THREE.CapsuleGeometry(0.012, 0.03, 6, 12), pbr(0xc9ced8, { roughness: 0.35, metalness: 0.4 }), { shadow: false, position: [-0.005, -0.026, side * 0.07], rotation: [0, 0, Math.PI / 2] }));
-    planeBody.add(part(new THREE.ShapeGeometry(new THREE.Shape().moveTo(0.015, 0).lineTo(-0.015, 0).lineTo(-0.04, 0.07).lineTo(-0.025, 0.07).closePath()), hull, { shadow: false, position: [-0.16, 0.012, 0], rotation: [side * Math.PI / 2, 0, 0], scale: [1, side, 1] }));
-  }
-  planeBody.add(part(new THREE.ShapeGeometry(new THREE.Shape().moveTo(0.03, 0).lineTo(-0.02, 0).lineTo(-0.05, 0.085).lineTo(-0.025, 0.085).closePath()), stripe, { shadow: false, position: [-0.15, 0.025, 0], rotation: [0, 0, 0] }));
-  // Contrail: a soft white streak fading out behind the plane.
-  const trailCanvas = document.createElement("canvas");
-  trailCanvas.width = 256;
-  trailCanvas.height = 32;
-  {
-    const context = trailCanvas.getContext("2d")!;
-    const along = context.createLinearGradient(0, 0, 256, 0);
-    along.addColorStop(0, "rgba(255,255,255,0)");
-    along.addColorStop(1, "rgba(255,255,255,0.85)");
-    context.fillStyle = along;
-    context.fillRect(0, 0, 256, 32);
-    context.globalCompositeOperation = "destination-in";
-    const across = context.createLinearGradient(0, 0, 0, 32);
-    across.addColorStop(0, "rgba(0,0,0,0)");
-    across.addColorStop(0.5, "rgba(0,0,0,1)");
-    across.addColorStop(1, "rgba(0,0,0,0)");
-    context.fillStyle = across;
-    context.fillRect(0, 0, 256, 32);
-  }
-  const trailTexture = new THREE.CanvasTexture(trailCanvas);
-  trailTexture.colorSpace = THREE.SRGBColorSpace;
-  const contrail = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.4, 0.05),
-    new THREE.MeshBasicMaterial({ map: trailTexture, transparent: true, opacity: 0.8, depthWrite: false }),
-  );
-  contrail.position.set(-0.9, 0, -0.01);
-  airplane.add(contrail);
-  airplane.position.set(-2.6, 2.95, -1.5);
-  world.add(airplane);
-
-  // ---------- Clouds: soft lumpy cumulus drifting across ----------
-  const clouds: Array<{ group: ThreeTypes.Group; speed: number }> = [];
-  const cloudMaterial = pbr(C.cloud, { roughness: 1, sheen: 0.5, sheenColor: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.12 });
-  [
-    [-1.4, 2.05, -1.2, 0.95, 0.06],
-    [0.5, 2.6, -1.9, 0.75, 0.04],
-  ].forEach(([x, y, z, size, speed], c) => {
-    const group = new THREE.Group();
-    group.position.set(x, y, z);
-    group.scale.setScalar(size);
-    const puffs: Array<[number, number, number, number]> = [
-      [0, 0, 0, 0.22], [0.24, 0.05, 0.02, 0.18], [-0.24, -0.01, 0.02, 0.17], [0.1, 0.15, -0.02, 0.17],
-      [-0.1, 0.12, 0.04, 0.15], [0.4, -0.02, 0, 0.13], [-0.4, -0.03, 0, 0.12], [0.02, -0.04, 0.14, 0.16], [0.18, -0.05, -0.12, 0.14],
-    ];
-    puffs.forEach(([px, py, pz, radius], i) => {
-      const puff = roughen(new THREE.IcosahedronGeometry(radius, 3), 0.08 * radius, 4, c * 13 + i * 2);
-      group.add(part(puff, cloudMaterial, { shadow: false, position: [px, py, pz], scale: [1, 0.8, 0.85] }));
-    });
-    world.add(group);
-    clouds.push({ group, speed });
-  });
-
-  // ---------- Butterflies looping around the island ----------
-  const butterflies: Array<{ group: ThreeTypes.Group; wings: ThreeTypes.Object3D[]; phase: number; radius: number; height: number }> = [];
-  const wingShape = new THREE.Shape()
-    .moveTo(0, 0)
-    .bezierCurveTo(0.03, 0.06, 0.08, 0.06, 0.075, 0.015)
-    .bezierCurveTo(0.072, -0.01, 0.045, -0.012, 0.03, -0.005)
-    .bezierCurveTo(0.05, -0.03, 0.03, -0.06, 0.008, -0.04)
-    .lineTo(0, 0);
-  const wingGeometry = new THREE.ShapeGeometry(wingShape, 12);
-  [[0xff8fb1, 0, 0.95, 1.2], [0xffd84f, 2.4, 1.15, 0.8]].forEach(([color, phase, radius, height]) => {
-    const group = new THREE.Group();
-    const wingMaterial = pbr(color, { roughness: 0.5, doubleSide: true, emissive: color, emissiveIntensity: 0.12 });
-    const wings: ThreeTypes.Object3D[] = [];
-    for (const side of [-1, 1]) {
-      const pivot = new THREE.Group();
-      pivot.add(part(wingGeometry, wingMaterial, { shadow: false, scale: [side, 1, 1] }));
-      group.add(pivot);
-      wings.push(pivot);
+  // ---------- Spaceships crossing the sky ----------
+  const saucerLights = [0x5ee7ff, 0xff8a3d, 0xb48cff, 0x7dff9a];
+  const buildSaucer = (scale: number) => {
+    const ship = new THREE.Group();
+    const body = new THREE.Group();
+    ship.add(body);
+    body.add(part(new THREE.SphereGeometry(0.22, 48, 24), brightSteel, { shadow: false, scale: [1, 0.22, 1] }));
+    body.add(part(new THREE.TorusGeometry(0.21, 0.018, 10, 64), steel, { shadow: false, rotation: [Math.PI / 2, 0, 0] }));
+    body.add(part(new THREE.SphereGeometry(0.09, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), pbr(0x8ff1ff, { roughness: 0.05, metalness: 0.1, clearcoat: 1, opacity: 0.75, emissive: 0x2bb8d8, emissiveIntensity: 0.4 }), { shadow: false, position: [0, 0.035, 0] }));
+    const lights: ThreeTypes.Mesh[] = [];
+    for (let i = 0; i < 10; i += 1) {
+      const a = (i / 10) * Math.PI * 2;
+      const light = new THREE.Mesh(new THREE.SphereGeometry(0.012, 8, 6), neon(saucerLights[i % saucerLights.length]));
+      light.position.set(Math.cos(a) * 0.17, -0.03, Math.sin(a) * 0.17);
+      body.add(light);
+      lights.push(light);
     }
-    group.add(part(new THREE.CapsuleGeometry(0.007, 0.05, 4, 8), pbr(0x1e1a18, { roughness: 0.6 }), { shadow: false, rotation: [Math.PI / 2, 0, 0] }));
-    world.add(group);
-    butterflies.push({ group, wings, phase, radius, height });
+    const tractor = new THREE.Mesh(new THREE.CircleGeometry(0.07, 32), neon(CYAN_GLOW, 0.9));
+    tractor.rotation.x = Math.PI / 2;
+    tractor.position.y = -0.05;
+    body.add(tractor);
+    ship.scale.setScalar(scale);
+    world.add(ship);
+    return { ship, body, lights };
+  };
+  const ships = [
+    { ...buildSaucer(1), speed: 0.3, y: 2.95, z: -1.4, dir: 1, offset: 0 },
+    { ...buildSaucer(0.55), speed: 0.16, y: 2.35, z: -2.1, dir: -1, offset: 2.6 },
+  ];
+  ships.forEach((ship) => {
+    ship.ship.position.set(ship.dir > 0 ? -3.2 + ship.offset : 3.2 - ship.offset, ship.y, ship.z);
   });
 
-  return { world, swayers, rays, clouds, butterflies, sun, moon, stars, starMaterial, sparkles, airplane, planeBody, wind, groundAt };
+  function update(elapsed: number, delta: number) {
+    // Deck and rim pulse gently; thruster flickers.
+    const pulse = 0.5 + 0.5 * Math.sin(elapsed * 2.2);
+    deckMaterial.emissiveIntensity = 1.1 + pulse * 0.6;
+    rimGlow.color.setHSL(0.53, 1, 0.55 + pulse * 0.12);
+    const flicker = 0.85 + Math.sin(elapsed * 31) * 0.06 + Math.sin(elapsed * 17) * 0.05;
+    (beam.material as ThreeTypes.MeshBasicMaterial).opacity = 0.5 * flicker;
+    beam.scale.set(1, 0.95 + flicker * 0.1, 1);
+    core.scale.setScalar(0.92 + flicker * 0.1);
+    blinkers.forEach(({ mesh, phase }) => {
+      mesh.visible = Math.sin(elapsed * 2.6 + phase) > -0.3;
+    });
+    deckLight.intensity = 1.1 + pulse * 0.6;
+
+    // Holo rings: the floor ring breathes, the scan ring sweeps up and down the robot.
+    floorRing.scale.setScalar(1 + pulse * 0.06);
+    (floorRing.material as ThreeTypes.MeshBasicMaterial).opacity = 0.45 + pulse * 0.35;
+    const sweep = (Math.sin(elapsed * 0.9) + 1) / 2;
+    scanRing.position.y = 0.05 + sweep * 1.75;
+    (scanRing.material as ThreeTypes.MeshBasicMaterial).opacity = 0.25 + 0.6 * Math.sin(sweep * Math.PI);
+    orbitRing.rotation.set(Math.PI / 2 + Math.sin(elapsed * 0.5) * 0.35, elapsed * 0.6, Math.cos(elapsed * 0.4) * 0.25);
+
+    panels.forEach(({ mesh, baseY, phase }) => {
+      mesh.position.y = baseY + Math.sin(elapsed * 1.1 + phase) * 0.04;
+      (mesh.material as ThreeTypes.MeshBasicMaterial).opacity = 0.8 + Math.sin(elapsed * 7 + phase) * 0.04 + (Math.sin(elapsed * 0.7 + phase) > 0.97 ? -0.4 : 0);
+    });
+
+    drones.forEach(({ group, rotors, eye, phase, radius, height }) => {
+      const t = elapsed * 0.42 + phase;
+      group.position.set(Math.sin(t) * radius, height + Math.sin(t * 2.1) * 0.08, Math.cos(t) * radius * 0.6);
+      group.rotation.set(Math.sin(t * 2.1) * 0.08, t + Math.PI / 2, Math.cos(t) * 0.18);
+      rotors.forEach((rotor, i) => {
+        rotor.rotation.z = elapsed * 40 + i;
+      });
+      eye.visible = Math.sin(elapsed * 3 + phase) > -0.6;
+    });
+
+    rays.rotation.z = 0.35 + Math.sin(elapsed * 0.1) * 0.02;
+    planet.rotation.y = elapsed * 0.08;
+
+    ships.forEach((ship) => {
+      ship.ship.position.x += delta * ship.speed * ship.dir;
+      if (ship.dir > 0 && ship.ship.position.x > 3.4) ship.ship.position.x = -3.4;
+      if (ship.dir < 0 && ship.ship.position.x < -3.4) ship.ship.position.x = 3.4;
+      ship.ship.position.y = ship.y + Math.sin(elapsed * 0.8 + ship.offset) * 0.05;
+      ship.body.rotation.set(Math.sin(elapsed * 0.9 + ship.offset) * 0.06, elapsed * 1.5 * ship.dir, -0.12 * ship.dir);
+      ship.lights.forEach((light, i) => {
+        light.visible = (Math.floor(elapsed * 6) + i) % 3 !== 0;
+      });
+    });
+  }
+
+  // The deck is flat at y = 0.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const groundAt = (_x: number, _z: number) => 0;
+  return { world, sun, moon, stars, starMaterial, sparkles, update, groundAt };
 }
 
 // ======================= Component =======================
@@ -1402,17 +1292,15 @@ export function ToyAvatar() {
       const rig = new THREE.Group();
       scene.add(rig);
 
-      const { world, swayers, rays, clouds, butterflies, sun, moon, stars, starMaterial, sparkles, airplane, planeBody, wind, groundAt } = buildWorld(builder);
+      const { world, sun, moon, stars, starMaterial, sparkles, update: updateWorld, groundAt } = buildWorld(builder);
       rig.add(world);
 
-      const { character, torso, head, eyes, brows, arms, legs, mouth } = buildCharacter(builder);
+      // The robot loads in after the island is up; this group holds it.
+      const character = new THREE.Group();
       character.position.set(-0.05, groundAt(-0.05, 0.05), 0.05);
+      character.rotation.y = 0.12;
       rig.add(character);
 
-      const { puppy, body: puppyBody, head: puppyHead, tail, tongue, ears } = buildPuppy(builder);
-      puppy.position.set(0.62, groundAt(0.62, 0.3), 0.3);
-      puppy.rotation.y = -0.35;
-      rig.add(puppy);
 
       // Soft contact shadows on the grass (the key light adds the real cast shadows).
       const shadowCanvas = document.createElement("canvas");
@@ -1433,7 +1321,6 @@ export function ToyAvatar() {
         return mesh;
       };
       const characterShadow = addShadow(-0.05, 0.08, 0.8, 0.36);
-      addShadow(0.62, 0.3, 0.5, 0.36);
 
       const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       const lighting = await lightScene(THREE, renderer, scene, { shadows: true });
@@ -1453,8 +1340,8 @@ export function ToyAvatar() {
       const nightRim = new THREE.Color(0x8ea6ff);
       const daySky = new THREE.Color(0xdcefff);
       const nightSky = new THREE.Color(0x6f80c8);
-      const dayGround = new THREE.Color(0x5b8f3e);
-      const nightGround = new THREE.Color(0x2c3d3a);
+      const dayGround = new THREE.Color(0x4a5468);
+      const nightGround = new THREE.Color(0x1c2233);
       function applyNight() {
         const t = night * night * (3 - 2 * night);
         lighting.key.color.copy(dayKey).lerp(nightKey, t);
@@ -1479,8 +1366,6 @@ export function ToyAvatar() {
           mesh.scale.setScalar(size * (0.8 + 0.3 * twinkle));
           mesh.rotation.z = Math.sin(elapsed * 0.4 + phase) * 0.2;
         });
-        airplane.visible = t < 0.999;
-        airplane.scale.setScalar(Math.max(0.001, 1 - t));
       }
       const themeObserver = new MutationObserver(() => {
         nightTarget = isNight() ? 1 : 0;
@@ -1492,6 +1377,158 @@ export function ToyAvatar() {
         sync();
       });
       themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+      // ---------- Robot ----------
+      type Robot = {
+        mixer: ThreeTypes.AnimationMixer;
+        actions: Map<string, ThreeTypes.AnimationAction>;
+        idle: ThreeTypes.AnimationAction;
+        current: ThreeTypes.AnimationAction | null;
+        inner: ThreeTypes.Group;
+        hips?: ThreeTypes.Object3D;
+        look: Array<{ bone: ThreeTypes.Object3D; weight: number }>;
+        anchor: ThreeTypes.Vector3 | null;
+        age: number;
+      };
+      let robot: Robot | null = null;
+      let clickIndex = 0;
+      let idleFor = 0;
+      let nextIdleMove = 9;
+      let lookWeight = 1;
+
+      async function loadRobot() {
+        const [{ GLTFLoader }, { DRACOLoader }] = await Promise.all([
+          import("three/examples/jsm/loaders/GLTFLoader.js"),
+          import("three/examples/jsm/loaders/DRACOLoader.js"),
+        ]);
+        const draco = new DRACOLoader().setDecoderPath("/draco/");
+        const gltf = await new GLTFLoader().setDRACOLoader(draco).loadAsync(ROBOT_URL);
+        draco.dispose();
+        if (disposed) return;
+
+        const model = gltf.scene;
+        model.traverse((node) => {
+          const mesh = node as ThreeTypes.Mesh;
+          if (!mesh.isMesh) return;
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
+          mesh.frustumCulled = false;
+          disposables.add(mesh.geometry);
+          const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+          materials.forEach((material) => {
+            disposables.add(material);
+            Object.values(material).forEach((value) => {
+              if (value && (value as ThreeTypes.Texture).isTexture) disposables.add(value as ThreeTypes.Texture);
+            });
+          });
+        });
+        // Same height as the old figure, feet on the grass, centred.
+        model.updateMatrixWorld(true);
+        const box = new THREE.Box3().setFromObject(model, true);
+        const height = box.max.y - box.min.y;
+        model.scale.multiplyScalar(1.85 / Math.max(height, 0.001));
+        model.updateMatrixWorld(true);
+        box.setFromObject(model, true);
+        const center = box.getCenter(new THREE.Vector3());
+        model.position.x -= center.x;
+        model.position.z -= center.z;
+        model.position.y -= box.min.y;
+        const inner = new THREE.Group();
+        inner.add(model);
+        character.add(inner);
+
+        const find = (name: string) => model.getObjectByName(name) ?? model.getObjectByName(name.replace(":", ""));
+        const mixer = new THREE.AnimationMixer(model);
+        const actions = new Map(gltf.animations.map((clip) => [clip.name, mixer.clipAction(clip)]));
+        const idle = actions.get("Idle") ?? [...actions.values()][0];
+        idle.play();
+        mixer.addEventListener("finished", (event) => {
+          if (!robot || event.action !== robot.current) return;
+          robot.idle.reset().play();
+          robot.idle.crossFadeFrom(robot.current, 0.45, false);
+          robot.current = null;
+          idleFor = 0;
+        });
+        robot = {
+          mixer,
+          actions,
+          idle,
+          current: null,
+          inner,
+          hips: find("mixamorig:Hips"),
+          look: [
+            { bone: find("mixamorig:Head"), weight: 0.6 },
+            { bone: find("mixamorig:Neck"), weight: 0.25 },
+            { bone: find("mixamorig:Spine2"), weight: 0.15 },
+          ].filter((entry): entry is { bone: ThreeTypes.Object3D; weight: number } => Boolean(entry.bone)),
+          anchor: null,
+          age: 0,
+        };
+        sync();
+      }
+
+      /** Plays a one-shot move, cross-fading from whatever is playing, then returns to idle. */
+      function playMove(name: string) {
+        if (!robot) return;
+        const next = robot.actions.get(name);
+        if (!next || next === robot.current) return;
+        const from = robot.current ?? robot.idle;
+        next.reset();
+        next.setLoop(THREE.LoopOnce, 1);
+        next.clampWhenFinished = true;
+        next.play();
+        next.crossFadeFrom(from, 0.35, false);
+        robot.current = next;
+        idleFor = 0;
+      }
+
+      // Rotates a bone in world space, independent of the rig's own axes.
+      const parentWorld = new THREE.Quaternion();
+      const parentInverse = new THREE.Quaternion();
+      const turn = new THREE.Quaternion();
+      const turnEuler = new THREE.Euler(0, 0, 0, "YXZ");
+      function addWorldRotation(bone: ThreeTypes.Object3D, yaw: number, pitch: number) {
+        bone.parent?.getWorldQuaternion(parentWorld);
+        parentInverse.copy(parentWorld).invert();
+        turnEuler.set(pitch, yaw, 0);
+        turn.setFromEuler(turnEuler);
+        bone.quaternion.premultiply(parentWorld).premultiply(turn).premultiply(parentInverse);
+      }
+      const hipsAt = new THREE.Vector3();
+
+      function updateRobot(delta: number) {
+        if (!robot) return;
+        robot.age += delta;
+        robot.mixer.update(delta);
+        // Keep the hips over the same spot so dances and gestures don't wander off the island.
+        if (robot.hips) {
+          character.updateMatrixWorld(true);
+          robot.hips.getWorldPosition(hipsAt);
+          character.worldToLocal(hipsAt);
+          if (!robot.anchor) robot.anchor = hipsAt.clone();
+          else {
+            robot.inner.position.x -= hipsAt.x - robot.anchor.x;
+            robot.inner.position.z -= hipsAt.z - robot.anchor.z;
+          }
+        }
+        // Head follows the cursor, mostly while idling.
+        lookWeight += ((robot.current ? 0.25 : 1) - lookWeight) * (1 - Math.exp(-delta * 4));
+        robot.look.forEach(({ bone, weight }) => {
+          addWorldRotation(bone, gaze.x * 0.85 * weight * lookWeight, -gaze.y * 0.45 * weight * lookWeight);
+        });
+        // Every so often while idle, do a small gesture on his own.
+        if (!robot.current) {
+          idleFor += delta;
+          if (idleFor > nextIdleMove) {
+            playMove(IDLE_MOVES[Math.floor(Math.random() * IDLE_MOVES.length)]);
+            nextIdleMove = 12 + Math.random() * 8;
+          }
+        }
+      }
+
+      loadRobot().catch(() => {
+        // The island still works without the robot.
+      });
 
       // ---------- Camera ----------
       const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 60);
@@ -1518,8 +1555,6 @@ export function ToyAvatar() {
       let lastX = 0;
       let dragYaw = 0;
       let dragVelocity = 0;
-      let waveTime = -1;
-      let hopTime = -1;
 
       // The scroll guide borrows Suraj from the island while it follows the reader.
       let presenceTarget = 1;
@@ -1560,8 +1595,8 @@ export function ToyAvatar() {
           renderer.domElement.releasePointerCapture(event.pointerId);
         }
         if (dragMoved < 6) {
-          if (waveTime < 0) waveTime = 0;
-          if (hopTime < 0) hopTime = 0;
+          playMove(CLICK_MOVES[clickIndex % CLICK_MOVES.length]);
+          clickIndex += 1;
         }
       }
       function resetGaze() {
@@ -1575,15 +1610,14 @@ export function ToyAvatar() {
       let elapsed = 0;
       let intro = 0;
       let introWaveDone = false;
-      const WAVE_SECONDS = 2;
 
       function pose(delta: number) {
         elapsed += delta;
-        wind.value = elapsed;
         intro = Math.min(1, intro + delta / 1.1);
-        if (!introWaveDone && elapsed > 1.3) {
+        if (!introWaveDone && robot && robot.age > 0.8) {
           introWaveDone = true;
-          if (waveTime < 0) waveTime = 0;
+          playMove("Waving");
+          clickIndex = 1;
         }
         // With no recent cursor movement, glance around on his own.
         if (elapsed - lastPointer > 3) {
@@ -1593,116 +1627,17 @@ export function ToyAvatar() {
           );
         }
         gaze.lerp(gazeTarget, 1 - Math.exp(-delta * 7));
-        const breathe = Math.sin(elapsed * 1.7);
 
-        // --- Suraj: breathes, slowly shifts his weight from foot to foot ---
-        const shift = Math.sin(elapsed * 0.42);
-        torso.scale.set(1 + breathe * 0.006, 1 + breathe * 0.01, 1);
-        torso.position.x = shift * 0.014;
-        torso.rotation.z = -shift * 0.035 + Math.sin(elapsed * 0.7) * 0.01;
-        torso.rotation.y = gaze.x * 0.14 + shift * 0.04;
-        legs.forEach((hip, index) => {
-          const side = index === 0 ? -1 : 1;
-          hip.rotation.z = side * 0.025 + shift * 0.03;
-          hip.rotation.x = Math.max(0, side * shift) * 0.04;
-        });
-        head.rotation.y = gaze.x * 0.55;
-        head.rotation.x = -gaze.y * 0.28;
-        eyes.forEach(({ iris }) => {
-          iris.position.x = gaze.x * 0.011;
-          iris.position.y = gaze.y * 0.009;
-        });
-        const cycle = (elapsed + 0.8) % 4.2;
-        const blinkAt = (center: number) => Math.exp(-Math.pow((cycle - center) / 0.06, 2));
-        const doubleBlink = Math.floor((elapsed + 0.8) / 4.2) % 3 === 1 ? blinkAt(3.95) : 0;
-        const blink = Math.max(blinkAt(3.7), doubleBlink);
-        eyes.forEach(({ group }) => group.scale.set(1, Math.max(0.08, 1 - blink), 1));
-
-        let raise = 0;
-        if (waveTime >= 0) {
-          waveTime += delta;
-          const t = waveTime / WAVE_SECONDS;
-          raise = t < 0.18 ? t / 0.18 : t > 0.82 ? Math.max(0, (1 - t) / 0.18) : 1;
-          raise = raise * raise * (3 - 2 * raise);
-          if (t >= 1) waveTime = -1;
-        }
-        arms.forEach(({ shoulder, elbow, hand, side }) => {
-          const swing = Math.sin(elapsed * 1.7 + side) * 0.03;
-          // Relaxed rest pose: arms a little out from the body, elbows softly bent.
-          shoulder.position.y = 0.5 + breathe * 0.004;
-          if (side === -1) {
-            // Waves with the arm away from the puppy, palm turned to the viewer.
-            shoulder.rotation.z = -0.14 - raise * 2.35 + shift * 0.02;
-            shoulder.rotation.x = swing - raise * 0.35;
-            elbow.rotation.z = -raise * (0.5 + Math.sin(elapsed * 13) * 0.42);
-            elbow.rotation.x = -0.22 * (1 - raise);
-            hand.rotation.y = raise * -0.9;
-            hand.rotation.z = raise * Math.sin(elapsed * 13) * 0.25;
-          } else {
-            shoulder.rotation.z = 0.14 - shift * 0.02;
-            shoulder.rotation.x = -swing;
-            elbow.rotation.z = 0.05;
-            elbow.rotation.x = -0.24 + Math.sin(elapsed * 1.1) * 0.02;
-          }
-        });
-        head.rotation.z = -raise * 0.1 + shift * 0.02;
-        torso.rotation.z += raise * 0.05;
-        // Expression: brows lift and the smile opens while waving.
-        brows.forEach((brow) => {
-          brow.position.y = brow.userData.baseY + raise * 0.012 + gaze.y * 0.004;
-        });
-        mouth.smile.visible = raise < 0.35;
-        mouth.open.scale.set(1, Math.max(0.001, raise), 1);
-
-        // --- Puppy: looks at the cursor, wags, hops on click ---
-        let hop = 0;
-        if (hopTime >= 0) {
-          hopTime += delta;
-          const t = Math.min(1, hopTime / 0.6);
-          hop = Math.sin(t * Math.PI);
-          if (t >= 1) hopTime = -1;
-        }
-        puppyBody.position.y = hop * 0.16;
-        puppyBody.rotation.x = -hop * 0.15;
-        puppyHead.rotation.y = gaze.x * 0.6 + 0.3;
-        puppyHead.rotation.x = -gaze.y * 0.3;
-        puppyHead.rotation.z = Math.sin(elapsed * 0.9) * 0.08 + (elapsed - lastPointer > 3 ? Math.sin(elapsed * 0.3) * 0.12 : 0);
-        tail.rotation.z = Math.sin(elapsed * (hop > 0 ? 22 : 11)) * 0.7;
-        // Occasional quick ear flick.
-        ears.forEach((ear, index) => {
-          const flick = Math.max(0, Math.sin(elapsed * 2.1 + index * 2.6) - 0.96) * 25;
-          ear.rotation.z = ear.userData.baseZ + flick * (index === 0 ? 0.35 : -0.35);
-        });
-        tongue.scale.y = 0.5 + Math.max(0, Math.sin(elapsed * 6)) * 0.25;
-        puppyBody.scale.y = 1 + Math.sin(elapsed * 3.2) * 0.015;
+        // --- Robot ---
+        updateRobot(delta);
 
         // --- World ---
-        swayers.forEach(({ object, phase }) => {
-          object.rotation.z = Math.sin(elapsed * 1.3 + phase) * 0.05;
-        });
-        rays.rotation.z = elapsed * 0.08;
+        updateWorld(elapsed, delta);
         night += (nightTarget - night) * (1 - Math.exp(-delta * 3));
         if (Math.abs(nightTarget - night) < 0.001) night = nightTarget;
         applyNight();
-        if (night < 0.999) sun.scale.multiplyScalar(1 + Math.sin(elapsed * 1.5) * 0.02);
+        if (night < 0.999) sun.scale.multiplyScalar(1 + Math.sin(elapsed * 1.5) * 0.015);
         moon.rotation.z = Math.sin(elapsed * 0.2) * 0.05;
-        airplane.position.x += delta * 0.22;
-        if (airplane.position.x > 3.2) airplane.position.x = -3.2;
-        airplane.position.y = 2.95 + Math.sin(elapsed * 0.6) * 0.04;
-        planeBody.rotation.x = Math.sin(elapsed * 0.9) * 0.08;
-        planeBody.rotation.z = Math.sin(elapsed * 0.6 + 1) * 0.03;
-        clouds.forEach(({ group, speed }) => {
-          group.position.x += speed * delta;
-          if (group.position.x > 2.4) group.position.x = -2.4;
-        });
-        butterflies.forEach(({ group, wings, phase, radius, height }) => {
-          const t = elapsed * 0.55 + phase;
-          group.position.set(Math.sin(t) * radius, height + Math.sin(t * 2.3) * 0.12, Math.cos(t) * radius * 0.55);
-          group.rotation.y = t + Math.PI / 2;
-          const flap = Math.sin(elapsed * 22 + phase) * 0.9;
-          wings[0].rotation.y = flap;
-          wings[1].rotation.y = -flap;
-        });
 
         // --- Whole island: float, cursor parallax, drag spin with spring back ---
         if (!dragging) {
@@ -1717,10 +1652,12 @@ export function ToyAvatar() {
         rig.scale.setScalar(0.85 + ease * 0.15);
         // Pop off / back onto the island when the scroll guide takes over.
         presence += (presenceTarget - presence) * (1 - Math.exp(-delta * 9));
-        character.visible = presence > 0.02;
-        character.scale.setScalar(Math.max(0.001, presence));
+        const arrive = robot ? 1 - Math.pow(1 - Math.min(1, robot.age / 0.7), 3) : 0;
+        const shown = presence * arrive;
+        character.visible = shown > 0.02;
+        character.scale.setScalar(Math.max(0.001, shown));
         character.position.y = groundAt(-0.05, 0.05) + (1 - presence) * 0.6;
-        characterShadow.scale.setScalar(Math.max(0.001, presence) * (1 - raise * 0.04));
+        characterShadow.scale.setScalar(Math.max(0.001, shown));
       }
 
       function render() {
@@ -1795,8 +1732,10 @@ export function ToyAvatar() {
               render();
             },
             wave() {
-              waveTime = 0;
-              hopTime = 0;
+              playMove("Waving");
+            },
+            move(name: string) {
+              playMove(name);
             },
             look(x: number, y: number) {
               lastPointer = elapsed + 1000;
@@ -1848,9 +1787,12 @@ export function ToyAvatar() {
       </div>
       <div ref={hostRef} className="hero-orbit__canvas-host" />
       <figcaption className="hero-orbit__description">
-        A 3D scene of Suraj Singh in a navy suit standing on a floating grass island with trees,
-        flowers, a puppy, butterflies, clouds and a sun. He follows the cursor, waves when clicked,
-        and the island can be dragged to spin.
+        A futuristic 3D scene of a robot standing on a floating hover-pad with glowing rings,
+        holographic panels, orbiting drones and flying saucers, under a ringed planet by day or a
+        moon and stars by night. The robot follows the cursor with its head, waves,
+        salutes, claps or dances when clicked, and the island can be dragged to spin. Robot model
+        rig by Beneth Borromeo (CC BY 4.0), animations from Adobe Mixamo, fan-made Chappie
+        character © Sony Pictures / MRC.
       </figcaption>
     </figure>
   );
