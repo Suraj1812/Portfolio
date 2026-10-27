@@ -20,16 +20,6 @@ const buildWords = [
   { text: "interactive web", color: "--yellow" },
 ];
 
-const stickers = [
-  { label: "LLMs", color: "--lime", x: "8%", y: "34%", tilt: "-8deg", delay: "0s" },
-  { label: "Next.js", color: "#fff9ef", x: "4%", y: "52%", tilt: "7deg", delay: "-1.2s" },
-  { label: "RAG", color: "--cyan", x: "82%", y: "58%", tilt: "-5deg", delay: "-2.4s" },
-];
-
-function colorValue(color: string) {
-  return color.startsWith("--") ? `var(${color})` : color;
-}
-
 /** Cycles through what Suraj builds; stays on the first word for reduced motion. */
 function RotatingWord({ enabled }: { enabled: boolean }) {
   const [index, setIndex] = useState(0);
@@ -138,39 +128,6 @@ export function HeroSection() {
           </div>
 
           <HeroAvatar />
-
-          <div className="hero-bubble" aria-hidden="true">
-            <span>
-              Hey, I&apos;m Suraj <span className="hero-wave">👋</span>
-            </span>
-          </div>
-
-          <svg className="hero-arrow" viewBox="0 0 120 80" aria-hidden="true">
-            <path d="M6 70 C 30 70, 60 60, 78 30" />
-            <path d="M66 32 L 79 28 L 82 42" />
-          </svg>
-          <span className="hero-arrow-label" aria-hidden="true">
-            that&apos;s me!
-          </span>
-
-          {stickers.map((sticker) => (
-            <span
-              key={sticker.label}
-              className="hero-sticker"
-              aria-hidden="true"
-              style={
-                {
-                  "--x": sticker.x,
-                  "--y": sticker.y,
-                  "--tilt": sticker.tilt,
-                  "--delay": sticker.delay,
-                  "--sticker-color": colorValue(sticker.color),
-                } as CSSProperties
-              }
-            >
-              {sticker.label}
-            </span>
-          ))}
         </motion.div>
       </div>
     </section>

@@ -753,7 +753,7 @@ export function buildPuppy({ THREE, part, pbr }: Builder) {
 // ======================= World =======================
 /**
  * Futuristic stage: a floating hover-pad with glowing panel seams, a pulsing
- * rim and thrusters, holographic UI panels, orbiting drones, a scanner ring,
+ * rim and thrusters, holographic UI panels, orbiting drones,
  * a flying saucer, and a ringed planet by day / moon and stars by night.
  */
 function buildWorld(builder: Builder) {
@@ -947,12 +947,6 @@ function buildWorld(builder: Builder) {
   floorRing.rotation.x = -Math.PI / 2;
   floorRing.position.y = 0.01;
   world.add(floorRing);
-  const scanRing = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.006, 6, 96), holo(0.8));
-  scanRing.rotation.x = Math.PI / 2;
-  world.add(scanRing);
-  const orbitRing = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.004, 6, 128), holo(0.45));
-  orbitRing.position.y = 1.0;
-  world.add(orbitRing);
 
   // ---------- Holographic UI panels ----------
   const panelTexture = (kind: number) =>
@@ -1206,13 +1200,9 @@ function buildWorld(builder: Builder) {
     });
     deckLight.intensity = 1.1 + pulse * 0.6;
 
-    // Holo rings: the floor ring breathes, the scan ring sweeps up and down the robot.
+    // The holo ring on the deck breathes.
     floorRing.scale.setScalar(1 + pulse * 0.06);
     (floorRing.material as ThreeTypes.MeshBasicMaterial).opacity = 0.45 + pulse * 0.35;
-    const sweep = (Math.sin(elapsed * 0.9) + 1) / 2;
-    scanRing.position.y = 0.05 + sweep * 1.75;
-    (scanRing.material as ThreeTypes.MeshBasicMaterial).opacity = 0.25 + 0.6 * Math.sin(sweep * Math.PI);
-    orbitRing.rotation.set(Math.PI / 2 + Math.sin(elapsed * 0.5) * 0.35, elapsed * 0.6, Math.cos(elapsed * 0.4) * 0.25);
 
     panels.forEach(({ mesh, baseY, phase }) => {
       mesh.position.y = baseY + Math.sin(elapsed * 1.1 + phase) * 0.04;
