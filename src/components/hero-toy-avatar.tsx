@@ -20,8 +20,8 @@ export const C = {
   skin: 0xe4b28c,
   skinShade: 0xcb9772,
   hair: 0x171210,
-  tee: 0x151517,
-  jeans: 0x2b3449,
+  blazer: 0x1f2840,
+  trousers: 0x2f323b,
   suit: 0x252a45,
   lapel: 0x171b30,
   shirt: 0xf7f3ee,
@@ -358,8 +358,8 @@ export async function lightScene(
 /**
  * Suraj, modelled after his photo: a round, soft-jawed face with full cheeks,
  * warm skin, thick straight brows, dark almond eyes, a closed-lip smile and
- * short textured hair swept up and over to his right. Dressed as in the
- * photo: black crew-neck tee, dark jeans and white sneakers.
+ * short hair under a navy baseball cap. Dressed for work: navy
+ * blazer over a white shirt and tie, charcoal trousers and brown oxfords.
  */
 export function buildCharacter({ THREE, part, pbr }: Builder) {
   const skinSurface: Surface = { roughness: 0.62, sheen: 0.35, sheenRoughness: 0.6, sheenColor: 0xffc9ad };
@@ -369,19 +369,24 @@ export function buildCharacter({ THREE, part, pbr }: Builder) {
     skinShade: pbr(C.skinShade, skinSurface),
     hair: pbr(C.hair, hairSurface),
     hairLight: pbr(0x2b211c, hairSurface),
-    tee: pbr(C.tee, { roughness: 0.96, sheen: 0.35, sheenRoughness: 0.75, sheenColor: 0x45454c, texture: "cloth", bumpScale: 0.005 }),
-    rib: pbr(0x202024, { roughness: 0.95, texture: "cloth", bumpScale: 0.006 }),
-    jeans: pbr(C.jeans, { roughness: 0.95, sheen: 0.2, sheenColor: 0x6f7fa0, texture: "cloth", bumpScale: 0.008 }),
-    sneaker: pbr(0xf3f1ea, { roughness: 0.55, clearcoat: 0.2, clearcoatRoughness: 0.4 }),
-    sole: pbr(0xd8d4cb, { roughness: 0.75 }),
-    lace: pbr(0xffffff, { roughness: 0.85 }),
+    blazer: pbr(C.blazer, { roughness: 0.9, sheen: 0.45, sheenRoughness: 0.65, sheenColor: 0x56658f, texture: "cloth", bumpScale: 0.004 }),
+    lapel: pbr(0x18203a, { roughness: 0.55, sheen: 0.35, sheenColor: 0x56658f }),
+    button: pbr(0x111111, { roughness: 0.3, clearcoat: 0.6 }),
+    shirt: pbr(0xf6f7f9, { roughness: 0.82, sheen: 0.2, sheenColor: 0xffffff, texture: "cloth", bumpScale: 0.003 }),
+    tie: pbr(0x23365e, { roughness: 0.42, sheen: 0.6, sheenRoughness: 0.4, sheenColor: 0x7d95c8 }),
+    trousers: pbr(C.trousers, { roughness: 0.88, sheen: 0.3, sheenColor: 0x6a6f7c, texture: "cloth", bumpScale: 0.004 }),
+    belt: pbr(0x1b1512, { roughness: 0.4, clearcoat: 0.5 }),
+    buckle: pbr(0xc9ced6, { roughness: 0.25, metalness: 1 }),
+    shoe: pbr(0x4a2c18, { roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.15 }),
+    sole: pbr(0x24170f, { roughness: 0.7 }),
+    pocketSquare: pbr(0xffffff, { roughness: 0.6, sheen: 0.4 }),
     white: pbr(0xfaf8f5, { roughness: 0.18 }),
     iris: pbr(0x3a2214, { roughness: 0.2 }),
     irisRing: pbr(0x1f120a, { roughness: 0.2 }),
     pupil: pbr(0x070403, { roughness: 0.1 }),
     lash: pbr(0x1a120e, { roughness: 0.7 }),
     lipLine: pbr(0x8a4a42, { roughness: 0.5 }),
-    lips: pbr(C.lips, { roughness: 0.45, sheen: 0.3, sheenColor: 0xffb0a0 }),
+    lips: pbr(C.lips, { roughness: 0.62 }),
     mouthInside: pbr(0x7a2a26, { roughness: 0.6 }),
     teeth: pbr(0xfffdf8, { roughness: 0.25 }),
     tongue: pbr(0xe0645e, { roughness: 0.4 }),
@@ -389,6 +394,9 @@ export function buildCharacter({ THREE, part, pbr }: Builder) {
     nostril: pbr(0x8a5a44, { roughness: 0.8 }),
     blush: pbr(C.blush, { roughness: 0.9, opacity: 0.12 }),
     shine: pbr(0xffffff, { roughness: 0.2, opacity: 0.35 }),
+    cap: pbr(0x1d2a4a, { roughness: 0.9, sheen: 0.4, sheenColor: 0x5a6c9a, texture: "cloth", bumpScale: 0.004 }),
+    capSeam: pbr(0x141d35, { roughness: 0.9 }),
+    capBadge: pbr(0x63e6ff, { roughness: 0.5, emissive: 0x63e6ff, emissiveIntensity: 0.1 }),
   };
   const sphere = (radius: number, w = 32, h = 24) => new THREE.SphereGeometry(radius, w, h);
   const taper = (top: number, bottom: number, height: number, segments = 24) =>
@@ -414,59 +422,99 @@ export function buildCharacter({ THREE, part, pbr }: Builder) {
 
   const figure = new THREE.Group();
 
-  // ---------- Legs: dark jeans and white sneakers ----------
+  // ---------- Legs: charcoal trousers and brown oxfords ----------
   const legs: ThreeTypes.Group[] = [];
   for (const side of [-1, 1]) {
     const hip = new THREE.Group();
     hip.position.set(side * 0.1, 0.9, 0);
-    hip.add(part(sphere(0.09), mat.jeans, { position: [0, -0.02, 0] }));
-    hip.add(part(taper(0.09, 0.072, 0.8), mat.jeans, { position: [0, -0.43, 0] }));
-    hip.add(part(taper(0.075, 0.075, 0.03, 24), mat.jeans, { position: [0, -0.83, 0] })); // hem
-    const sneaker = new THREE.Group();
-    sneaker.position.set(side * 0.008, -0.87, 0.05);
-    sneaker.add(part(new THREE.CapsuleGeometry(0.072, 0.15, 8, 18), mat.sneaker, { rotation: [Math.PI / 2, 0, 0], scale: [1.05, 0.95, 0.7] }));
-    sneaker.add(part(sphere(0.068), mat.sneaker, { position: [0, -0.01, 0.09], scale: [1, 0.72, 0.95] })); // toe box
-    sneaker.add(part(taper(0.068, 0.072, 0.06, 18), mat.sneaker, { position: [0, 0.04, -0.05] })); // heel collar
-    sneaker.add(part(new THREE.CapsuleGeometry(0.078, 0.17, 6, 18), mat.sole, { position: [0, -0.046, 0], rotation: [Math.PI / 2, 0, 0], scale: [1.1, 1.02, 0.24] }));
-    for (let i = 0; i < 3; i += 1) {
-      sneaker.add(part(new THREE.BoxGeometry(0.05, 0.005, 0.008), mat.lace, { shadow: false, position: [0, 0.056 - i * 0.014, 0.02 + i * 0.03], rotation: [-0.55, 0, 0] }));
-    }
-    hip.add(sneaker);
+    hip.add(part(sphere(0.088), mat.trousers, { position: [0, -0.02, 0] }));
+    hip.add(part(taper(0.088, 0.07, 0.82), mat.trousers, { position: [0, -0.44, 0] }));
+    // Front crease down the trouser leg.
+    hip.add(part(new THREE.BoxGeometry(0.004, 0.74, 0.004), mat.lapel, { shadow: false, position: [0, -0.44, 0.077], rotation: [0.022, 0, 0] }));
+    const shoe = new THREE.Group();
+    shoe.position.set(side * 0.008, -0.87, 0.045);
+    shoe.add(part(new THREE.CapsuleGeometry(0.068, 0.16, 8, 18), mat.shoe, { rotation: [Math.PI / 2, 0, 0], scale: [1, 0.92, 0.66] }));
+    shoe.add(part(taper(0.064, 0.067, 0.05, 18), mat.shoe, { position: [0, 0.032, -0.06] }));
+    shoe.add(part(new THREE.CapsuleGeometry(0.07, 0.17, 6, 18), mat.sole, { position: [0, -0.04, 0], rotation: [Math.PI / 2, 0, 0], scale: [1.06, 1.02, 0.18] }));
+    // Toe cap seam.
+    shoe.add(part(new THREE.TorusGeometry(0.05, 0.003, 6, 24, Math.PI), mat.sole, { shadow: false, position: [0, 0.012, 0.1], rotation: [-1.1, 0, 0], scale: [1.15, 1, 1] }));
+    hip.add(shoe);
     figure.add(hip);
     legs.push(hip);
   }
 
-  // ---------- Torso: relaxed black crew-neck tee ----------
+  // ---------- Torso: navy blazer, white shirt, tie ----------
   const torso = new THREE.Group();
   torso.position.y = 0.86;
   figure.add(torso);
-  const teeProfile = [
-    [0, -0.06], [0.2, -0.06], [0.21, 0.08], [0.215, 0.28], [0.24, 0.44],
-    [0.25, 0.52], [0.21, 0.575], [0.1, 0.6], [0, 0.6],
+  const jacketProfile = [
+    [0, -0.07], [0.2, -0.07], [0.212, 0.03], [0.21, 0.2], [0.235, 0.38],
+    [0.252, 0.47], [0.238, 0.545], [0.17, 0.592], [0.075, 0.612], [0, 0.612],
   ].map(([r, y]) => new THREE.Vector2(r, y));
-  torso.add(part(new THREE.LatheGeometry(teeProfile, 48), mat.tee, { scale: [1, 1, 0.72] }));
-  torso.add(part(new THREE.TorusGeometry(0.074, 0.011, 10, 40), mat.rib, { position: [0, 0.6, 0.004], rotation: [Math.PI / 2, 0, 0], scale: [1, 0.78, 1] })); // ribbed collar
+  torso.add(part(new THREE.LatheGeometry(jacketProfile, 48), mat.blazer, { scale: [1, 1, 0.7] }));
   for (const side of [-1, 1]) {
-    torso.add(part(sphere(0.08), mat.tee, { position: [side * 0.235, 0.505, 0], scale: [1.1, 0.8, 0.95] }));
+    torso.add(part(sphere(0.078), mat.blazer, { position: [side * 0.235, 0.515, 0], scale: [1.12, 0.76, 0.95] }));
   }
-  // Neck.
-  torso.add(part(taper(0.06, 0.068, 0.16, 24), mat.skin, { position: [0, 0.64, 0] }));
+  // Belt peeking under the jacket hem.
+  torso.add(part(taper(0.198, 0.198, 0.03, 40), mat.belt, { position: [0, -0.055, 0], scale: [1, 1, 0.7] }));
+  torso.add(part(new THREE.BoxGeometry(0.032, 0.024, 0.008), mat.buckle, { position: [0, -0.055, 0.14] }));
 
-  // ---------- Arms: short sleeves, bare forearms, hands with fingers ----------
+  const shape = (points: Array<[number, number]>) =>
+    new THREE.ShapeGeometry(new THREE.Shape(points.map(([x, y]) => new THREE.Vector2(x, y))));
+  const front = new THREE.Group();
+  front.position.set(0, 0.32, 0.163);
+  front.rotation.x = -0.17;
+  torso.add(front);
+  // Shirt V between the lapels.
+  front.add(part(shape([[-0.076, 0.28], [0.076, 0.28], [0, -0.02]]), mat.shirt, { shadow: false, position: [0, 0, 0.004] }));
+  // Tie: knot and blade.
+  front.add(part(shape([[-0.017, 0.262], [0.017, 0.262], [0.012, 0.232], [-0.012, 0.232]]), mat.tie, { shadow: false, position: [0, 0, 0.012] }));
+  front.add(part(shape([[-0.011, 0.234], [0.011, 0.234], [0.022, 0.04], [0, 0.012], [-0.022, 0.04]]), mat.tie, { shadow: false, position: [0, 0, 0.01] }));
+  for (const side of [-1, 1]) {
+    // Shirt collar points over the tie knot.
+    front.add(part(shape([[side * 0.006, 0.282], [side * 0.072, 0.29], [side * 0.042, 0.215]]), mat.shirt, { shadow: false, position: [0, 0, 0.015] }));
+    // Notch lapel.
+    front.add(part(shape([
+      [side * 0.07, 0.272], [side * 0.15, 0.215], [side * 0.126, 0.186],
+      [side * 0.156, 0.162], [side * 0.012, -0.03],
+    ]), mat.lapel, { shadow: false, position: [0, 0, 0.007] }));
+  }
+  // Single button closing the jacket.
+  torso.add(part(sphere(0.012, 14, 10), mat.button, { position: [0, 0.14, 0.15] }));
+  torso.add(part(new THREE.BoxGeometry(0.004, 0.16, 0.003), mat.lapel, { shadow: false, position: [0, 0.06, 0.15], rotation: [-0.06, 0, 0] }));
+  // White pocket square in the chest pocket.
+  const pocket = new THREE.Group();
+  pocket.position.set(0.118, 0.41, 0.15);
+  pocket.rotation.y = 0.37;
+  torso.add(pocket);
+  pocket.add(part(new THREE.BoxGeometry(0.052, 0.012, 0.004), mat.pocketSquare, { shadow: false, position: [0, 0.006, 0.004] }));
+  pocket.add(part(new THREE.BoxGeometry(0.066, 0.005, 0.004), mat.lapel, { shadow: false, position: [0, -0.002, 0.006] }));
+  // Side pocket flaps.
+  for (const side of [-1, 1]) {
+    const flap = new THREE.Group();
+    flap.position.set(side * 0.12, 0.07, 0.115);
+    flap.rotation.y = side * 0.62;
+    flap.add(part(new THREE.BoxGeometry(0.09, 0.022, 0.006), mat.blazer, { shadow: false }));
+    torso.add(flap);
+  }
+  // Shirt collar band and neck.
+  torso.add(part(taper(0.064, 0.072, 0.05, 24), mat.shirt, { position: [0, 0.612, 0.004] }));
+  torso.add(part(taper(0.054, 0.06, 0.14, 24), mat.skin, { position: [0, 0.65, 0] }));
+
+  // ---------- Arms: blazer sleeves, shirt cuffs, hands with fingers ----------
   type Arm = { shoulder: ThreeTypes.Group; elbow: ThreeTypes.Group; hand: ThreeTypes.Group; side: number };
   const arms: Arm[] = [];
   for (const side of [-1, 1]) {
     const shoulder = new THREE.Group();
     shoulder.position.set(side * 0.255, 0.5, 0);
-    shoulder.add(part(taper(0.074, 0.066, 0.22), mat.tee, { position: [0, -0.11, 0] }));
-    shoulder.add(part(new THREE.TorusGeometry(0.064, 0.007, 8, 28), mat.rib, { position: [0, -0.22, 0], rotation: [Math.PI / 2, 0, 0] })); // sleeve hem
-    shoulder.add(part(taper(0.06, 0.056, 0.12), mat.skin, { position: [0, -0.26, 0] }));
+    shoulder.add(part(taper(0.07, 0.062, 0.32), mat.blazer, { position: [0, -0.16, 0] }));
     const elbow = new THREE.Group();
     elbow.position.y = -0.32;
-    elbow.add(part(sphere(0.056), mat.skin));
-    elbow.add(part(taper(0.054, 0.046, 0.25), mat.skin, { position: [0, -0.125, 0] }));
+    elbow.add(part(sphere(0.062), mat.blazer));
+    elbow.add(part(taper(0.062, 0.057, 0.24), mat.blazer, { position: [0, -0.12, 0] }));
+    elbow.add(part(taper(0.05, 0.05, 0.03, 20), mat.shirt, { position: [0, -0.252, 0] })); // cuff
     const hand = new THREE.Group();
-    hand.position.y = -0.27;
+    hand.position.y = -0.275;
     hand.add(part(sphere(0.046, 20, 16), mat.skin, { position: [0, -0.035, 0], scale: [1, 1.15, 0.62] }));
     for (let f = 0; f < 4; f += 1) {
       const x = (f - 1.5) * 0.021;
@@ -512,7 +560,7 @@ export function buildCharacter({ THREE, part, pbr }: Builder) {
     head.add(part(sphere(0.028, 16, 12), mat.skinShade, { shadow: false, position: [side * 0.232, HEAD_Y - 0.037, -0.01], scale: [0.3, 1, 0.68] }));
   }
 
-  // ---------- Hair: short tight sides, textured top swept up and to his right ----------
+  // ---------- Short hair at the sides and back, under a baseball cap ----------
   const hair = new THREE.Group();
   hair.position.set(0, HEAD_Y, 0);
   head.add(hair);
@@ -522,29 +570,37 @@ export function buildCharacter({ THREE, part, pbr }: Builder) {
   for (const side of [-1, 1]) {
     hair.add(part(new THREE.CapsuleGeometry(0.015, 0.045, 6, 10), mat.hair, { shadow: false, position: [side * 0.199, -0.005, 0.035], rotation: [0, 0, side * 0.1] }));
   }
-  // Volume on top, leaning to his right (the viewer's left).
-  hair.add(part(roughen(sphere(0.135, 48, 32), 0.01, 14, 3), mat.hair, { position: [-0.02, 0.185, 0.025], scale: [1.5, 0.8, 1.3], rotation: [0.1, 0, 0.14] }));
-  // Front: a lifted fringe of soft locks combed from the parting on his left across to his right.
-  const lock = new THREE.CapsuleGeometry(0.03, 0.1, 8, 14);
-  for (let i = 0; i < 7; i += 1) {
-    const u = i / 6;
-    hair.add(part(lock, i === 2 || i === 5 ? mat.hairLight : mat.hair, {
-      position: [0.13 - 0.28 * u, 0.2 + 0.05 * Math.sin(u * Math.PI), 0.13 - 0.04 * Math.abs(u - 0.5)],
-      rotation: [-0.65 + 0.1 * u, 0, 0.55 + 0.35 * u],
-      scale: [1, 0.9 + 0.3 * Math.sin(u * Math.PI), 0.85],
-    }));
+  // Baseball cap: six-panel crown, sweatband edge, curved brim, top button and a small badge.
+  const cap = new THREE.Group();
+  hair.add(cap);
+  cap.add(part(new THREE.SphereGeometry(0.228, 48, 32, 0, Math.PI * 2, 0, 1.28), mat.cap, { position: [0, 0.035, -0.006], rotation: [-0.12, 0, 0], scale: [1.04, 1.02, 1.0] }));
+  for (let i = 0; i < 6; i += 1) {
+    // Panel seams running from the button down the crown.
+    const seam = new THREE.Group();
+    seam.position.set(0, 0.035, -0.006);
+    seam.rotation.set(-0.12, (i / 6) * Math.PI * 2, 0);
+    seam.add(part(new THREE.TorusGeometry(0.2295, 0.0018, 4, 40, 1.22), mat.capSeam, { shadow: false, rotation: [0, Math.PI / 2, Math.PI / 2 - 1.22], scale: [1.04, 1.02, 1] }));
+    cap.add(seam);
   }
-  // Texture: shallow strands lying across the crown in the direction of the sweep.
-  const strand = new THREE.CapsuleGeometry(0.017, 0.1, 8, 12);
-  for (let i = 0; i < 9; i += 1) {
-    const t = i / 8;
-    hair.add(part(strand, i % 3 === 1 ? mat.hairLight : mat.hair, {
-      shadow: false,
-      position: [0.12 - 0.26 * t, 0.178 - 0.01 * Math.abs(t - 0.5), -0.05 + 0.15 * Math.sin(t * Math.PI)],
-      rotation: [0.25 - 0.45 * t, 0.25, Math.PI / 2 - 0.35 - 0.12 * t],
-      scale: [1, 1, 0.5],
-    }));
+  cap.add(part(sphere(0.014, 16, 10), mat.cap, { position: [0, 0.266, -0.034], scale: [1, 0.55, 1] }));
+  // Curved brim: a half disc that dips at its sides.
+  const brimGeometry = new THREE.CylinderGeometry(0.175, 0.175, 0.012, 40, 1, false, -Math.PI / 2, Math.PI);
+  {
+    const position = brimGeometry.attributes.position as ThreeTypes.BufferAttribute;
+    for (let i = 0; i < position.count; i += 1) {
+      const x = position.getX(i);
+      position.setY(i, position.getY(i) - (x * x) * 1.6);
+    }
+    brimGeometry.computeVertexNormals();
   }
+  cap.add(part(brimGeometry, mat.cap, { position: [0, 0.112, 0.1], rotation: [0.16, 0, 0], scale: [1.02, 1, 1.12] }));
+  // Badge on the front panel in the site's cyan.
+  const badge = new THREE.Group();
+  badge.position.set(0, 0.17, 0.192);
+  badge.rotation.x = -0.62;
+  badge.add(part(new THREE.CircleGeometry(0.03, 28), mat.capBadge, { shadow: false }));
+  badge.add(part(new THREE.TorusGeometry(0.03, 0.003, 6, 28), mat.capSeam, { shadow: false, position: [0, 0, 0.001] }));
+  cap.add(badge);
 
   // ---------- Face ----------
   const face = new THREE.Group();
@@ -1121,6 +1177,144 @@ function buildWorld(builder: Builder) {
   sun.add(halo, rays);
   world.add(sun);
 
+  // ---------- Moon and stars: shown instead of the sun in dark mode ----------
+  const moon = new THREE.Group();
+  moon.position.copy(sun.position);
+  const moonSurface = new THREE.MeshStandardMaterial({
+    color: 0xe9edf6,
+    roughness: 0.95,
+    emissive: 0xc9d4ff,
+    emissiveIntensity: 0.32,
+  });
+  moon.add(new THREE.Mesh(roughen(new THREE.SphereGeometry(0.26, 64, 48), 0.004, 6, 17), moonSurface));
+  // Shallow craters on the side facing the viewer.
+  const craterMaterial = new THREE.MeshStandardMaterial({ color: 0xa3abbe, roughness: 1, emissive: 0x7c88ac, emissiveIntensity: 0.25 });
+  const craters: Array<[number, number, number]> = [[-0.09, 0.08, 0.05], [0.07, -0.06, 0.04], [0.1, 0.1, 0.028], [-0.04, -0.12, 0.03], [-0.13, -0.02, 0.022]];
+  craters.forEach(([cx, cy, r]) => {
+    const cz = Math.sqrt(Math.max(0, 0.26 * 0.26 - cx * cx - cy * cy));
+    const crater = new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), craterMaterial);
+    crater.position.set(cx, cy, cz - r * 0.55);
+    crater.scale.set(1, 1, 0.35);
+    crater.lookAt(cx * 4, cy * 4, cz * 4);
+    moon.add(crater);
+  });
+  const moonGlow = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 1),
+    glowMaterial(glowTexture([[0, "rgba(220,230,255,0.75)"], [0.32, "rgba(170,190,255,0.32)"], [0.6, "rgba(130,150,240,0.08)"], [0.8, "rgba(120,140,230,0)"], [1, "rgba(120,140,230,0)"]]), 1),
+  );
+  moonGlow.scale.setScalar(1.6);
+  moonGlow.position.z = -0.03;
+  moon.add(moonGlow);
+  moon.scale.setScalar(0.001);
+  moon.visible = false;
+  world.add(moon);
+
+  const starCount = 120;
+  const starPositions = new Float32Array(starCount * 3);
+  for (let i = 0; i < starCount; i += 1) {
+    starPositions.set([(random() - 0.5) * 3.6, 1.15 + random() * 2.1, -2.2 - random() * 0.6], i * 3);
+  }
+  const starGeometry = new THREE.BufferGeometry();
+  starGeometry.setAttribute("position", new THREE.Float32BufferAttribute(starPositions, 3));
+  const starMaterial = new THREE.PointsMaterial({
+    color: 0xfdf6d8,
+    size: 0.055,
+    map: glowTexture([[0, "rgba(255,255,255,1)"], [0.35, "rgba(255,250,220,0.6)"], [1, "rgba(255,250,220,0)"]], 64),
+    transparent: true,
+    opacity: 0,
+    depthWrite: false,
+    toneMapped: false,
+  });
+  const stars = new THREE.Points(starGeometry, starMaterial);
+  stars.visible = false;
+  world.add(stars);
+
+  // A few bigger four-point sparkles that twinkle.
+  const sparkleCanvas = document.createElement("canvas");
+  sparkleCanvas.width = sparkleCanvas.height = 128;
+  {
+    const context = sparkleCanvas.getContext("2d")!;
+    const glow = context.createRadialGradient(64, 64, 0, 64, 64, 30);
+    glow.addColorStop(0, "rgba(255,255,240,1)");
+    glow.addColorStop(1, "rgba(255,245,200,0)");
+    context.fillStyle = glow;
+    context.fillRect(0, 0, 128, 128);
+    context.fillStyle = "rgba(255,252,230,0.95)";
+    context.beginPath();
+    for (let i = 0; i < 8; i += 1) {
+      const angle = (i / 8) * Math.PI * 2 - Math.PI / 2;
+      const radius = i % 2 === 0 ? 62 : 9;
+      context.lineTo(64 + Math.cos(angle) * radius, 64 + Math.sin(angle) * radius);
+    }
+    context.closePath();
+    context.fill();
+  }
+  const sparkleTexture = new THREE.CanvasTexture(sparkleCanvas);
+  sparkleTexture.colorSpace = THREE.SRGBColorSpace;
+  const sparkles: Array<{ mesh: ThreeTypes.Mesh; material: ThreeTypes.MeshBasicMaterial; phase: number; size: number }> = [];
+  ([[-1.35, 2.85, 0.32], [-0.35, 3.15, 0.24], [0.45, 2.75, 0.2], [1.6, 3.05, 0.26], [-1.6, 1.9, 0.2], [1.75, 1.75, 0.18]] as const).forEach(([x, y, size], i) => {
+    const material = new THREE.MeshBasicMaterial({ map: sparkleTexture, transparent: true, opacity: 0, depthWrite: false, toneMapped: false });
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
+    mesh.position.set(x, y, -2.1);
+    mesh.scale.setScalar(size);
+    mesh.visible = false;
+    world.add(mesh);
+    sparkles.push({ mesh, material, phase: i * 1.3, size });
+  });
+
+  // ---------- Airplane: crosses the sky by day, trailing a contrail ----------
+  const airplane = new THREE.Group();
+  const planeBody = new THREE.Group();
+  airplane.add(planeBody);
+  const hull = pbr(0xf7f8fb, { roughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.2 });
+  const stripe = pbr(0x3b6fe0, { roughness: 0.4 });
+  const glass = pbr(0x1c2a44, { roughness: 0.15 });
+  // Fuselage along +x with a rounded nose and a tapered tail.
+  planeBody.add(part(new THREE.CapsuleGeometry(0.034, 0.26, 8, 20), hull, { shadow: false, rotation: [0, 0, Math.PI / 2] }));
+  planeBody.add(part(new THREE.ConeGeometry(0.034, 0.1, 20), hull, { shadow: false, position: [-0.175, 0.012, 0], rotation: [0, 0, Math.PI / 2 + 0.25], scale: [1, 1, 0.9] }));
+  planeBody.add(part(new THREE.BoxGeometry(0.28, 0.009, 0.071), stripe, { shadow: false, position: [0, -0.004, 0] }));
+  planeBody.add(part(new THREE.BoxGeometry(0.03, 0.012, 0.06), glass, { shadow: false, position: [0.152, 0.015, 0], rotation: [0, 0, -0.5] }));
+  for (let i = 0; i < 7; i += 1) {
+    planeBody.add(part(new THREE.SphereGeometry(0.005, 8, 6), glass, { shadow: false, position: [0.1 - i * 0.03, 0.013, 0.033] }));
+  }
+  // Swept wings with engines, tail fin and stabilisers.
+  const planeWing = new THREE.ShapeGeometry(new THREE.Shape().moveTo(0.03, 0).lineTo(-0.03, 0).lineTo(-0.08, 0.2).lineTo(-0.05, 0.2).closePath());
+  for (const side of [-1, 1]) {
+    planeBody.add(part(planeWing, hull, { shadow: false, position: [0.02, -0.012, 0], rotation: [side * Math.PI / 2, 0, 0], scale: [1, side, 1] }));
+    planeBody.add(part(new THREE.CapsuleGeometry(0.012, 0.03, 6, 12), pbr(0xc9ced8, { roughness: 0.35, metalness: 0.4 }), { shadow: false, position: [-0.005, -0.026, side * 0.07], rotation: [0, 0, Math.PI / 2] }));
+    planeBody.add(part(new THREE.ShapeGeometry(new THREE.Shape().moveTo(0.015, 0).lineTo(-0.015, 0).lineTo(-0.04, 0.07).lineTo(-0.025, 0.07).closePath()), hull, { shadow: false, position: [-0.16, 0.012, 0], rotation: [side * Math.PI / 2, 0, 0], scale: [1, side, 1] }));
+  }
+  planeBody.add(part(new THREE.ShapeGeometry(new THREE.Shape().moveTo(0.03, 0).lineTo(-0.02, 0).lineTo(-0.05, 0.085).lineTo(-0.025, 0.085).closePath()), stripe, { shadow: false, position: [-0.15, 0.025, 0], rotation: [0, 0, 0] }));
+  // Contrail: a soft white streak fading out behind the plane.
+  const trailCanvas = document.createElement("canvas");
+  trailCanvas.width = 256;
+  trailCanvas.height = 32;
+  {
+    const context = trailCanvas.getContext("2d")!;
+    const along = context.createLinearGradient(0, 0, 256, 0);
+    along.addColorStop(0, "rgba(255,255,255,0)");
+    along.addColorStop(1, "rgba(255,255,255,0.85)");
+    context.fillStyle = along;
+    context.fillRect(0, 0, 256, 32);
+    context.globalCompositeOperation = "destination-in";
+    const across = context.createLinearGradient(0, 0, 0, 32);
+    across.addColorStop(0, "rgba(0,0,0,0)");
+    across.addColorStop(0.5, "rgba(0,0,0,1)");
+    across.addColorStop(1, "rgba(0,0,0,0)");
+    context.fillStyle = across;
+    context.fillRect(0, 0, 256, 32);
+  }
+  const trailTexture = new THREE.CanvasTexture(trailCanvas);
+  trailTexture.colorSpace = THREE.SRGBColorSpace;
+  const contrail = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.4, 0.05),
+    new THREE.MeshBasicMaterial({ map: trailTexture, transparent: true, opacity: 0.8, depthWrite: false }),
+  );
+  contrail.position.set(-0.9, 0, -0.01);
+  airplane.add(contrail);
+  airplane.position.set(-2.6, 2.95, -1.5);
+  world.add(airplane);
+
   // ---------- Clouds: soft lumpy cumulus drifting across ----------
   const clouds: Array<{ group: ThreeTypes.Group; speed: number }> = [];
   const cloudMaterial = pbr(C.cloud, { roughness: 1, sheen: 0.5, sheenColor: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.12 });
@@ -1167,7 +1361,7 @@ function buildWorld(builder: Builder) {
     butterflies.push({ group, wings, phase, radius, height });
   });
 
-  return { world, swayers, rays, clouds, butterflies, sun, wind, groundAt };
+  return { world, swayers, rays, clouds, butterflies, sun, moon, stars, starMaterial, sparkles, airplane, planeBody, wind, groundAt };
 }
 
 // ======================= Component =======================
@@ -1208,7 +1402,7 @@ export function ToyAvatar() {
       const rig = new THREE.Group();
       scene.add(rig);
 
-      const { world, swayers, rays, clouds, butterflies, sun, wind, groundAt } = buildWorld(builder);
+      const { world, swayers, rays, clouds, butterflies, sun, moon, stars, starMaterial, sparkles, airplane, planeBody, wind, groundAt } = buildWorld(builder);
       rig.add(world);
 
       const { character, torso, head, eyes, brows, arms, legs, mouth } = buildCharacter(builder);
@@ -1241,12 +1435,63 @@ export function ToyAvatar() {
       const characterShadow = addShadow(-0.05, 0.08, 0.8, 0.36);
       addShadow(0.62, 0.3, 0.5, 0.36);
 
+      const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       const lighting = await lightScene(THREE, renderer, scene, { shadows: true });
       if (disposed) {
         lighting.dispose();
         return;
       }
       disposables.add(lighting);
+
+      // ---------- Day / night: follows the site's theme toggle ----------
+      const isNight = () => document.documentElement.dataset.theme === "dark";
+      let nightTarget = isNight() ? 1 : 0;
+      let night = nightTarget;
+      const dayKey = new THREE.Color(0xfff1dc);
+      const nightKey = new THREE.Color(0xaebfff);
+      const dayRim = new THREE.Color(0xffc98a);
+      const nightRim = new THREE.Color(0x8ea6ff);
+      const daySky = new THREE.Color(0xdcefff);
+      const nightSky = new THREE.Color(0x6f80c8);
+      const dayGround = new THREE.Color(0x5b8f3e);
+      const nightGround = new THREE.Color(0x2c3d3a);
+      function applyNight() {
+        const t = night * night * (3 - 2 * night);
+        lighting.key.color.copy(dayKey).lerp(nightKey, t);
+        lighting.key.intensity = 2.6 - t * 1.25;
+        lighting.rim.color.copy(dayRim).lerp(nightRim, t);
+        lighting.rim.intensity = 1.5 - t * 0.4;
+        lighting.sky.color.copy(daySky).lerp(nightSky, t);
+        lighting.sky.groundColor.copy(dayGround).lerp(nightGround, t);
+        lighting.sky.intensity = 0.75 - t * 0.25;
+        scene.environmentIntensity = 0.55 - t * 0.25;
+        renderer.toneMappingExposure = 1.12 - t * 0.1;
+        sun.visible = t < 0.999;
+        sun.scale.setScalar(Math.max(0.001, 1 - t));
+        moon.visible = t > 0.001;
+        moon.scale.setScalar(Math.max(0.001, t));
+        stars.visible = t > 0.001;
+        starMaterial.opacity = t * (0.85 + Math.sin(elapsed * 2.3) * 0.15);
+        sparkles.forEach(({ mesh, material, phase, size }) => {
+          const twinkle = 0.55 + 0.45 * Math.sin(elapsed * 1.8 + phase);
+          mesh.visible = t > 0.001;
+          material.opacity = t * twinkle;
+          mesh.scale.setScalar(size * (0.8 + 0.3 * twinkle));
+          mesh.rotation.z = Math.sin(elapsed * 0.4 + phase) * 0.2;
+        });
+        airplane.visible = t < 0.999;
+        airplane.scale.setScalar(Math.max(0.001, 1 - t));
+      }
+      const themeObserver = new MutationObserver(() => {
+        nightTarget = isNight() ? 1 : 0;
+        if (reducedQuery.matches) {
+          night = nightTarget;
+          applyNight();
+          render();
+        }
+        sync();
+      });
+      themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
       // ---------- Camera ----------
       const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 60);
@@ -1266,7 +1511,6 @@ export function ToyAvatar() {
       }
 
       // ---------- Interaction ----------
-      const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       const gaze = new THREE.Vector2();
       const gazeTarget = new THREE.Vector2();
       let dragging = false;
@@ -1437,7 +1681,16 @@ export function ToyAvatar() {
           object.rotation.z = Math.sin(elapsed * 1.3 + phase) * 0.05;
         });
         rays.rotation.z = elapsed * 0.08;
-        sun.scale.setScalar(1 + Math.sin(elapsed * 1.5) * 0.02);
+        night += (nightTarget - night) * (1 - Math.exp(-delta * 3));
+        if (Math.abs(nightTarget - night) < 0.001) night = nightTarget;
+        applyNight();
+        if (night < 0.999) sun.scale.multiplyScalar(1 + Math.sin(elapsed * 1.5) * 0.02);
+        moon.rotation.z = Math.sin(elapsed * 0.2) * 0.05;
+        airplane.position.x += delta * 0.22;
+        if (airplane.position.x > 3.2) airplane.position.x = -3.2;
+        airplane.position.y = 2.95 + Math.sin(elapsed * 0.6) * 0.04;
+        planeBody.rotation.x = Math.sin(elapsed * 0.9) * 0.08;
+        planeBody.rotation.z = Math.sin(elapsed * 0.6 + 1) * 0.03;
         clouds.forEach(({ group, speed }) => {
           group.position.x += speed * delta;
           if (group.position.x > 2.4) group.position.x = -2.4;
@@ -1519,6 +1772,7 @@ export function ToyAvatar() {
 
       destroy = () => {
         cancelAnimationFrame(rafId);
+        themeObserver.disconnect();
         resizeObserver.disconnect();
         visibility.disconnect();
         window.removeEventListener("pointermove", onPointerMove);
