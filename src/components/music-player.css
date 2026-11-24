@@ -73,9 +73,22 @@
 @keyframes music-record-spin { to { transform: rotate(360deg); } }
 @keyframes music-note-float { 0% { opacity: 0; transform: translate(0, 0) rotate(-10deg); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(12px, -65px) rotate(15deg); } }
 @media (max-width: 759px) {
-  .music-player { --music-size: 82px; --music-edge: 16px; }
-  .music-tonearm { width: 25px; height: 70px; }
-  .music-play-indicator { width: 24px; height: 24px; font-size: 10px; }
+  /* Phones: a compact record pinned bottom-left, so it never sits on top of
+     project cards (top-right) or the scroll-guide robot (bottom-right). */
+  .music-player,
+  .music-player.is-at-top {
+    --music-size: 64px;
+    --music-edge: 12px;
+    top: auto;
+    right: auto;
+    bottom: max(var(--music-edge), env(safe-area-inset-bottom));
+    left: max(var(--music-edge), env(safe-area-inset-left));
+  }
+  .music-player-button:hover { transform: none; }
+  .music-record { border-width: 2px; }
+  .music-tonearm { width: 20px; height: 56px; }
+  .music-play-indicator { width: 20px; height: 20px; right: 2px; bottom: 0; font-size: 9px; border-width: 1.5px; }
+  .music-notes span { font-size: 18px; top: 4px; }
 }
 .music-sound-nudge {
   position: absolute;
@@ -114,7 +127,7 @@
 }
 
 @media (max-width: 759px) {
-  .music-sound-nudge { padding: 7px 11px; font-size: 0.7rem; right: calc(100% + 6px); }
+  .music-sound-nudge { padding: 7px 11px; font-size: 0.7rem; right: auto; left: calc(100% + 8px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
