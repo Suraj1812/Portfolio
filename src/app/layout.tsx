@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import { MotionProvider } from "@/components/motion-provider";
+import { MusicPlayer } from "@/components/music-player";
 
 import "@fontsource-variable/manrope";
 import "@fontsource-variable/space-grotesk";
@@ -131,6 +132,7 @@ export default function RootLayout({
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <MotionProvider>{children}</MotionProvider>
+        <MusicPlayer />
       </body>
     </html>
   );
